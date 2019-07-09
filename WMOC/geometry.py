@@ -12,8 +12,24 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 def geometry(inp_file, wavespeed=1200, plot= True):
-    """Take .inp fileas input and output the geometry of the network
-    and parameters of the nodes and links. nodes and links are objects."""    
+    """Read geometry and assign parameters
+    
+    Parameters
+    ----------
+    inp_file : wntr.network.model.WaterNetworkModel
+        .inp file used for EPAnet simulation 
+    wavespeed : int, optional
+        Wave speed, by default 1200 [m/s]
+    plot : bool, optional
+        Plot network, by default True
+
+    Returns
+    -------
+    wn : wntr.network.model.WaterNetworkModel
+        Network with updated parameters 
+    npipe : integer
+        Number of pipes
+    """
        
     wn = wntr.network.WaterNetworkModel(inp_file)
     G = wn.get_graph()
@@ -27,63 +43,96 @@ def geometry(inp_file, wavespeed=1200, plot= True):
         
     # assign wave speed to each pipes 
     i= 0 
-    for pn, pipe in wn.pipes():  
+    for _, pipe in wn.pipes():  
         pipe.wavev = lambda: None        
         setattr(pipe, 'wavev', wavev[i])
         i+=1
         
     # calculate the slope for each pipe 
-    for pn, pipe in wn.pipes():  
+    for _, pipe in wn.pipes():  
         pipe.theta = lambda: None
         try: 
-            theta = np.sin(np.arctan(pipe.end_node.elevation-pipe.start_node.elevation)/pipe.length)
+            theta = np.sin(np.arctan(pipe.end_node.elevation -
+                pipe.start_node.elevation)/pipe.length)
         except:
             theta = 0.0
         setattr(pipe, 'theta',theta )
         
     # assign ID to each links, start from 1.      
     i =1
-    for ln, link in wn.links():  
+    for _, link in wn.links():  
         link.id = lambda: None 
         setattr(link, 'id', i)
         i+=1 
    
     # assign ID to each links, start from 1.      
     i =1
-    for nn, node in wn.nodes():  
+    for _, node in wn.nodes():  
         node.id = lambda: None 
         setattr(node, 'id', i)
         i+=1     ## Graph the network
         
     if plot: 
-#        wntr.graphics.plot_network(wn, title=wn.name)
         # Compute betweenness centrality
         plt.figure(figsize=(4,4), dpi=80, facecolor='w', edgecolor='k') 
         bet_cen = nx.betweenness_centrality(G)
-        wntr.graphics.plot_network(wn, node_attribute=bet_cen, node_size=30, 
+        wntr.graphics.plot_network(wn, node_attribute=bet_cen, 
+                                node_size=30, 
                                 title='Betweenness Centrality')
     return  wn, npipe
 
-def topology(wn, npipe, pressure_zone_bc):
+def topology(wn, npipe):
+    """Figure out the topology of the network
+    
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        .inp file used for EPAnet simulation
+    npipe : integer
+        Number of pipes
+
+    Returns
+    -------
+    links1 : list 
+        The id of ajacent pipe on the start node. 
+        The sign represents the direction of the pipe. 
+        + : flowing into the junction
+        - : flowing out from the junction
+    links2 : list 
+        The id of ajacent pipe on the end node. 
+        The sign represents the direction of the pipe. 
+        + : flowing into the junction
+        - : flowing out from the junction
+    utype : list 
+        The type of the upstream ajacent links. 
+        If the link is not pipe, the name of that link 
+        will also be included.
+        If there is no upstream link, the type of the start node 
+        will be recorded.  
+    dtype : list
+        The type of the downstream ajacent links. 
+        If the link is not pipe, the name of that link 
+        will also be included.
+        If there is no downstream link, the type of the end node 
+        will be recorded.
+    """
     G = wn.get_graph()
     
     length = wn.query_link_attribute('length')
     G.weight_graph(link_attribute = length)
 
-    
     # add 'id' attribute to networkx links 
     i =1
     for ln, link in wn.links():          
         G.edges[link.start_node_name,link.end_node_name, ln]['id'] = i
         i+=1 
         
- 
+    # allocate the parameters
     links1 = [0] * len(wn.links) 
     links2 = [0] * len(wn.links)  
     utype = [('Pipe',0)] * npipe
     dtype = [('Pipe',0)] * npipe
  
-
     # Adjcant pipes for each pipe IN:+; OUT:-   
     for _, link in wn.links():
         pn = link.id
@@ -112,8 +161,6 @@ def topology(wn, npipe, pressure_zone_bc):
     #figure out downstream type and upstream type                
     for _,pipe in wn.pipes():
         pn = pipe.id-1 
-#        print ('Calculating pipe #',pipe.name)
-
         if links1[pn] :   
             if max(map(abs, links1[pn])) > npipe:   
                 utype[pn] = [(l.link_type,l.name)
@@ -122,17 +169,15 @@ def topology(wn, npipe, pressure_zone_bc):
                 
                 if links1[abs(links1[pn][0])-1] and links2[abs(links1[pn][0])-1]:
                     links1[pn] = [i 
-                              for i in [links1[abs(links1[pn][0])-1], links2[abs(links1[pn][0])-1]]
-                              if abs(i[0]) -1 != pn][0]         
+                    for i in [links1[abs(links1[pn][0])-1], links2[abs(links1[pn][0])-1]]
+                    if abs(i[0]) -1 != pn][0]         
                 else:
                     links1[pn] = ['End']
                     
-                        
         else:
             utype[pn] = (wn.nodes[pipe.start_node_name].node_type, 
                          wn.nodes[pipe.start_node_name])
 
-            
         if links2[pn] :            
             if max(map(abs, links2[pn])) > npipe:
                 dtype[pn] = [(l.link_type,l.name) 
@@ -141,54 +186,76 @@ def topology(wn, npipe, pressure_zone_bc):
                  
                 if links1[abs(links2[pn][0])-1] and links2[abs(links2[pn][0])-1]:
                     links2[pn] = [i 
-                              for i in [links1[abs(links2[pn][0])-1], links2[abs(links2[pn][0])-1]]
-                              if abs(i[0]) -1 != pn][0]  
+                    for i in [links1[abs(links2[pn][0])-1], links2[abs(links2[pn][0])-1]]
+                    if abs(i[0]) -1 != pn][0]  
                 else:
                     links2[pn] = ['End']
                            
         else:
             dtype[pn] = (wn.nodes[pipe.end_node_name].node_type,
                          wn.nodes[pipe.end_node_name])
-
-
-        if  utype[pn][0] == 'Junction' and utype[pn][1].name in pressure_zone_bc:
-            utype[pn] = ('PressureZone',utype[pn][1])
-            
-        if  dtype[pn][0] == 'Junction' and dtype[pn][1].name in pressure_zone_bc:
-            dtype[pn] = ('PressureZone',dtype[pn][1])            
-
-#        print('links1', links1[pn], 'links2', links2[pn])
-#        print ('utype', utype[pn], 'dtype', dtype[pn])
         
     return links1, links2, utype, dtype
 
 def max_time_step(wn):
-    """Detrtmine the common maximum time step value for all pipes
-    that satisfies Courant's criteria. 
-    ."""
+    """Detrtmine the maximum time step based onCourant's criteria.
+    
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        Network 
+    
+    Returns
+    -------
+    max_dt : float 
+        Maximum time step allowed for this network
+    """
     max_dt = math.inf
  
-    for name, pipe in wn.pipes():
+    for _, pipe in wn.pipes():
         dt = pipe.length / (2. * pipe.wavev)
         if max_dt > dt :
             max_dt = dt           
     return max_dt
 
 def cal_N(wn, npipe, dt):
-    """ Determine the number of computation uites ($N_i$) for each pipes.""" 
+    """Determine the number of computation uites ($N_i$) for each pipes.
     
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        Network
+    npipe : integer
+        Number of pipes
+    dt : float 
+        Time step for transient simulation
+    """
     N = np.zeros((npipe,1))
-    
+
     for _, pipe in wn.pipes() :
-#        print ('N', int(pipe.id)-1)
+
         N[int(pipe.id)-1] =  int(2*np.int(pipe.length/ (2. * pipe.wavev *dt)))
     return N
 
 
 def adjust_wavev( wn, N):
-    """Adjust wave sppeed to solve the compatibility equations 
-    in caseof an uneven wave travel time. 
+    """Adjust wave speed and time step to solve compatibility equations.
+    
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        Network
+    N : numpy array
+        Number of discretization for each pipe
+    
+    Returns
+    -------
+    wn : wntr.network.model.WaterNetworkModel
+        Network with adjusted wave speed.
+    dt : float 
+        Adjusted time step
     """
+
     from numpy import transpose as trans  
 
     phi = [np.longdouble(pipe.length / pipe.wavev / N[int(pipe.id)-1])
@@ -202,16 +269,31 @@ def adjust_wavev( wn, N):
 
     # adjust the wave speed of each links    
     for _, pipe in wn.pipes():    
-#        adj = (phi[int(pipe.id)-1] * theta -1)*100
-#        print ('wave speed of pipe %s ajusted  by %s ' %(pipe.id, adj), '%')
         pipe.wavev = np.float64(pipe.wavev * phi[int(pipe.id)-1] * theta)
     
     return wn, dt 
 
-def discretization( wn, npipe, dt ):
-    """ Discritize in temporal and spatial space. 
-    Caculate the time interval (dt) using wave speed adjustement scheme 
-    to solve the compatibility equations in caseof an uneven wave travel time."""
+def discretization( wn, npipe, dt):
+    """Discritize in temporal and spatial space using wave speed adjustement scheme. 
+    
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        Network
+    npipe : integer 
+        Number of pipes
+    dt : float 
+        User defined time step
+
+    Returns
+    -------
+    wn : wntr.network.model.WaterNetworkModel
+        Network with updated parameters
+    dt : float 
+        Adjusted time step
+    Ndis : numpy array 
+        Number of discritization for each pipe
+    """
     
     max_dt = max_time_step(wn)
     if dt > max_dt: 
@@ -219,17 +301,32 @@ def discretization( wn, npipe, dt ):
               less than %s """ %max_dt)
     else :
         Ndis = cal_N(wn, npipe, dt) 
-        wn, dt = adjust_wavev(wn, Ndis)
-
-#        for _, pipe in wn.pipes() :
-#            print ('pipe', pipe.id, 'spatial discretization', Ndis[int(pipe.id)-1],
-#                    'wave spped', pipe.wavev, 
-#                    'dt', pipe.length/Ndis[int(pipe.id)-1]/ pipe.wavev)
-        
+        wn, dt = adjust_wavev(wn, Ndis)       
     return  wn, dt, Ndis
 
 def valvesetting(dt, tf, valve_op):
-    "Define valve operation curve."
+    """Define valve operation curve (percentage open v.s. time)
+    
+    Parameters
+    ----------
+    dt : float
+        Time step
+    tf : float 
+        Simulation Time
+    valve_op : list 
+        Contains paramtes to defie valve operation rule
+        valve_op = [tc,ts,se,m]
+        tc : the duration takes to close the valve [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+
+    Returns
+    -------
+    s : list 
+        valve operation curve 
+    """
+
     [tc,ts,se,m] = valve_op
     tn = int(tf/dt)
     # aburupt closure 
@@ -242,13 +339,30 @@ def valvesetting(dt, tf, valve_op):
         s =  np.array([(1- (i*dt- ts)/tc)**m    for i in range(tn)])
         s[s>1] = 1
         s[s<se] = se
-        
-    
-
     return s   
 
 def pumpsetting(dt, tf, pump_op):
-    """ Define pump operation curve. """
+    """Define pump operation curve (percentage open v.s. time)
+    
+    Parameters
+    ----------
+    dt : float
+        Time step
+    tf : float 
+        Simulation Time
+    valve_op : list 
+        Contains paramtes to defie valve operation rule
+        valve_op = [tc,ts,se,m]
+        tc : the duration takes to close the valve [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+
+    Returns
+    -------
+    s : list 
+        valve operation curve 
+    """
     [tc,ts,se,m] = pump_op
     tn = int(tf/dt)
     # gradual closure 

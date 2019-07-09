@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 
 def decorator(d):
-    "Make function d a decorator: d wraps a function fn."
+    """Make function d a decorator: d wraps a function fn."""
     def _d(fn):
         return update_wrapper(d(fn), fn)
     update_wrapper(_d, d)
@@ -39,57 +39,115 @@ def memo(f):
             return f(*args)
     return _f
 
-def wmoc(inp_file, dt, tf, valve_to_close, pump_to_operate,valve_op, pump_op,  
-                 pressure_zone_bc, T, leak_loc, leak_A, 
-                 burst_loc, burst_A, burst_t, 
-                 block_loc, block_A):
+def wmoc(inp_file, dt, tf, valve_to_close=None, valve_op=None,
+        pump_to_operate=None, pump_op=None,  
+        leak_loc=None, leak_A=None, 
+        burst_loc=None, burst_A=None, burst_t=None):
+    """ MOC Main Function
     
-    "tempory function for test purpose."
+    Apply Method of Charateristics to the given network, 
+    and return results of pressure head and flowrate at each 
+    computation nodes.
+    
+    Parameters
+    ----------
+    inp_file : .inp file
+        Define the topology and parameters of the network   
+    dt : float 
+        Time step in transient simulation [s]
+    tf : float 
+        Duration of the transient simulation [s]
+    valve_to_close : list, optional 
+        The list of valves to be closed to generate transient, by default None
+    valve_op : list, optional 
+        Required if valve_to_close is defined, by default None
+        valve_op = [tc,ts,se,m]
+        tc : the duration takes to close the valve [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+    pump_to_operate: list, optional 
+        The list of pumps to be operate to generate transient, by default None
+    pump_op : list, optional 
+        Required if pump_to_close is defined, by default None 
+        pump_op = [tc,ts,se,m]
+        tc : the duration takes to operate the pump [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+    leak_loc : list, optional 
+        The list of leakage loction, defined by the name of
+        the junction node, by default None
+    leak_A : float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge, by default None 
+        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_loc : list, optional 
+        The list of burst loction,
+        defined by the name of the junction node, by default None
+    burst_A : float, optional 
+        Required if burst_loc is defined
+        The final burst coefficient of the burst, by default None 
+        Q_burst_final = burst_A [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_t : list, optional 
+        Required if burst_loc is defined, by default None
+        burst_t = [(burst_start_time, burst_end_time)] [s]
+            
+    Returns
+    ------
+        wn : wntr.network.model.WaterNetworkModel
+            Simulated network 
+        H[npipe][nnode,tn] : numpy.array [m]
+            Head results 
+        V[npipe][nnode,tn] : numpy.array [m/s]
+            Velocity results        
+        tt : list [s]
+            Simulated timestamps
+    """
     startttime = datetime.now()
+    # read the geometry of the network 
     wn, npipe = geometry(inp_file)
+    # adjust the time step and discretize each pipe 
     wn, dt, Ndis = discretization(wn, npipe, dt)
+    print('time step %.5f s' % dt)  
     
-    print('time step %s s' % dt)  
     tn = int(tf/dt) # Total time steps 
     print ('Total Time Step in this simulation', tn)
-    
+
     # valve closure curve
     vo = valvesetting(dt, tf, valve_op)
 
     # pump operation curve
     po = pumpsetting(dt, tf, pump_op)
 
-    
-    t0 = 0 # initial condition calculated at t0     
+    # initial condition calculated at t0
+    t0 = 0
+
+    # determine leak location based on input node name
+    # and add the leak to initial consition calculation
     if leak_loc != None :         
         for node in leak_loc:
             leak_node = wn.get_node(node)  
-            leak_node.add_leak(wn, area=leak_A/np.sqrt(2*9.8)/1000, discharge_coeff=1,
+            leak_node.add_leak(wn, area=leak_A/np.sqrt(2*9.8)/1000, 
+                                discharge_coeff=1,
                                start_time=t0)
         leak_loc = [wn.nodes[i].id-1 for i in leak_loc]
-                        
-    if block_loc != None :
-        block_loc = [wn.nodes[i].id-1 for i in block_loc]
 
+    # determine burst location based on input node name
     if burst_loc != None :
         burst_loc = [wn.nodes[i].id-1 for i in burst_loc]
-    # initial condition     
+
+    # calculate initial condition     
     wn, H, V = initialize(wn, t0, Ndis, npipe, tn)  
 
-    # network topology 
-    links1, links2, utype, dtype = topology(wn,npipe,pressure_zone_bc)    
-    
-    # MOC transient simulation 
-    wnnodes = wn.nodes 
-    wnpipes = wn.pipes 
-    wnlinks = wn.links
+    # determine network topology 
+    links1, links2, utype, dtype = topology(wn,npipe)    
 
-    H, V, tt = MOC(links1, links2, utype, dtype,
-                        wnnodes, wnpipes, wnlinks,
-                        H, V, npipe, Ndis, dt, tf, t0, 
-                        vo, valve_to_close, po, pump_to_operate, T,
-                       leak_loc, leak_A, burst_loc, burst_A, burst_t,
-                       block_loc, block_A)
+    # startMOC transient simulation 
+    H, V, tt = MOC(links1, links2, utype, dtype, wn,
+                    H, V, npipe, Ndis, dt, tf, t0, 
+                    valve_to_close, vo, pump_to_operate, po, 
+                    leak_loc, leak_A, burst_loc, burst_A, burst_t)
     
     simtime = datetime.now() - startttime
     print('Running Time:', simtime)    
@@ -97,6 +155,34 @@ def wmoc(inp_file, dt, tf, valve_to_close, pump_to_operate,valve_op, pump_op,
     
 
 def initialize(wn, t0, Ndis, npipe, tn):
+    """Initial Condition Calculation.
+
+    Initialize the list containing numpy arrays for velocity and head. 
+    Calculate initial conditions using Epanet engine.
+    Calculate D-W coefficients based on initial conditions. 
+    Calculate demand coefficients based on initial conditions. 
+
+    Parameters
+    ----------
+    wn : wntr.network.model.WaterNetworkModel
+        Simulated network 
+    t0 : float
+        time to calculate initial condition
+    npipe : float 
+        Number of pipes 
+    tn : float 
+        Total time steps
+
+    Returns
+    -------
+    wn : wntr.network.model.WaterNetworkModel
+        Network with updated parameters 
+    H : list 
+        Initialized list of numpy.ndarray to store head results
+    V : list
+        Initialized list of numpy.ndarray to store velocity results
+    """
+
     # initialize H and V for all computational nodes
     H = [0] * npipe  #pipes 
     V = [0] * npipe   
@@ -105,60 +191,78 @@ def initialize(wn, t0, Ndis, npipe, tn):
     # initialize the results list and set initial conditions   
     for _, pipe in wn.pipes():
         pn = int(pipe.id)-1
-        H[pn] = np.zeros((int(Ndis[pn]+1),tn), dtype=np.float64)  # initialize the matrix for heads                        
-        V[pn] = np.zeros((int(Ndis[pn]+1),tn), dtype=np.float64)  # initialize the matrix for flow velocity
-            
-    
+        # initialize the matrix for heads 
+        H[pn] = np.zeros((int(Ndis[pn]+1),tn), dtype=np.float64)   
+        # initialize the matrix for flow velocity                      
+        V[pn] = np.zeros((int(Ndis[pn]+1),tn), dtype=np.float64) 
+
+    print ("Initial Condition")            
+    # calculate initial conditions using EPAnet engine
     sim = wntr.sim.EpanetSimulator(wn)
     results = sim.run_sim() 
-    print ("Initial Condition")
+
+    # assign the initial conditions to the result arrays
     for _, pipe in wn.pipes():      
         pn = int(pipe.id) -1 
-        V[pn][:,0] = np.sign(results.link['flowrate'].loc[t0*3600, pipe.name]) *\
-                    results.link['velocity'].loc[t0, pipe.name] *\
+        V[pn][:,0] = np.sign(results.link['flowrate'].loc[t0*3600, pipe.name])*\
+                    results.link['velocity'].loc[t0, pipe.name]*\
                     np.ones((int(Ndis[pn]+1)))
         
         H[pn][:,0] = [results.node['head'].loc[t0, pipe.start_node_name] +\
-                      i* (results.node['head'].loc[t0, pipe.end_node_name]-
-                       results.node['head'].loc[t0, pipe.start_node_name])/int(Ndis[pn]+1) 
+                      i* ((results.node['head'].loc[t0, pipe.end_node_name]-
+                       results.node['head'].loc[t0, pipe.start_node_name])/
+                       int(Ndis[pn]+1)) 
                     for i in range(int(Ndis[pn]+1))]
 
        # calculate demand coefficient        
-        pipe.start_demand_coeff = lambda: None
-        pipe.end_demand_coeff = lambda: None 
+        pipe.start_demand_coeff = lambda: None #[m^3/s/(m H20)^(9)1/2)]
+        pipe.end_demand_coeff = lambda: None #[m^3/s/(m H20)^(9)1/2)]
         try:
-            start_demand_coeff = wn.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)/ np.sqrt(H[pn][0,0])
+            demand = wn.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
+            start_demand_coeff = demand/ np.sqrt(H[pn][0,0])
         except :
             start_demand_coeff = 0. 
             
         try: 
-            end_demand_coeff =wn.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)/ np.sqrt(H[pn][-1,0])
+            demand = wn.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
+            end_demand_coeff = demand / np.sqrt(H[pn][-1,0])
         except :
             end_demand_coeff = 0. 
             
-        setattr(pipe, 'start_demand_coeff',start_demand_coeff*1000 )
-        setattr(pipe, 'end_demand_coeff',end_demand_coeff*1000 )        
+        setattr(pipe, 'start_demand_coeff',start_demand_coeff )
+        setattr(pipe, 'end_demand_coeff',end_demand_coeff )        
         
         # tolerance for velocity and head change
         if abs(V[pn][0,0]) >= 1e-5 and abs(H[pn][0,0] - H[pn][-1,0]) >=1e-4:
-            pipe.roughness = abs(H[pn][0,0]-H[pn][-1,0]) / (pipe.length/pipe.diameter)/\
-                        (V[pn][0,0]**2/2/g)
+            pipe.roughness = abs(H[pn][0,0]-H[pn][-1,0]) / \
+                            (pipe.length/pipe.diameter)/\
+                            (V[pn][0,0]**2/2/g)
         else:
             pipe.roughness = 0 
             
         if pipe.roughness >0.08:
-            warnings.warn("%s :the friction coefficient %s is too large. \
-                          The D-W coeff has been set to 0.03 "%(pipe.name, pipe.roughness))
+            warnings.warn("%s :the friction coefficient %.4f is too large. \
+                            The D-W coeff has been set to 0.03 " 
+                            %(pipe.name, pipe.roughness))
             pipe.roughness = 0.03
-            
-#        print ('Pipe', pipe.name, pipe.start_demand_coeff, pipe.end_demand_coeff)
-        
-    return wn,H, V
-
-
-
+                 
+    return wn, H, V
 
 def valve_curve(s,valve='Gate'):
+    """Define valve curve
+    
+    Parameters
+    ----------
+    s : float
+        open percentage
+    valve : str, optional
+        [description], by default 'Gate'
+
+    Returns
+    -------
+    k : float 
+        Friction coeffient with given open percentage
+    """
     percent_open = np.linspace(100,0,11)
     # loss coefficients for a gate valve
     kl = [1/0.2, 2.50, 1.25, 0.625, 0.333, 0.17,
@@ -167,16 +271,100 @@ def valve_curve(s,valve='Gate'):
     return k
 
 @memo 
-def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
-        H, V, npipe, Ndis, dt, tf, t0, vo, valve_to_close, po, pump_to_operate,
-        T, leak_loc, leak_A, burst_loc, final_burst, burst_t, block_loc, block_A):
-    """ Apply Method of Charateristics to the given network, 
-    and return results of pressure head and flowrate at each 
-    computation nodes.
-    Output:
-        H[npipe][nnode,tn]"""
-          
-        
+def MOC(links1, links2, utype, dtype, wn,
+       H, V, npipe, Ndis, dt, tf, t0, 
+        valve_to_close=None, vo=None, 
+        pump_to_operate=None, po=None,
+        leak_loc=None, leak_A=None, 
+        burst_loc=None, final_burst=None, burst_t=None):
+    """Transient Simulation using MOC method
+    
+    Parameters
+    ----------
+    links1 : list 
+        The id of ajacent pipe on the start node. 
+        The sign represents the direction of the pipe. 
+        + : flowing into the junction
+        - : flowing out from the junction
+    links2 : list 
+        The id of ajacent pipe on the end node. 
+        The sign represents the direction of the pipe. 
+        + : flowing into the junction
+        - : flowing out from the junction
+    utype : list 
+        The type of the upstream ajacent links. 
+        If the link is not pipe, the name of that link 
+        will also be included.
+        If there is no upstream link, the type of the start node 
+        will be recorded.  
+    dtype : list
+        The type of the downstream ajacent links. 
+        If the link is not pipe, the name of that link 
+        will also be included.
+        If there is no downstream link, the type of the end node 
+        will be recorded.
+    wn : wntr.network.model.WaterNetworkModel
+        Network 
+    H : list 
+        Array to store head results with initial condition given
+    V : list
+        Array to store head results with initial condition given
+    npipe : integer 
+        Number of pipes 
+    Ndis : numpy array 
+        Number of discritization for each pipe
+    dt : float 
+        Adjusted time step
+    tf : float 
+        Simulation Time
+    t0 : float 
+        Time to calculate initial condition 
+    valve_to_close : list, optional 
+        The list of valves to be closed to generate transient, by default None
+    valve_op : list, optional 
+        Required if valve_to_close is defined, by default None
+        valve_op = [tc,ts,se,m]
+        tc : the duration takes to close the valve [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+    pump_to_operate: list, optional 
+        The list of pumps to be operate to generate transient, by default None
+    pump_op : list, optional 
+        Required if pump_to_close is defined, by default None 
+        pump_op = [tc,ts,se,m]
+        tc : the duration takes to operate the pump [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+    leak_loc : list, optional 
+        The list of leakage loction, defined by the name of
+        the junction node, by default None
+    leak_A : float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge, by default None 
+        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_loc : list, optional 
+        The list of burst loction,
+        defined by the name of the junction node, by default None
+    burst_A : float, optional 
+        Required if burst_loc is defined
+        The final burst coefficient of the burst, by default None 
+        Q_burst_final = burst_A [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_t : list, optional 
+        Required if burst_loc is defined, by default None
+        burst_t = [(burst_start_time, burst_end_time)] [s]
+
+    Returns
+    ------- 
+        H[npipe][nnode,tn] : numpy.array [m]
+            Head results 
+        V[npipe][nnode,tn] : numpy.array [m/s]
+            Velocity results        
+        tt : list [s]
+            Simulated timestamps
+    """
+           
     tt = ['x']
     tt.append(0)
 
@@ -187,9 +375,10 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
     a = {1:-2, -1:1}    
     # generat a list of pipe 
     p = []
-    for _, pipe in wnpipes():
+    for _, pipe in wn.pipes():
         p.append(pipe)
-    """ Start Claculation"""      
+
+    # Start Claculation      
     for ts in range(1,tn):       
         t = ts*dt
 #        print ("Calculation time", t)
@@ -210,29 +399,39 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                     burst_A = 0
                 else :
                     burst_A = final_burst
-        for _,pipe in wnpipes():
+                    
+        for _,pipe in wn.pipes():
             pn = pipe.id-1         
-#            print ('Calculating pipe #',pipe.name)
-            """Assumption: when a pipe is connected with a pump or valve, 
-                the connection is not branch junction.
-            """
+            # Assumption: 
+            # when a pipe is connected with a pump or valve, 
+            # the connection is not branch junction.
+            
             # inner pipes 
             if links1[pn] and links2[pn] and \
                 links1[pn] != ['End'] and links2[pn] != ['End']:
-                
+                # list to store information about pump and vale 
+                # pump[0] and valve[0] for upstream elemnets 
+                # pump[1] and valve[1] for downstream elements 
                 pump = [0,0]; valve = [0,0]
+                # upstream 
                 if utype[pn][0] == 'Pump': 
-                    pump[0] = wnlinks[utype[pn][1]].get_pump_curve().points
+                    # three points for pump charatersitics curve 
+                    pump[0] = wn.links[utype[pn][1]].get_pump_curve().points
+                    # calculate the coordinate of the three points 
+                    # based on the pump speed
                     if utype[pn][1] in pump_to_operate:
                         pump[0]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0]]
                         
-                elif utype[pn][0] == 'Valve':                                         
+                elif utype[pn][0] == 'Valve': 
+                    # determine valve fricton coefficients based on 
+                    # open percentage 
                     if utype[pn][1] in valve_to_close:
                         valve[0] = valve_curve(vo[ts]*100)
                     else :  
                          valve[0] = valve_curve(100)
+                # downstream
                 if dtype[pn][0] == 'Pump':                    
-                    pump[1] = wnlinks[dtype[pn][1]].get_pump_curve().points                
+                    pump[1] = wn.links[dtype[pn][1]].get_pump_curve().points                
                     if dtype[pn][1] in pump_to_operate:
                         pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
    
@@ -241,9 +440,6 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                         valve[1] = valve_curve(vo[ts]*100)
                     else :                        
                          valve[1] = valve_curve(100)
-                # demand at the start node and end node
-#                demand = [wnnodes[pipe.start_node_name].demand_timeseries_list.at(t0+t),
-#                      wnnodes[pipe.end_node_name].demand_timeseries_list.at(t0+t)]
 
                 HP, VP = inner_pipe(pipe, pn,
                      H[pn][:,ts], V[pn][:,ts],
@@ -255,31 +451,33 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                      [H[abs(i)-1][a[np.sign(i)],ts-1] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)],ts-1] for i in links2[pn]],
                      pump, valve, 
-                     leak_loc, leak_A, burst_loc, burst_A, 
-                     block_loc, block_A)    
+                     leak_loc, leak_A, burst_loc, burst_A)    
                 H[pn][:,ts], V[pn][:,ts] = HP, VP
                                 
             # left boundary pipe           
             elif not links1[pn] or links1[pn] == ['End']:
                 pump = [0,0]; valve = [0,0]
-#                 LEFT BOUNDARY 
-                if utype[pn][0] == 'Reservoir':                    
-                    H[pn][0,:]   =  wnnodes[utype[pn][1]].base_head # head of reservoir 
+                # LEFT BOUNDARY 
+                if utype[pn][0] == 'Reservoir':   
+                    # head B.C.                 
+                    H[pn][0,:]   =  wn.nodes [utype[pn][1]].base_head 
                 elif utype[pn][0] == 'Tank':
-                    H[pn][0,:]   =  wnnodes[utype[pn][1]].head # head of tank 
+                    # head B.C. 
+                    H[pn][0,:]   =  wn.nodes [utype[pn][1]].head 
                 elif utype[pn][0] == 'Junction':
-                    V[pn][0,ts] = V[pn][0,0]   
-                elif utype[pn][0] == 'PressureZone':
-                    V[pn][0,ts] = V[pn][0,0] 
-                    T =T 
+                    V[pn][0,ts] = V[pn][0,0]    
                 elif utype[pn][0] == 'Valve':
                     if utype[pn][1] in valve_to_close:
-                        V[pn][0,ts]   = V[pn][0,0] *vo[ts]  # valve velocity condition 
+                        # velocity B.C.
+                        V[pn][0,ts]   = V[pn][0,0] *vo[ts]  
                     else :
                         V[pn][0,:]   = V[pn][0,0]
-                elif utype[pn][0] == 'Pump': #source pump         
-                    pump[0] = [wnlinks[utype[pn][1]].start_node.base_head,
-                         wnlinks[utype[pn][1]].get_pump_curve().points]
+                # source pump 
+                elif utype[pn][0] == 'Pump': 
+                    # pump[0][0]: elevation of the reservoir/tank
+                    # pump[0][1]: three points for pump characteristic curve
+                    pump[0] = [wn.links[utype[pn][1]].start_node.base_head,
+                         wn.links[utype[pn][1]].get_pump_curve().points]
                       
                     if utype[pn][1] in pump_to_operate:
                         pump[0][1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0][1]]
@@ -289,7 +487,7 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                     
                 # RIGHT BOUNDARY    
                 if dtype[pn][0] == 'Pump':                    
-                    pump[1] = wnlinks[dtype[pn][1]].get_pump_curve().points                
+                    pump[1] = wn.links[dtype[pn][1]].get_pump_curve().points                
                     if dtype[pn][1] in pump_to_operate:
                         pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
                         
@@ -299,17 +497,14 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                     else :                        
                          valve[1] = valve_curve(100)
                                            
-                # demand at the end node
-#                demand = wnnodes[pipe.end_node_name].demand_timeseries_list.at(t0+t)
                 HP, VP = left_boundary(pipe, pn, 
                      H[pn][:,ts], V[pn][:,ts],
-                     links2[pn], p, T, pump, valve,
+                     links2[pn], p, pump, valve,
                      np.asscalar(Ndis[pn]), dt,
                      H[pn][:,ts-1], V[pn][:,ts-1], 
                      [H[abs(i)-1][a[np.sign(i)],ts-1] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)],ts-1] for i in links2[pn]],
-                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A, 
-                     block_loc, block_A) 
+                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A) 
                 H[pn][:,ts], V[pn][:,ts] = HP, VP
                
             #  right boundary pipe
@@ -317,14 +512,11 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                 pump = [0,0]; valve = [0,0] 
                 # RIGHT boundary
                 if dtype[pn][0] == 'Reservoir':
-                    H[pn][-1,:]   =  wnnodes[dtype[pn][1]].base_head # head of reservoir 
+                    H[pn][-1,:]   =  wn.nodes [dtype[pn][1]].base_head # head of reservoir 
                 elif dtype[pn][0] == 'Tank':
-                    H[pn][-1,:]   =  wnnodes[dtype[pn][1]].head # head of tank 
+                    H[pn][-1,:]   =  wn.nodes [dtype[pn][1]].head # head of tank 
                 elif dtype[pn][0] == 'Junction':
                     V[pn][-1,ts] = V[pn][-1,0] 
-                elif dtype[pn][0] == 'PressureZone':
-                    V[pn][-1,ts] = V[pn][-1,0] 
-                    T = T 
                 elif dtype[pn][0] == 'Valve':
                     if dtype[pn][1] in valve_to_close:
                         V[pn][-1,ts] = V[pn][-1,0]*vo[ts]  # valve velocity condition 
@@ -332,44 +524,101 @@ def MOC(links1, links2, utype, dtype, wnnodes, wnpipes, wnlinks,
                         V[pn][-1,:] = V[pn][-1,0]
                 else :
                      warnings.warn('Pipe %s miss %s downstream.' %(pipe, dtype[pn][0]))
-                # LEFT boundary   
+                # LEFT boundary 
+                # source pump   
                 if utype[pn][0] == 'Pump': 
-                    pump[0] = wnlinks[utype[pn][1]].get_pump_curve().points
+                    # pump[0][0]: elevation of the reservoir/tank
+                    # pump[0][1]: three points for pump characteristic curve
+                    pump[0] = wn.links[utype[pn][1]].get_pump_curve().points
                     if utype[pn][1] in pump_to_operate:
                         pump[0]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0]]
 
-                        
                 elif utype[pn][0] == 'Valve':                                         
                     if utype[pn][1] in valve_to_close:
                         valve[0] = valve_curve(vo[ts]*100)
                     else :  
                          valve[0] = valve_curve(100)
-                # demand at the end node
-#                demand = wnnodes[pipe.start_node_name].demand_timeseries_list.at(t0+t) 
 
                 HP, VP = right_boundary(pipe, pn,  
                      H[pn][:,ts], V[pn][:,ts],
-                     links1[pn], p, T, pump, valve, 
+                     links1[pn], p, pump, valve, 
                      np.asscalar(Ndis[pn]), dt,
                      H[pn][:,ts-1], V[pn][:,ts-1], 
                      [H[abs(i)-1][a[np.sign(i)],ts-1] for i in links1[pn]],
                      [V[abs(i)-1][a[np.sign(i)],ts-1] for i in links1[pn]],                
-                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A, 
-                     block_loc, block_A)   
+                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A)   
                 H[pn][:,ts], V[pn][:,ts] = HP, VP
                 
     return H, V, tt[1:]
 
 def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt, 
                 H0, V0, H10, V10, H20, V20, pump, valve,
-                leak_loc, leak_A, burst_loc, burst_A, block_loc, block_A):
-    """  Transient flow analysis in a single pipe using 
-    Method of Characteristics (MOC) 
-    Input:
-        results from last time step at current pipe (H0,V0),
-        L1 (H10,V10), R2 (H20,V20)
-    """
+                leak_loc, leak_A, burst_loc, burst_A):
+    """MOC solution for an indivial inner pipe.
     
+    Parameters
+    ----------
+    linkp : object
+        Current pipe object
+    pn : int
+        Current pipe ID
+    H : numpy.ndarray 
+        Head of current pipe at current time step [m]
+    V : numpy.ndarray
+        Velocity of current pipe at current time step [m/s]
+    links1 : list
+        Upstream adjacent pipes 
+    links2 : list
+        Downstream ajacent pipes 
+    utype : list 
+        Upstream adjacent link type, and if not pipe, their name
+    dtype : list
+        Downstream adjacent link type, and if not pipe, their name
+    p : list
+        pipe list 
+    n : int
+        Number of discretization of current pipe
+    dt : float 
+        Time step 
+    H0 : numpy.ndarray
+        Head of current pipe at previous time step [m]
+    V0 : numpy.ndarray
+        Velocity of current pipe at previous time step [m/s]
+    H10 : list
+        Head of left adjacent nodes at previous time step [m]
+    V10 : list
+        Velocity of left adjacent nodes at previous time step [m/s]
+    H20 : list
+        Head of right adjacent nodes at previous time step [m]
+    V20 : list
+        Velocity of right adjacent nodes at previous time step [m/s]
+    pump : list
+        Characteristics of the pump 
+    valve : list
+        Characteristics of the valve
+    leak_loc : list, optional 
+        The list of leakage loction, defined by the name of
+        the junction node, by default None
+    leak_A : float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge, by default None 
+        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_loc : list, optional 
+        The list of burst loction,
+        defined by the name of the junction node, by default None
+    burst_A : float, optional 
+        Required if burst_loc is defined
+        The burst coefficient of the burst, by default None 
+        Q_burst_final = burst_A [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    
+    Returns
+    -------
+    H : numpy.ndarray
+        Head results of the current pipe at current time step. [m]
+    V : numpy.ndarray
+        Velocity results of the current pipe at current time step. [m/s]
+    """
+
     # Properties of current pipe 
     g = 9.8                          # m/s^2
     n = int(n)                       # spatial discritization 
@@ -390,14 +639,9 @@ def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt,
                     H[i], V[i] = add_leakage(burst_A, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
                     
-                elif block_loc != None and int(p[pn].start_node.id) in block_loc:
-                    H[i], V[i] = add_blockage(leak_A, V1, H1, link1, 
-                     V2, H2, linkp, i, g, dt)
                 else :
                     H[i], V[i] = add_leakage(linkp.start_demand_coeff, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
-#                    H[i], V[i] = inner_boundary(link1, linkp, demand[0],
-#                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[0])
                 H[i], V[i] = pump_boundary(pumpc, link1, linkp,
@@ -417,15 +661,11 @@ def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt,
                 elif burst_loc != None and int(p[pn].end_node.id) in burst_loc:
                     H[i], V[i] = add_leakage(burst_A,linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                elif block_loc != None and int(p[pn].end_node.id) in block_loc:
-                    H[i], V[i] = add_blockage(block_A, V1, H1, linkp, 
-                     V2, H2, link2, i, g, dt)
                 else :
                     H[i], V[i] = add_leakage(linkp.end_demand_coeff,linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
                     
-#                    H[i], V[i] = inner_boundary(linkp, link2, demand[1],
-#                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2)) 
+
                     
             elif dtype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[1])
@@ -447,12 +687,67 @@ def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt,
                   
     return H, V 
 
-
-def left_boundary(linkp, pn, H, V, links2, p, T, pump, valve, n, dt, 
+def left_boundary(linkp, pn, H, V, links2, p, pump, valve, n, dt, 
                   H0, V0, H20, V20, utype, dtype,
-                  leak_loc, leak_A, burst_loc, burst_A, 
-                  block_loc, block_A ) :
-    """ Left boundary pipe"""
+                  leak_loc, leak_A, burst_loc, burst_A) :
+    """MOC solution for an indivial left boundary pipe.
+    
+    Parameters
+    ----------
+    linkp : object
+        Current pipe object
+    pn : int
+        Current pipe ID
+    H : numpy.ndarray 
+        Head of current pipe at current time step [m]
+    V : numpy.ndarray
+        Velocity of current pipe at current time step [m/s]
+    links2 : list
+        Downstream ajacent pipes 
+    p : list
+        pipe list 
+    pump : list
+        Characteristics of the pump 
+    valve : list
+        Characteristics of the valve
+    n : int
+        Number of discretization of current pipe
+    dt : float 
+        Time step 
+    H0 : numpy.ndarray
+        Head of current pipe at previous time step [m]
+    V0 : numpy.ndarray
+        Velocity of current pipe at previous time step [m/s]
+    H20 : list
+        Head of right adjacent nodes at previous time step [m]
+    V20 : list
+        Velocity of right adjacent nodes at previous time step [m/s]
+    utype : list 
+        Upstream adjacent link type, and if not pipe, their name
+    dtype : list
+        Downstream adjacent link type, and if not pipe, their name
+    leak_loc : list, optional 
+        The list of leakage loction, defined by the name of
+        the junction node, by default None
+    leak_A : float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge, by default None 
+        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_loc : list, optional 
+        The list of burst loction,
+        defined by the name of the junction node, by default None
+    burst_A : float, optional 
+        Required if burst_loc is defined
+        The burst coefficient of the burst, by default None 
+        Q_burst_final = burst_A [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    
+    Returns
+    -------
+    H : numpy.ndarray
+        Head results of the current pipe at current time step. [m]
+    V : numpy.ndarray
+        Velocity results of the current pipe at current time step. [m/s]
+    """
     
     link2 = [p[abs(i)-1] for i in links2]
     # Properties of current pipe 
@@ -475,8 +770,7 @@ def left_boundary(linkp, pn, H, V, links2, p, T, pump, valve, n, dt,
             elif utype[0] == 'Pump':  #source pump 
                 pump[0][1] = calc_parabola_vertex(pump[0][1])
                 H[i], V[i] = source_pump(pump[0], linkp, H2, V2, dt, g, [-1])
-            elif  utype[0] == 'PressureZone':
-                H[i], V[i] = pressure_zone (H2, V2, H0[i], T, i, a, g, f, D, dt)
+
         # Pipe end  (inner boundary conditions)
         if i == n: 
             V1 = V0[i-1]; H1 = H0[i-1]     # upstream node 
@@ -488,14 +782,10 @@ def left_boundary(linkp, pn, H, V, links2, p, T, pump, valve, n, dt,
                 elif burst_loc != None and int(p[pn].end_node.id) in burst_loc :
                     H[i], V[i] = add_leakage(burst_A, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                elif block_loc != None and int(p[pn].end_node.id) in block_loc :
-                    H[i], V[i] = add_blockage(block_A, V1, H1, linkp, 
-                     V2, H2, link2, i, g, dt)
                 else :
                     H[i], V[i] = add_leakage(linkp.end_demand_coeff, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-#                    H[i], V[i] = inner_boundary(linkp, link2, demand, 
-#                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+
             elif dtype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[1])
                 H[i], V[i] = pump_boundary(pumpc, linkp, link2,
@@ -516,11 +806,68 @@ def left_boundary(linkp, pn, H, V, links2, p, T, pump, valve, n, dt,
             
     return H, V 
 
-def right_boundary(linkp, pn, H, V, links1, p, T, pump, valve, n, dt,
+def right_boundary(linkp, pn, H, V, links1, p, pump, valve, n, dt,
                 H0, V0, H10, V10, utype, dtype, 
-                leak_loc, leak_A, burst_loc, burst_A, 
-                block_loc, block_A):
-    """ Right boundary pipe """
+                leak_loc, leak_A, burst_loc, burst_A):
+    """MOC solution for an indivial right boundary pipe.
+    
+    Parameters
+    ----------
+    linkp : object
+        Current pipe object
+    pn : int
+        Current pipe ID
+    H : numpy.ndarray 
+        Head of current pipe at current time step [m]
+    V : numpy.ndarray
+        Velocity of current pipe at current time step [m/s]
+    links1 : list
+        Upstream ajacent pipes 
+    p : list
+        pipe list 
+    pump : list
+        Characteristics of the pump 
+    valve : list
+        Characteristics of the valve
+    n : int
+        Number of discretization of current pipe
+    dt : float 
+        Time step 
+    H0 : numpy.ndarray
+        Head of current pipe at previous time step [m]
+    V0 : numpy.ndarray
+        Velocity of current pipe at previous time step [m/s]
+    H10 : list
+        Head of left adjacent nodes at previous time step [m]
+    V10 : list
+        Velocity of left adjacent nodes at previous time step [m/s]
+    utype : list 
+        Upstream adjacent link type, and if not pipe, their name
+    dtype : list
+        Downstream adjacent link type, and if not pipe, their name
+    leak_loc : list, optional 
+        The list of leakage loction, defined by the name of
+        the junction node, by default None
+    leak_A : float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge, by default None 
+        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    burst_loc : list, optional 
+        The list of burst loction,
+        defined by the name of the junction node, by default None
+    burst_A : float, optional 
+        Required if burst_loc is defined
+        The burst coefficient of the burst, by default None 
+        Q_burst_final = burst_A [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+    
+    Returns
+    -------
+    H : numpy.ndarray
+        Head results of the current pipe at current time step. [m]
+    V : numpy.ndarray
+        Velocity results of the current pipe at current time step. [m/s]
+    """
+
     # Properties of current pipe 
     link1 = [p[abs(i)-1] for i in links1]
     f = linkp.roughness              # unitless
@@ -543,14 +890,10 @@ def right_boundary(linkp, pn, H, V, links1, p, T, pump, valve, n, dt,
                     H[i], V[i] = add_leakage(burst_A, link1, linkp,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
                     
-                elif block_loc != None and int(p[pn].start_node.id) in block_loc :                
-                    H[i], V[i] = add_blockage(block_A, V1, H1, link1, 
-                     V2, H2, linkp, i, g, dt)
                 else :
                     H[i], V[i] = add_leakage(linkp.start_demand_coeff, link1, linkp,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
-#                    H[i], V[i] = inner_boundary(link1, linkp, demand,
-#                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
+
             elif utype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[0])
                 H[i], V[i] = pump_boundary(pumpc, link1, linkp,
@@ -569,8 +912,6 @@ def right_boundary(linkp, pn, H, V, links1, p, T, pump, valve, n, dt,
                 H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt)
             if dtype[0] == 'Junction':
                 H[i], V[i] = dead_end (linkp ,H1, V1, i, a, g, f, D, dt)
-            if dtype[0] == 'PressureZone':
-                H[i], V[i] = pressure_zone (H1, V1, H0[i], T, i, a, g, f, D, dt)
                 
         # Interior points
         if (i > 0) and (i < n):
@@ -583,7 +924,14 @@ def right_boundary(linkp, pn, H, V, links1, p, T, pump, valve, n, dt,
     return H, V  
 
 def calc_parabola_vertex(points):
-    '''Adapted and modifed to get the unknowns for defining a parabola:'''
+    """Adapted and modifed to get the unknowns for defining a parabola
+    
+    Parameters
+    ----------
+    points : list
+        Three points on the pump characterisc curve.
+    """
+
     [(x1,y1),(x2,y2),(x3,y3)] = points
     denom = (x1-x2) * (x1-x3) * (x2-x3)
     A     = (x3 * (y2-y1) + x2 * (y1-y3) + x1 * (y3-y2)) / denom
@@ -591,13 +939,46 @@ def calc_parabola_vertex(points):
     C     = (x2 * x3 * (x2-x3) * y1+x3 * x1 * (x3-x1) * y2+x1 * x2 * (x1-x2) * y3) / denom
     return A,B,C
 
-
-
-    
 def inner_boundary(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
-    """Deal with inner nodes.
-    Coded according to Larock, Jeppson, and Watters's
-    Hydraulics of Pipeline Systems"""  
+    """Inner boudary MOC using C+ and C- characteristic curve
+    
+    Parameters
+    ----------
+    link1 : object
+        Pipe object of C+ charateristics curve 
+    link2 : object
+        Pipe object of C- charateristics curve 
+    demand : float
+        demand at the junction
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float 
+        Time step
+    g : float
+        Gravity aceleration
+    nn : int
+        The index of the calculation node
+    s1 : list 
+        List of signs that represent the direction of the flow 
+        in C+ charateristics curve
+    s2 : list 
+        List of signs that represent the direction of the flow 
+        in C- charateristics curve
+
+    Returns
+    -------
+    HP : float 
+        Head at current node at current time 
+    VP : float 
+        Velocity at current node at current time
+    """
+
     try :
         list(link1) 
     except:
@@ -662,10 +1043,38 @@ def inner_boundary(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
 
 
 def valve_boundary(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
-#    print (KL_inv)
-    """Deal with inline valve.
-    Coded according to Larock, Jeppson, and Watters's
-    Hydraulics of Pipeline Systems"""  
+    """Inline valve baoundary MOC calculation 
+    
+    Parameters
+    ----------
+    KL_inv : int
+        Inverse of the valve loss coefficient at current time
+    link1 : object
+        Pipe object of C+ charateristics curve 
+    link2 : object
+        Pipe object of C- charateristics curve 
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float 
+        Time step
+    g : float
+        Gravity aceleration
+    nn : int
+        The index of the calculation node
+    s1 : list 
+        List of signs that represent the direction of the flow 
+        in C+ charateristics curve
+    s2 : list 
+        List of signs that represent the direction of the flow 
+        in C- charateristics curve
+    """
+
     try :
         list(link1) 
     except:
@@ -766,10 +1175,38 @@ def valve_boundary(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
  
     
 def pump_boundary(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
-#    print ('s', s1, s2 )
-    """Deal with pump boundary conditions.
-    Coded according to Larock, Jeppson, and Watters's
-    Hydraulics of Pipeline Systems"""  
+    """ Inline pump baoundary MOC calculation
+    
+    Parameters
+    ----------
+    pumpc : list
+        Parameters (a, b,c) to define pump characteristic cure,
+        so that $h_p = a*Q**2 + b*Q + c$
+    link1 : object
+        Pipe object of C+ charateristics curve 
+    link2 : object
+        Pipe object of C- charateristics curve 
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float 
+        Time step
+    g : float
+        Gravity aceleration
+    nn : int
+        The index of the calculation node
+    s1 : list 
+        List of signs that represent the direction of the flow 
+        in C+ charateristics curve
+    s2 : list 
+        List of signs that represent the direction of the flow 
+        in C- charateristics curve
+    """
 
     try :
         list(link1) 
@@ -857,9 +1294,28 @@ def pump_boundary(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     return HP, VP 
 
 def source_pump(pump, link2, H2, V2, dt, g, s2):
-    """Deal with source pump boundary conditions.
-    Coded according to Larock, Jeppson, and Watters's
-    Hydraulics of Pipeline Systems"""  
+    """Source Pump boundary MOC calculation 
+    
+    Parameters
+    ----------
+    pump : list
+        pump[0]: elevation of the reservoir/tank 
+        pump[1]: Parameters (a, b,c) to define pump characteristic cure,
+        so that $h_p = a*Q**2 + b*Q + c$
+    link2 : object
+        Pipe object of C- charateristics curve 
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float 
+        Time step
+    g : float
+        Gravity aceleration
+    s2 : list 
+        List of signs that represent the direction of the flow 
+        in C- charateristics curve
+    """
     pumpc = pump[1]
     Hsump = pump[0]
     try :
@@ -923,6 +1379,29 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
 
 
 def valve_end(H1, V1, V, nn, a, g, f, D, dt):
+    """ End Valve boundary MOC calculation 
+    
+    Parameters
+    ----------
+    H1 : float
+        Head of the C+ charateristics curve
+    V1 : float 
+        Velocity of the C+ charateristics curve
+    V : float 
+        Velocity at the valve end at current time
+    nn : int
+        The index of the calculation node
+    a : float
+        Wave speed at the valve end
+    g : float 
+        Gravity acceleration
+    f : float 
+        friction factor of the current pipe 
+    D : float 
+        diameter of the current pipe 
+    dt : float 
+        Time step
+    """
     if nn == 0 :
         HP = H1 + a/g*(V - V1) + a/g*f*dt/(2.*D)*V1*abs(V1)
         VP = V
@@ -932,7 +1411,30 @@ def valve_end(H1, V1, V, nn, a, g, f, D, dt):
     return HP,VP
 
 def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
+    """Dead end boundary MOC calculation with pressure dependant demand
     
+    Parameters
+    ----------
+    link1 : object
+        Current pipe
+    H1 : float
+        Head of the C+ charateristics curve
+    V1 : float 
+        Velocity of the C+ charateristics curve
+    nn : int
+        The index of the calculation node
+    a : float
+        Wave speed at the valve end
+    g : float 
+        Gravity acceleration
+    f : float 
+        friction factor of the current pipe 
+    D : float 
+        diameter of the current pipe 
+    dt : float 
+        Time step
+    """
+
     A = math.pi/4. * linkp.diameter**2.
     
     if nn == 0:
@@ -975,6 +1477,29 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
     return HP,VP
 
 def rev_end( H2, V2, H, nn, a, g, f, D, dt):
+    """Reservoir/ Tank boundary MOC calculation
+    
+    Parameters
+    ----------
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    H : float 
+        Head of the reservoir/tank
+    nn : int
+        The index of the calculation node
+    a : float
+        Wave speed at the valve end
+    g : float 
+        Gravity acceleration
+    f : float 
+        friction factor of the current pipe 
+    D : float 
+        diameter of the current pipe 
+    dt : float 
+        Time step
+    """
     if nn == 0 :
         VP = V2 + g/a*(H - H2) - f*dt/(2.*D)*V2*abs(V2)
         HP = H
@@ -983,36 +1508,43 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt):
         HP = H    
     return HP,VP
 
-def tank_end():
-    HP = 0
-    VP = 0 
-    return HP, VP
-
-def pressure_zone(H2, V2, H, T, nn, a, g, f, D, dt):
-    """Deal with pressure-zone B.C."""  
-    if nn == 0 :
-        HP = (1-T)*H + T*H2
-        VP = V2 + g/a*(HP - H2) - f*dt/(2.*D)*V2*abs(V2)
-    else:
-        HP = (1-T)*H + T*H2
-        VP = V2 - g/a*(HP - H2) - f*dt/(2.*D)*V2*abs(V2)
-        
-#    V =  T/ (2-T) * (V1 - V)+ V
-#    if nn == 0 :
-#        HP = H1 + a/g*(V - V1) + a/g*f*dt/(2.*D)*V1*abs(V1)
-#        VP = V
-#    else :
-#        HP = H1 - a/g*(V - V1) - a/g*f*dt/(2.*D)*V1*abs(V1)
-#        VP = V
-    return HP, VP   
-
-
 def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
-    """Deal with leaking nodes.
-    Coded according to Larock, Jeppson, and Watters's
-    Hydraulics of Pipeline Systems"""  
+    """Leakge Node MOC calculation
     
-    emitter_coef = emitter_coef/1000  # m^3/s//(m H2O)^(1/2)
+    Parameters
+    ----------
+    emitter_coef : flot 
+        float, optional
+        Required if leak_loc is defined
+        The leakage coefficient of the leakge 
+        $Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)$
+    link1 : object
+        Pipe object of C+ charateristics curve 
+    link2 : object
+        Pipe object of C- charateristics curve 
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float 
+        Time step
+    g : float
+        Gravity aceleration
+    nn : int
+        The index of the calculation node
+    s1 : list 
+        List of signs that represent the direction of the flow 
+        in C+ charateristics curve
+    s2 : list 
+        List of signs that represent the direction of the flow 
+        in C- charateristics curve
+    """
+    
+    emitter_coef = emitter_coef  # m^3/s//(m H2O)^(1/2)
     
     try :
         list(link1) 
@@ -1086,41 +1618,3 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     else:        # pipe end 
         VP = np.float64(C1[:,0] - C1[:,1]*HP)
     return HP, VP 
-
-
-def add_blockage(r, V1, H1,link1, V2, H2, link2, i, g, dt):
-    """Add blockage (blocakge rate = r) to pipe nodes (not computation nodes). """
-    # property of left ajacent pipe
-    f1 = link1.roughness              # unitless
-    D1 = link1.diameter               # m
-    a1 = np.asscalar(link1.wavev)     # m/s
-    A1 = math.pi * D1**2. / 4.
-    
-    # property of right ajacent pipe 
-    f2 = link2.roughness              # unitless
-    D2 = link2.diameter               # m
-    a2 = np.asscalar(link2.wavev)     # m/s
-    A2 = math.pi * D2**2. / 4.
-    
-    C3 = V2 - g/a2*H2 - f2*dt/2./D2*V2*abs(V2) 
-    C4 = g/a2
-    C1 = V1 + g/a1*H1 - f1*dt/2./D1*V1*abs(V1)
-    C2 = g/a1
-    
-    A1 = math.pi * D1**2. / 4.
-    A2 = math.pi * D2**2. / 4.
-    
-    H = (C1*A1 - C3*A2) / ((1-r)*C4*A2 + C2*A1)
-
-    if i == 0:
-        HP = (1-r) * H
-        VP = C3 + C4 *HP
-    else :
-        HP = H
-        VP = C1 - C2* HP   
-    
-    return HP, VP
-
-     
-
-
