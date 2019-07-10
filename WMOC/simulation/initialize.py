@@ -1,5 +1,5 @@
 """
-The WMOC.simulation.initialize contains functions to
+The wmoc.simulation.initialize contains functions to
 1. Initialize the list containing numpy arrays for velocity and head.
 2. Calculate initial conditions using Epanet engine.
 3. Calculate D-W coefficients based on initial conditions.
@@ -70,39 +70,60 @@ def initialize(wn, t0, Ndis, npipe, tn):
                     for i in range(int(Ndis[pn]+1))]
 
         # calculate demand coefficient        
-        pipe = cal_demand_coef(pipe)
+        Hs = H[pn][0,0]
+        He = H[pn][-1,0]
+        demand = [0,0]
+        try :
+            demand[0] = wn.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
+        except:
+            demand[0] = 0.
+        try :
+            demand[1] = wn.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
+        except :
+            demand[1] = 0.
+
+        pipe = cal_demand_coef(demand, pipe, Hs, He, t0)
 
         # calculate roughness coefficien 
         Vp = V[pn][0,0]
-        hl = abs(H[pn][0,0] - H[pn][-1,0])
+        hl = abs(Hs - He)
         pipe = cal_roughness_coef(pipe, Vp, hl )
                  
     return wn, H, V
 
-def cal_demand_coef(pipe):
+def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
+    
     """Calculate the demand coefficent for the start and end node of the pipe. 
     
     Parameters 
     ----------
+    demand : list 
+        Demand at the start (demand[0]) and end demand[1] node 
     pipe : object 
         Pipe object
+    Hs : float 
+        Head at the start node 
+    He : float 
+        Head at the end node 
+    t0 : float, optional
+        Time to start initial condition calculation, by default 0
+
     Returns
     -------
     pipe : object 
         Pipe object with calculated demand coefficient 
     """
+    print ('demand',demand, Hs, He)
 
-    pipe.start_demand_coeff = lambda: None #[m^3/s/(m H20)^(9)1/2)]
-    pipe.end_demand_coeff = lambda: None #[m^3/s/(m H20)^(9)1/2)]
+    pipe.start_demand_coeff = lambda: None # [m^3/s/(m H20)^(1/2)]
+    pipe.end_demand_coeff = lambda: None   # [m^3/s/(m H20)^(1/2)]
     try:
-        demand = wn.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
-        start_demand_coeff = demand/ np.sqrt(H[pn][0,0])
+        start_demand_coeff = demand[0]/ np.sqrt(Hs)
     except :
         start_demand_coeff = 0. 
         
     try: 
-        demand = wn.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
-        end_demand_coeff = demand / np.sqrt(H[pn][-1,0])
+        end_demand_coeff = demand[1] / np.sqrt(He)
     except :
         end_demand_coeff = 0. 
         

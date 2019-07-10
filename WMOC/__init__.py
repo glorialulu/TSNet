@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""Top-level package for WMOC."""
-from WMOC.postprocessing import plot_head_history, plot_velocity_history 
-from WMOC.simulation import wmoc
+"""Top-level package for wmoc."""
 
-
+from wmoc import network
+from wmoc import simulation
+from wmoc import postprocessing 
+from wmoc import utils
 
 __author__ = """Lu Xing"""
 __email__ = 'xinglu@utexas.edu'

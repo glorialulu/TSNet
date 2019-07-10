@@ -4,6 +4,7 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+from distutils.core import Extension
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -36,16 +37,16 @@ setup(
     description="WMOC conducts transient simution using MOC method for water distribution systems.",
     entry_points={
         'console_scripts': [
-            'WMOC=WMOC.cli:main',
+            'wmoc=wmoc.cli:main',
         ],
     },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords='WMOC',
-    name='WMOC',
-    packages=find_packages(include=['WMOC']),
+    keywords='wmoc',
+    name='wmoc',
+    packages=find_packages(),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,

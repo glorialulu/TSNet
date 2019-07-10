@@ -1,6 +1,7 @@
 """
-The WMOC.simulation package contains methods to run transient simulation 
+The wmoc.simulation package contains methods to run transient simulation 
 using MOC method
 
 """
-from WMOC.simulation.main import wmoc
+from .main import MOCSimulator
+from .initialize import initialize

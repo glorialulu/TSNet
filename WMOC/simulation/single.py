@@ -7,9 +7,17 @@ transient simulation on a single pipe, including
 
 """
 import numpy as np 
-from WMOC.simulation.solver import *
-from WMOC.utils import calc_parabola_vertex
-
+from wmoc.utils import calc_parabola_vertex
+from wmoc.simulation.solver import (
+    inner_node,
+    valve_node,
+    pump_node,
+    source_pump,
+    valve_end,
+    dead_end,
+    rev_end,
+    add_leakage
+)
 def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt, 
                 H0, V0, H10, V10, H20, V20, pump, valve,
                 leak_loc, leak_A, burst_loc, burst_A):

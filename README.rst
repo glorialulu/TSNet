@@ -27,7 +27,7 @@ Features
 --------
 
 To use (with caution), simply do:
-	>>> import WMOC  
+	>>> import wmoc  
 
 	>>> wn, H1, V1, tt = WMOC.wmoc(inp_file, dt, tf, valve_to_close, pump_to_operate,
                             valve_op, pump_op, pressure_zone_bc, T,

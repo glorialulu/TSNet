@@ -1,11 +1,11 @@
 """
-The WMOC.simulation.core module contains the core function to 
+The wmoc.simulation.core module contains the core function to 
 perform trasnient simulation. 
 
 """
 from __future__ import print_function
-from WMOC.simulation.single import inner_pipe, left_boundary, right_boundary
-from WMOC.utils import valve_curve
+from wmoc.simulation.single import inner_pipe, left_boundary, right_boundary
+from wmoc.utils import valve_curve
 import numpy as np 
 from functools import update_wrapper
 import warnings

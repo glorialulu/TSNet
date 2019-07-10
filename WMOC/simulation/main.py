@@ -1,21 +1,21 @@
 """
-The WMOC.simulation.main module contains function to perform 
+The wmoc.simulation.main module contains function to perform 
 the workflow of read, discretize, initial, and transient 
 simulation for the given .inp file. 
 
 """
 from __future__ import print_function
-from WMOC.network import geometry, topology, discretization
-from WMOC.network import valvesetting, pumpsetting
-from WMOC.simulation.initialize import initialize
-from WMOC.simulation.core import MOC
+from wmoc.network import geometry, topology, discretization
+from wmoc.network import valvesetting, pumpsetting
+from wmoc.simulation.initialize import initialize
+from wmoc.simulation.core import MOC
 from datetime import datetime 
 import numpy as np
 
-def wmoc(inp_file, dt, tf, valve_to_close=None, valve_op=None,
-        pump_to_operate=None, pump_op=None,  
-        leak_loc=None, leak_A=None, 
-        burst_loc=None, burst_A=None, burst_t=None):
+def MOCSimulator(inp_file, dt, tf, valve_to_close=None, valve_op=None,
+    pump_to_operate=None, pump_op=None,  
+    leak_loc=None, leak_A=None, 
+    burst_loc=None, burst_A=None, burst_t=None):
     """ MOC Main Function
     
     Apply Method of Charateristics to the given network, 
@@ -96,7 +96,7 @@ def wmoc(inp_file, dt, tf, valve_to_close=None, valve_op=None,
 
     # initial condition calculated at t0
     t0 = 0
-
+    
     # determine leak location based on input node name
     # and add the leak to initial consition calculation
     if leak_loc != None :         
