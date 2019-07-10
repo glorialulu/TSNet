@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+"""
+The WMOC.simulation.main module contains function to perform 
+the workflow of read, discretize, initial, and transient 
+simulation for the given .inp file. 
 
-"""Console script for WMOC."""
-
+"""
 from __future__ import print_function
 from WMOC.network import geometry, topology, discretization
 from WMOC.network import valvesetting, pumpsetting
@@ -9,11 +11,8 @@ from WMOC.simulation.initialize import initialize
 from WMOC.simulation.core import MOC
 from datetime import datetime 
 import numpy as np
-import sys
-import click
 
-@click.command()
-def main(inp_file, dt, tf, valve_to_close=None, valve_op=None,
+def wmoc(inp_file, dt, tf, valve_to_close=None, valve_op=None,
         pump_to_operate=None, pump_op=None,  
         leak_loc=None, leak_A=None, 
         burst_loc=None, burst_A=None, burst_t=None):
@@ -126,4 +125,5 @@ def main(inp_file, dt, tf, valve_to_close=None, valve_op=None,
     
     simtime = datetime.now() - startttime
     print('Running Time:', simtime)    
-    return  wn, H, V, tt
+    return  wn, H, V, tt    
+    

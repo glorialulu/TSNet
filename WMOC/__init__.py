@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """Top-level package for WMOC."""
-from .postprocessing import plot_head_history, plot_velocity_history 
-from .WMOC import wmoc
+from WMOC.postprocessing import plot_head_history, plot_velocity_history 
+from WMOC.simulation import wmoc
+
 
 
 __author__ = """Lu Xing"""
