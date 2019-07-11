@@ -12,7 +12,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', ]
+requirements = []
 
 setup_requirements = ['pytest-runner', ]
 
@@ -35,11 +35,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     description="WMOC conducts transient simulation using MOC method for water distribution systems.",
-    entry_points={
-        'console_scripts': [
-            'wmoc=wmoc.cli:main',
-        ],
-    },
+    entry_points={},
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
