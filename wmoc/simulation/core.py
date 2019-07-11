@@ -39,8 +39,11 @@ def MOC(links1, links2, utype, dtype, wn,
     pump_to_operate=None, po=None,
     leak_loc=None, leak_A=None, 
     burst_loc=None, final_burst=None, burst_t=None):
-    """Transient Simulation using MOC method
+    r"""Transient Simulation using MOC method
     
+    The core function to perform transient simulation
+    using MOC method. 
+
     Parameters
     ----------
     links1 : list 
@@ -105,7 +108,7 @@ def MOC(links1, links2, utype, dtype, wn,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        $Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)$
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None

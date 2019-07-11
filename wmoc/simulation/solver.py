@@ -258,7 +258,8 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     ----------
     pumpc : list
         Parameters (a, b,c) to define pump characteristic cure,
-        so that $h_p = a*Q**2 + b*Q + c$
+        so that 
+        .. math:: h_p = a*Q**2 + b*Q + c
     link1 : object
         Pipe object of C+ charateristics curve 
     link2 : object
@@ -378,7 +379,8 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
     pump : list
         pump[0]: elevation of the reservoir/tank 
         pump[1]: Parameters (a, b,c) to define pump characteristic cure,
-        so that $h_p = a*Q**2 + b*Q + c$
+        so that 
+        .. math:: h_p = a*Q**2 + b*Q + c
     link2 : object
         Pipe object of C- charateristics curve 
     H2 : list
@@ -586,7 +588,7 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt):
     return HP,VP
 
 def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
-    """Leakge Node MOC calculation
+    r"""Leakge Node MOC calculation
     
     Parameters
     ----------
@@ -594,7 +596,7 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
         float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge 
-        $Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)$
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     link1 : object
         Pipe object of C+ charateristics curve 
     link2 : object

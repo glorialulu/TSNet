@@ -21,7 +21,7 @@ from wmoc.simulation.solver import (
 def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt, 
                 H0, V0, H10, V10, H20, V20, pump, valve,
                 leak_loc, leak_A, burst_loc, burst_A):
-    """MOC solution for an indivial inner pipe.
+    r"""MOC solution for an indivial inner pipe.
     
     Parameters
     ----------
@@ -69,7 +69,7 @@ def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None
@@ -161,7 +161,7 @@ def inner_pipe (linkp, pn,  H, V, links1, links2, utype, dtype, p, n, dt,
 def left_boundary(linkp, pn, H, V, links2, p, pump, valve, n, dt, 
                   H0, V0, H20, V20, utype, dtype,
                   leak_loc, leak_A, burst_loc, burst_A) :
-    """MOC solution for an indivial left boundary pipe.
+    r"""MOC solution for an indivial left boundary pipe.
     
     Parameters
     ----------
@@ -203,7 +203,7 @@ def left_boundary(linkp, pn, H, V, links2, p, pump, valve, n, dt,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None
@@ -282,7 +282,7 @@ def left_boundary(linkp, pn, H, V, links2, p, pump, valve, n, dt,
 def right_boundary(linkp, pn, H, V, links1, p, pump, valve, n, dt,
                 H0, V0, H10, V10, utype, dtype, 
                 leak_loc, leak_A, burst_loc, burst_A):
-    """MOC solution for an indivial right boundary pipe.
+    r"""MOC solution for an indivial right boundary pipe.
     
     Parameters
     ----------
@@ -324,7 +324,7 @@ def right_boundary(linkp, pn, H, V, links1, p, pump, valve, n, dt,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None

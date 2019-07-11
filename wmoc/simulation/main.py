@@ -16,7 +16,7 @@ def MOCSimulator(inp_file, dt, tf, valve_to_close=None, valve_op=None,
     pump_to_operate=None, pump_op=None,  
     leak_loc=None, leak_A=None, 
     burst_loc=None, burst_A=None, burst_t=None):
-    """ MOC Main Function
+    r""" MOC Main Function
     
     Parameters
     ----------
@@ -50,7 +50,7 @@ def MOCSimulator(inp_file, dt, tf, valve_to_close=None, valve_op=None,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+        .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None
