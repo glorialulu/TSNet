@@ -1,16 +1,16 @@
 ====
-WMOC
+wmoc
 ====
 
 
-.. image:: https://img.shields.io/pypi/v/WMOC.svg
-        :target: https://pypi.python.org/pypi/WMOC
+.. image:: https://img.shields.io/pypi/v/wmoc.svg
+        :target: https://pypi.python.org/pypi/wmoc
 
-.. image:: https://img.shields.io/travis/glorialulu/WMOC.svg
+.. image:: https://img.shields.io/travis/glorialulu/wmoc.svg
         :target: https://travis-ci.org/glorialulu/WMOC
 
-.. image:: https://readthedocs.org/projects/WMOC/badge/?version=latest
-        :target: https://WMOC.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/wmoc/badge/?version=latest
+        :target: https://wmoc.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
@@ -20,7 +20,7 @@ WMOC conducts transient simulation using MOC method for water distribution syste
 
 
 * Free software: MIT license
-* Documentation: https://WMOC.readthedocs.io.
+* Documentation: https://wmoc.readthedocs.io.
 
 
 Features

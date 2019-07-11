@@ -113,7 +113,6 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
     pipe : object 
         Pipe object with calculated demand coefficient 
     """
-    print ('demand',demand, Hs, He)
 
     pipe.start_demand_coeff = lambda: None # [m^3/s/(m H20)^(1/2)]
     pipe.end_demand_coeff = lambda: None   # [m^3/s/(m H20)^(1/2)]

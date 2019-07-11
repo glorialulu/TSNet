@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="WMOC conducts transient simution using MOC method for water distribution systems.",
+    description="WMOC conducts transient simulation using MOC method for water distribution systems.",
     entry_points={
         'console_scripts': [
             'wmoc=wmoc.cli:main',
