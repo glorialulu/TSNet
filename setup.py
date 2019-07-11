@@ -12,7 +12,9 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = []
+requirements = ['numpy', 'math', 'wntr','sys',
+                'datetime', 'warnings', 'functools',
+                'matplotlib', 'networkx', 'logging']
 
 setup_requirements = ['pytest-runner', ]
 
