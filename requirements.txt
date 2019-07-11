@@ -3,5 +3,5 @@ pandas
 numpy
 scipy
 matplotlib
-potly
+plotly
 wntr
