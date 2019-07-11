@@ -32,10 +32,37 @@ import wmoc
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
+extensions = [
+    'sphinx.ext.autodoc', 
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon'
+    ]
+
+viewcode_import = True
+numpydoc_show_class_members = True
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
+autodoc_member_order = 'bysource'
+autoclass_content = 'both'
+numfig=True
+numfig_format = {'figure':  'Figure %s', 'table': 'Table %s', 'code-block': 'Listing %s'}
+
+# Spelling check and list of word that is not typo
+try:
+    import sphinxcontrib.spelling
+except ImportError:
+    pass
+else :
+    extensions.append('sphinxcontrib,spelling')
+
+spelling_word_list_filename='wordlist.txt'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+# autosummary 
+import glob
+autosummary_generate = glob.glob("apidoc/*.rst")
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -76,7 +103,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 
 # -- Options for HTML output -------------------------------------------
