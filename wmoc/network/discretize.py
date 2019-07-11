@@ -7,7 +7,6 @@ uneven wave travel time.
 """
 
 from __future__ import print_function
-import math
 import numpy as np
 
 def max_time_step(wn):
@@ -23,7 +22,7 @@ def max_time_step(wn):
     max_dt : float 
         Maximum time step allowed for this network
     """
-    max_dt = math.inf
+    max_dt = np.inf
  
     for _, pipe in wn.pipes():
         dt = pipe.length / (2. * pipe.wavev)

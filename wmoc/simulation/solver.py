@@ -12,7 +12,6 @@ for different grid configurations, including:
 
 """
 from __future__ import print_function
-import math
 import numpy as np 
 import sys 
 import warnings
@@ -73,7 +72,7 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
     D1 = [link1[i].diameter  for i in range(len(link1))]    # m 
     a1 = [link1[i].wavev  for i in range(len(link1))] # m/s 
-    A1 = [math.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)   
     theta1 = [link1[i].theta for i in range((len(link1)))]
     
@@ -92,7 +91,7 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
     D2 = [link2[i].diameter  for i in range(len(link2))]       #m  
     a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [math.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range((len(link2)))]
         
@@ -168,7 +167,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
     D1 = [link1[i].diameter  for i in range(len(link1))]    # m 
     a1 = [link1[i].wavev  for i in range(len(link1))] # m/s 
-    A1 = [math.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)   
     theta1 = [link1[i].theta for i in range((len(link1)))]
 
@@ -187,7 +186,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
     D2 = [link2[i].diameter  for i in range(len(link2))]       #m  
     a2 = [link2[i].wavev  for i in range(len(link2))]          #m/s
-    A2 = [math.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range((len(link2)))]
 
@@ -302,7 +301,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
     D1 = [link1[i].diameter  for i in range(len(link1))]        # m 
     a1 = [link1[i].wavev  for i in range(len(link1))]           # m/s 
-    A1 = [math.pi * D1[i]**2. / 4.  for i in range(len(link1))] # m^2
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))] # m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)   
     theta1 = [link1[i].theta for i in range((len(link1)))]
  
@@ -321,7 +320,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
     D2 = [link2[i].diameter  for i in range(len(link2))]       # m  
     a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
-    A2 = [math.pi * D2[i]**2. / 4.  for i in range(len(link2))]# m^2
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]# m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range(len(link2))]
 
@@ -406,7 +405,7 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
     D2 = [link2[i].diameter  for i in range(len(link2))]       #m  
     a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [math.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range(len(link2))]
 
@@ -513,7 +512,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         Time step
     """
 
-    A = math.pi/4. * linkp.diameter**2.
+    A = np.pi/4. * linkp.diameter**2.
     
     if nn == 0:
         k = linkp.start_demand_coeff
@@ -640,7 +639,7 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
     D1 = [link1[i].diameter  for i in range(len(link1))]    # m 
     a1 = [link1[i].wavev  for i in range(len(link1))] # m/s 
-    A1 = [math.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)   
     theta1 = [link1[i].theta for i in range(len(link1))]
     # D-W coefficients given 
@@ -659,7 +658,7 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
     D2 = [link2[i].diameter  for i in range(len(link2))]       #m  
     a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [math.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range(len(link2))] 
 #   D-W coefficients given 
