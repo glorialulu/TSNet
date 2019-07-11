@@ -1,7 +1,7 @@
 """
-The WMOC.network.geometry read in the geometry defined by EPANet
+The wmoc.network.geometry read in the geometry defined by EPANet
 .inp file, and assign aditional parameters needed in transient 
-simution later in WMOC.
+simution later in wmoc.
 
 """
 

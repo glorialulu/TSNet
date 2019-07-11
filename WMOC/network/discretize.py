@@ -1,5 +1,5 @@
 """
-The WMOC.network.discretize contains methods to perform 
+The wmoc.network.discretize contains methods to perform 
 spatial and temporal discritization by adjusting wave speed 
 and time step to solve compatibility equations in case of 
 uneven wave travel time. 

@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use WMOC in a project::
+To use wmoc in a project::
 
     import wmoc

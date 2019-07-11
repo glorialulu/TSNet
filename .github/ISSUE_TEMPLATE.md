@@ -1,4 +1,4 @@
-* WMOC version:
+* wmoc version:
 * Python version:
 * Operating System:
 

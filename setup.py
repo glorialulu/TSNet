@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="WMOC conducts transient simulation using MOC method for water distribution systems.",
+    description="wmoc conducts transient simulation using MOC method for water distribution systems.",
     entry_points={},
     install_requires=requirements,
     license="MIT license",
@@ -46,7 +46,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/glorialulu/WMOC',
+    url='https://github.com/glorialulu/wmoc',
     version='0.1.0',
     zip_safe=False,
 )

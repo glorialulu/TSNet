@@ -1,5 +1,5 @@
 """
-The WMOC.network.topology figure out the tolopogy, i.e., 
+The wmoc.network.topology figure out the tolopogy, i.e., 
 upstream and downstream adjacent links for each pipe, and 
 store the information in lists.
 
