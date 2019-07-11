@@ -3,7 +3,5 @@ pandas
 numpy
 scipy
 matplotlib
+potly
 wntr
-warnings 
-functools 
-logging
