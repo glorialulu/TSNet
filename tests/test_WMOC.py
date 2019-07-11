@@ -4,11 +4,7 @@
 """Tests for `wmoc` package."""
 
 import pytest
-
-from click.testing import CliRunner
-
 from wmoc import *
-from wmoc import cli
 
 
 @pytest.fixture
