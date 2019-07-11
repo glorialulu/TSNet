@@ -40,19 +40,13 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    'numpydoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx'
     ]
 
 viewcode_import = True
-numpydoc_show_class_members = True
-numpydoc_show_inherited_class_members = False
-numpydoc_class_members_toctree = False
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
-numfig=True
-numfig_format = {'figure':  'Figure %s', 'table': 'Table %s', 'code-block': 'Listing %s'}
 
 # Spelling check and list of word that is not typo
 try:
