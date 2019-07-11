@@ -34,11 +34,11 @@ def memo(f):
 
 @memo 
 def MOC(links1, links2, utype, dtype, wn,
-       H, V, npipe, Ndis, dt, tf, t0, 
-        valve_to_close=None, vo=None, 
-        pump_to_operate=None, po=None,
-        leak_loc=None, leak_A=None, 
-        burst_loc=None, final_burst=None, burst_t=None):
+    H, V, npipe, Ndis, dt, tf, t0, 
+    valve_to_close=None, vo=None, 
+    pump_to_operate=None, po=None,
+    leak_loc=None, leak_A=None, 
+    burst_loc=None, final_burst=None, burst_t=None):
     """Transient Simulation using MOC method
     
     Parameters
@@ -105,7 +105,7 @@ def MOC(links1, links2, utype, dtype, wn,
     leak_A : float, optional
         Required if leak_loc is defined
         The leakage coefficient of the leakge, by default None 
-        Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
+        $Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)$
     burst_loc : list, optional 
         The list of burst loction,
         defined by the name of the junction node, by default None

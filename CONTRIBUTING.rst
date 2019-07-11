@@ -111,7 +111,7 @@ Tips
 
 To run a subset of tests::
 
-$ py.test .\tests.test_wmoc
+$ py.test .\tests\test_wmoc.py
 
 
 Deploying

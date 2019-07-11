@@ -4,8 +4,7 @@
 """Tests for `wmoc` package."""
 
 import pytest
-from wmoc import *
-
+import wmoc
 
 @pytest.fixture
 def response():

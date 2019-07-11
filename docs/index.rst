@@ -1,4 +1,4 @@
-Welcome to WMOC's documentation!
+Welcome to wmoc's documentation!
 ======================================
 
 .. toctree::

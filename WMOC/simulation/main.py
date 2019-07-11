@@ -18,10 +18,6 @@ def MOCSimulator(inp_file, dt, tf, valve_to_close=None, valve_op=None,
     burst_loc=None, burst_A=None, burst_t=None):
     """ MOC Main Function
     
-    Apply Method of Charateristics to the given network, 
-    and return results of pressure head and flowrate at each 
-    computation nodes.
-    
     Parameters
     ----------
     inp_file : .inp file

@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'WMOC'
+project = u'wmoc'
 copyright = u"2019, Lu Xing"
 author = u"Lu Xing"
 
@@ -101,7 +101,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'WMOCdoc'
+htmlhelp_basename = 'wmocdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------
@@ -128,8 +128,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'WMOC.tex',
-     u'WMOC Documentation',
+    (master_doc, 'wmoc.tex',
+     u'wmoc Documentation',
      u'Lu Xing', 'manual'),
 ]
 
@@ -139,8 +139,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'WMOC',
-     u'WMOC Documentation',
+    (master_doc, 'wmoc',
+     u'wmoc Documentation',
      [author], 1)
 ]
 
