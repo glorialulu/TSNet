@@ -7,7 +7,7 @@ wmoc
         :target: https://pypi.python.org/pypi/wmoc
 
 .. image:: https://img.shields.io/travis/glorialulu/wmoc.svg
-        :target: https://travis-ci.org/glorialulu/WMOC
+        :target: https://travis-ci.org/glorialulu/wmoc
 
 .. image:: https://readthedocs.org/projects/wmoc/badge/?version=latest
         :target: https://wmoc.readthedocs.io/en/latest/?badge=latest
@@ -29,7 +29,7 @@ Features
 To use (with caution), simply do:
 	>>> import wmoc  
 
-	>>> wn, H1, V1, tt = WMOC.wmoc(inp_file, dt, tf, valve_to_close, pump_to_operate,
+	>>> wn, H1, V1, tt = wmoc.simulation.MOCSimulator(inp_file, dt, tf, valve_to_close, pump_to_operate,
                             valve_op, pump_op, pressure_zone_bc, T,
                             leak_loc, leak_coef, burst_loc, burst_coef, burst_time, 
                             block_loc, block_A) 
