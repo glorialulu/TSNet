@@ -11,6 +11,7 @@ Welcome to wmoc's documentation!
    units
    usage
    simulation
+   transient
    results
    contributing
    authors

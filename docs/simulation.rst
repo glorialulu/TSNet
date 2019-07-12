@@ -2,23 +2,26 @@
 Transient Simulation
 ====================
 
-
-Valve closure
---------------
-Simulate valve closure 
-
-
-Pump Shut-off 
-------------
-simulate pump controlled shut-off
+Method of Characteristics (MOC)
+-------------------------------
 
 
 
-Burst
------
-simulate pipe burst 
 
 
-Leakage
--------
-simulate leakage
+Inner nodal boundary
+--------------------
+
+
+
+
+Nodal leakage boundary
+----------------------
+
+
+
+
+Choice of time step
+-----------------------
+
+
