@@ -7,7 +7,9 @@ Welcome to wmoc's documentation!
 
    readme
    installation
+   limitations
    usage
+   simulation
    modules
    contributing
    authors
