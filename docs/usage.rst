@@ -1,5 +1,5 @@
 =====
-Usage
+Get started
 =====
 
 To use wmoc in a project::

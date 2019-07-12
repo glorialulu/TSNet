@@ -51,33 +51,6 @@ Cite WMOC
 To cite WMOC, use one of the following references:
 
 
-Dependencies 
-------------
-
-WMOC is tested against Python versions 2.7, 3.4, 3.5 and 3.6. Further
-using a Python distribution is recommended as they already contain (or easily
-support installation of) many Python packages (e.g. SciPy, NumPy, pip, matplotlib,
-etc.) that are used in the TEASER code. Two examples of those distributions are:
-
-1. https://winpython.github.io/ WinPython comes along with a lot of Python
-packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
-2. http://conda.pydata.org/miniconda.html Conda is an open source package
-management  system and environment management system for installing multiple
-versions of software  packages and their dependencies and switching easily
-between them.
-
-In addition, WMOC requires some specific Python packages:
-
-1. wntr: Water Network Tool for Resilience 
-  install on a python-enabled command line with `pip install wntr`
-
-2. networkx: Network creation and manupulation engine
-  install on a python-enabled command line with `pip install networkx`
-
-3. pytest: Unit Tests engine
-  install on a python-enabled command line with `pip install -U pytest`
-
-
 License
 -------
 
