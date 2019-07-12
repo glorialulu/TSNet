@@ -54,7 +54,7 @@ Once you have a copy of the source, you can install it with:
 Dependencies 
 ------------
 
-WMOC is tested against Python versions 2.7, 3.4, 3.5 and 3.6. Further
+WMOC is tested against Python versions 2.7, 3.5 and 3.6. Further
 using a Python distribution is recommended as they already contain (or easily
 support installation of) many Python packages (e.g. SciPy, NumPy, pandas, pip, 
 matplotlib,etc.) that are used in the WMOC code. 

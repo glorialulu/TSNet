@@ -6,7 +6,7 @@ WMOC
         :target: https://pypi.python.org/pypi/wmoc
 
 .. image:: https://img.shields.io/travis/glorialulu/wmoc.svg
-        :target: https://travis-ci.org/glorialulu/wmoc
+        :target: https://travis-ci.com/glorialulu/wmoc
 
 .. image:: https://readthedocs.org/projects/wmoc/badge/?version=latest
         :target: https://wmoc.readthedocs.io/en/latest/?badge=latest
