@@ -49,3 +49,32 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/glorialulu/wmoc
 .. _tarball: https://github.com/glorialulu/wmoc/tarball/master
+
+
+Dependencies 
+------------
+
+WMOC is tested against Python versions 2.7, 3.4, 3.5 and 3.6. Further
+using a Python distribution is recommended as they already contain (or easily
+support installation of) many Python packages (e.g. SciPy, NumPy, pandas, pip, 
+matplotlib,etc.) that are used in the WMOC code. 
+
+Two examples of those distributions are:
+
+1. https://winpython.github.io/ WinPython comes along with a lot of Python
+packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
+2. http://conda.pydata.org/miniconda.html Conda is an open source package
+management  system and environment management system for installing multiple
+versions of software  packages and their dependencies and switching easily
+between them.
+
+In addition, WMOC requires some specific Python packages:
+
+1. wntr: Water Network Tool for Resilience 
+  install on a python-enabled command line with `pip install wntr`
+
+2. networkx: Network creation and manupulation engine
+  install on a python-enabled command line with `pip install networkx`
+
+3. pytest: Unit Tests engine
+  install on a python-enabled command line with `pip install -U pytest`

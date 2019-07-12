@@ -12,6 +12,7 @@ Welcome to wmoc's documentation!
    contributing
    authors
    history
+   API documentation <apidocs/wmoc>
 
 Indices and tables
 ==================
