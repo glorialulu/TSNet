@@ -14,4 +14,3 @@ dependencies:
     - folium
     - utm
     - sphinx
-    - numpydoc
