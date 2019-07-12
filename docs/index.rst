@@ -8,13 +8,15 @@ Welcome to wmoc's documentation!
    readme
    installation
    limitations
+   units
    usage
    simulation
-   modules
+   results
    contributing
    authors
    history
    API documentation <apidocs/wmoc>
+   abbrev
 
 Indices and tables
 ==================
