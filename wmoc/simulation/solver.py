@@ -69,10 +69,10 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
         V2 = [V2] ; H2 = [H2]
 
     # property of left adjacent pipe   
-    f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
-    D1 = [link1[i].diameter  for i in range(len(link1))]    # m 
-    a1 = [link1[i].wavev  for i in range(len(link1))] # m/s 
-    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
+    f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
+    D1 = [link1[i].diameter  for i in range(len(link1))]        # m 
+    a1 = [link1[i].wavev  for i in range(len(link1))]           # m/s 
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   # m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)   
     theta1 = [link1[i].theta for i in range((len(link1)))]
     

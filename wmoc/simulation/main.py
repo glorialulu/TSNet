@@ -99,8 +99,8 @@ def MOCSimulator(inp_file, dt, tf, valve_to_close=None, valve_op=None,
         for node in leak_loc:
             leak_node = wn.get_node(node)  
             leak_node.add_leak(wn, area=leak_A/np.sqrt(2*9.8)/1000, 
-                                discharge_coeff=1,
-                               start_time=t0)
+                                discharge_coeff = 1,
+                               start_time = t0)
         leak_loc = [wn.nodes[i].id-1 for i in leak_loc]
 
     # determine burst location based on input node name

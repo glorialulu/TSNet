@@ -149,7 +149,10 @@ def cal_roughness_coef(pipe, V, hl):
         Pipe object with calculated D-W roughness coefficient. 
     """
     g = 9.8
-    if abs(V) >= 1e-5 and hl >=1e-4:
+    H_tol = 1e-4
+    V_tol = 1e-5
+    
+    if abs(V) >= V_tol and hl >= H_tol:
         pipe.roughness = hl / (pipe.length/pipe.diameter) / (V**2/2/g)
     else:
         pipe.roughness = 0 
