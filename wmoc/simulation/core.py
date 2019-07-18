@@ -195,7 +195,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 # list to store information about pump and vale
                 # pump[0] and valve[0] for upstream elemnets
                 # pump[1] and valve[1] for downstream elements
-                pump = [0,0]; valve = [0,0]
+                pump = [[],[]]; valve = [0,0]
                 # upstream
                 if utype[pn][0] == 'Pump':
                     # three points for pump charatersitics curve
@@ -241,7 +241,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
 
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:
-                pump = [0,0]; valve = [0,0]
+                pump = [[],[]]; valve = [0,0]
                 # LEFT BOUNDARY
                 if utype[pn][0] == 'Reservoir':
                     # head B.C.
@@ -297,7 +297,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
 
             #  right boundary pipe
             elif not links2[pn] or links2[pn] == ['End']:
-                pump = [0,0]; valve = [0,0]
+                pump = [[],[]]; valve = [0,0]
                 # RIGHT boundary
                 if dtype[pn][0] == 'Reservoir':
                     HN[pn][-1]   =  tm.nodes[dtype[pn][1]].base_head # head of reservoir
@@ -347,6 +347,5 @@ def MOC(links1, links2, utype, dtype, tm, t0,
             H[pn] = HN[pn]
             V[pn] = VN[pn]
 
-    tm.simulation_timestamps = lambda: None
-    setattr(tm, 'simulation_timestamps', tt[1:])
+    tm.simulation_timestamps = tt[1:]
     return tm

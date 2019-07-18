@@ -36,13 +36,11 @@ def discretization(tm, dt):
     # add number of segements as a new attribute to each pipe
     i = 0
     for _, pipe in tm.pipes():
-        pipe.number_of_segments = lambda: None
-        setattr(pipe, 'number_of_segments',int(Ndis[i]))
+        pipe.number_of_segments = int(Ndis[i])
         i+=1
 
     # set time step as a new attribute to TransientModel
-    tm.time_step = lambda: None
-    setattr(tm, 'time_step',dt)
+    tm.time_step =dt
 
     return  tm
 

@@ -63,10 +63,6 @@ def MOCSimulator(tm, valve_to_close=[], valve_op=None,
     """
 
     startttime = datetime.now()
-    dt = tm.time_step
-    tf = tm.simulation_peroid
-
-
     # initial condition calculated at t0
     t0 = 0
 

@@ -43,8 +43,7 @@ def Initializer(tm, t0, dt, tf):
     # adjust the time step and discretize each pipe
     tm = discretization(tm, dt)
     print('Simulation time step %.5f s' % tm.time_step)
-    tm.simulation_peroid = lambda: None
-    setattr(tm, 'simulation_peroid', tf)
+    tm.simulation_peroid = tf
     tn = int(tf/tm.time_step) # Total time steps
     print ('Total Time Step in this simulation %s'  %tn)
 
@@ -63,8 +62,7 @@ def Initializer(tm, t0, dt, tf):
 
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays
-        pipe.initial_head = lambda: None
-        pipe.initial_velocity = lambda: None
+
         V = np.sign(results.link['flowrate'].loc[t0, pipe.name])*\
                     results.link['velocity'].loc[t0, pipe.name]*\
                     np.ones(pipe.number_of_segments+1)
@@ -76,8 +74,8 @@ def Initializer(tm, t0, dt, tf):
                     for i in range(pipe.number_of_segments+1)]
                     
         H = np.array(H)
-        setattr(pipe, 'initial_head', H)
-        setattr(pipe, 'initial_velocity', V)
+        pipe.initial_head = H
+        pipe.initial_velocity = V
 
         # assign the initial conditions to the results attributes
         pipe.start_node_velocity[0] = V[0]
@@ -108,10 +106,8 @@ def Initializer(tm, t0, dt, tf):
 
 
     # set initial conditions as a new attribute to TransientModel
-    tm.initial_head = lambda: None
-    tm.initial_velocity = lambda: None
-    setattr(tm, 'initial_head', H)
-    setattr(tm, 'initial_velocity', V)
+    tm.initial_head = H
+    tm.initial_velocity = V
 
     return tm
 
@@ -138,8 +134,7 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
         Pipe object with calculated demand coefficient
     """
 
-    pipe.start_demand_coeff = lambda: None # [m^3/s/(m H20)^(1/2)]
-    pipe.end_demand_coeff = lambda: None   # [m^3/s/(m H20)^(1/2)]
+
     try:
         start_demand_coeff = demand[0]/ np.sqrt(Hs)
     except :
@@ -149,9 +144,9 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
         end_demand_coeff = demand[1] / np.sqrt(He)
     except :
         end_demand_coeff = 0.
+    pipe.start_demand_coeff = start_demand_coeff # [m^3/s/(m H20)^(1/2)]
+    pipe.end_demand_coeff = end_demand_coeff   # [m^3/s/(m H20)^(1/2)]
 
-    setattr(pipe, 'start_demand_coeff',start_demand_coeff )
-    setattr(pipe, 'end_demand_coeff',end_demand_coeff )
 
     return pipe
 

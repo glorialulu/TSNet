@@ -28,29 +28,32 @@ class TransientModel (WaterNetworkModel):
     def __init__ (self, inp_file):
         super().__init__(inp_file)
         self.leak_node = []
+        self.simulation_timestamps = []
+        self.time_step = 0.
+        self.simulation_peroid = 0.
+        self.initial_velocity = []
+        self.initial_head = []
         # assign ID to each links, start from 1.
         i =1
         for _, link in self.links():
-            link.id = lambda: None
-            setattr(link, 'id', i)
+            link.id = i
             i+=1
 
         # assign ID to each links, start from 1.
         i =1
         for _, node in self.nodes():
-            node.id = lambda: None
-            setattr(node, 'id', i)
+            node.id = i
             i+=1     ## Graph the network
 
         # calculate the slope for each pipe
         for _, pipe in self.pipes():
-            pipe.theta = lambda: None
+            
             try:
                 theta = np.sin(np.arctan(pipe.end_node.elevation -
                     pipe.start_node.elevation)/pipe.length)
             except:
                 theta = 0.0
-            setattr(pipe, 'theta',theta)
+            pipe.theta = theta
 
 
     def set_wavespeed(self, wavespeed=1200.):
@@ -72,8 +75,7 @@ class TransientModel (WaterNetworkModel):
         # assign wave speed to each pipes
         i= 0
         for _, pipe in self.pipes():
-            pipe.wavev = lambda: None
-            setattr(pipe, 'wavev', wavev[i])
+            pipe.wavev = wavev[i]
             i+=1
 
 
