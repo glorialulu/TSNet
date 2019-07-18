@@ -20,8 +20,7 @@ from wmoc.simulation.solver import (
 )
 
 def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
-                H0, V0, H, V, H10, V10, H20, V20, pump, valve,
-                leak_loc, leak_A, burst_loc, burst_A):
+                H0, V0, H, V, H10, V10, H20, V20, pump, valve):
     r"""MOC solution for an indivial inner pipe.
 
     Parameters
@@ -95,18 +94,8 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             V1 = V10;     H1 = H10       #list
             V2 = V0[i+1]; H2 = H0[i+1]
             if utype[0] == 'Pipe':
-                if leak_loc != None and int(p[pn].start_node.id) in leak_loc:
-                    leak_A += linkp.start_demand_coeff
-                    H[i], V[i] = add_leakage(leak_A, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
-
-                elif burst_loc != None and int(p[pn].start_node.id) in burst_loc:
-                    burst_A += linkp.start_demand_coeff
-                    H[i], V[i] = add_leakage(burst_A, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
-
-                else :
-                    H[i], V[i] = add_leakage(linkp.start_demand_coeff, link1, linkp,
+                emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_demand_coeff
+                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[0])
@@ -121,18 +110,9 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             V1 = V0[i-1];    H1 = H0[i-1]
             V2 = V20;        H2 = H20
             if dtype[0] == 'Pipe':
-                if leak_loc != None and int(p[pn].end_node.id) in leak_loc:
-                    leak_A += linkp.end_demand_coeff
-                    H[i], V[i] = add_leakage(leak_A,linkp, link2,
+                emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_demand_coeff
+                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                elif burst_loc != None and int(p[pn].end_node.id) in burst_loc:
-                    burst_A += linkp.end_demand_coeff
-                    H[i], V[i] = add_leakage(burst_A,linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                else :
-                    H[i], V[i] = add_leakage(linkp.end_demand_coeff,linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-
             elif dtype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[1])
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
@@ -154,8 +134,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
     return H, V
 
 def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
-                    H20, V20, utype, dtype,
-                  leak_loc, leak_A, burst_loc, burst_A) :
+                    H20, V20, utype, dtype) :
     r"""MOC solution for an indivial left boundary pipe.
 
     Parameters
@@ -242,16 +221,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             V1 = V0[i-1]; H1 = H0[i-1]     # upstream node
             V2 = V20;     H2 = H20         # downstream nodes
             if dtype[0] == 'Pipe':
-                if leak_loc != None and int(p[pn].end_node.id) in leak_loc :
-                    leak_A += linkp.end_demand_coeff
-                    H[i], V[i] = add_leakage(leak_A, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                elif burst_loc != None and int(p[pn].end_node.id) in burst_loc :
-                    burst_A += linkp.end_demand_coeff
-                    H[i], V[i] = add_leakage(burst_A, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
-                else :
-                    H[i], V[i] = add_leakage(linkp.end_demand_coeff, linkp, link2,
+                emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_demand_coeff
+                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
             elif dtype[0] == 'Pump':
@@ -275,8 +246,7 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
     return H, V
 
 def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
-                 H10, V10, utype, dtype,
-                leak_loc, leak_A, burst_loc, burst_A):
+                 H10, V10, utype, dtype):
     r"""MOC solution for an indivial right boundary pipe.
 
     Parameters
@@ -350,18 +320,8 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
             V1 = V10; H1 = H10            # upstream node
             V2 = V0[i+1]; H2 = H0[i+1]    # downstream node
             if utype[0] == 'Pipe':
-                if leak_loc != None and int(p[pn].start_node.id) in leak_loc :
-                    leak_A += linkp.start_demand_coeff
-                    H[i], V[i] = add_leakage(leak_A, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
-
-                elif burst_loc != None and int(p[pn].start_node.id) in burst_loc :
-                    burst_A += linkp.start_demand_coeff
-                    H[i], V[i] = add_leakage(burst_A, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
-
-                else :
-                    H[i], V[i] = add_leakage(linkp.start_demand_coeff, link1, linkp,
+                emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_demand_coeff
+                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
 
             elif utype[0] == 'Pump':

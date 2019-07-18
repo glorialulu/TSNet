@@ -33,8 +33,7 @@ def memo(f):
     return _f
 
 
-def MOC(links1, links2, utype, dtype, tm, t0,
-    burst_loc=None, final_burst=None, burst_t=None):
+def MOC(links1, links2, utype, dtype, tm, t0):
     r"""Transient Simulation using MOC method
 
     The core function to perform transient simulation
@@ -125,9 +124,6 @@ def MOC(links1, links2, utype, dtype, tm, t0,
     tt : list [s]
         Simulated timestamps
     """
-
-    leak_loc = [name.id-1 for name in tm.leak_node]
-    leak_A = [node.emitter_coeff for node in tm.leak_node]
     tt = ['x']
     tt.append(0)
     dt = tm.time_step
@@ -159,28 +155,17 @@ def MOC(links1, links2, utype, dtype, tm, t0,
     for ts in range(1,tn):
         t = ts*dt
         tt.append(t)
+
+        # for burst node: emitter_coeff = burst_coeff[ts]
+        for _,node in tm.nodes():
+            if node.bursting == True:
+                node.emitter_coeff = node.burst_coeff[ts]
+        
         # initilaize the results at this time step
         for _, pipe in tm.pipes():
             pn = pipe.id-1
             HN[pn] =  np.zeros_like(H[pn])
             VN[pn] =  np.zeros_like(V[pn])
-
-        # calculate the burst area in the current time
-        burst_A = None
-        if burst_loc != None:
-            if (burst_t[0][1]-burst_t[0][0]) !=0:
-                tmp = (t - burst_t[0][0])/(burst_t[0][1]-burst_t[0][0])
-                if tmp < 0:
-                    burst_A = 0
-                elif tmp > 1 :
-                    burst_A = final_burst
-                else :
-                    burst_A = final_burst * tmp
-            else:
-                if t < burst_t[0][0]:
-                    burst_A = 0
-                else :
-                    burst_A = final_burst
 
         for _,pipe in tm.pipes():
             pn = pipe.id-1
@@ -232,8 +217,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     pump, valve,
-                     leak_loc, leak_A, burst_loc, burst_A)
+                     pump, valve)
 
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -291,7 +275,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                      links2[pn], p, pump, valve, dt,
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A)
+                     utype[pn], dtype[pn])
 
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -338,7 +322,7 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                      links1[pn], p, pump, valve,  dt,
                      [H[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
-                     utype[pn], dtype[pn], leak_loc, leak_A, burst_loc, burst_A)
+                     utype[pn], dtype[pn])
 
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]

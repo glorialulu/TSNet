@@ -12,8 +12,7 @@ from wmoc.simulation.core import MOC
 from datetime import datetime
 import numpy as np
 
-def MOCSimulator(tm,
-    burst_loc=None, burst_A=None, burst_t=None):
+def MOCSimulator(tm):
     r""" MOC Main Function
 
     Parameters
@@ -64,11 +63,6 @@ def MOCSimulator(tm,
     startttime = datetime.now()
     # initial condition calculated at t0
     t0 = 0
-
-    # determine burst location based on input node name
-    burst_A = None
-    if burst_loc != None :
-        burst_loc = [tm.nodes[i].id-1 for i in burst_loc]
 
     # determine network topology
     links1, links2, utype, dtype = topology(tm)

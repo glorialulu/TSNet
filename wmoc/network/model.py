@@ -13,7 +13,7 @@ import numpy as np
 import logging
 from wntr.network import WaterNetworkModel
 import collections
-from wmoc.network.control import valvesetting, pumpsetting
+from wmoc.network.control import valvesetting, pumpsetting,burstsetting
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,6 @@ class TransientModel (WaterNetworkModel):
     """
     def __init__ (self, inp_file):
         super().__init__(inp_file)
-        self.leak_node = []
         self.simulation_timestamps = []
         self.time_step = 0.
         self.simulation_peroid = 0.
@@ -43,6 +42,9 @@ class TransientModel (WaterNetworkModel):
         i =1
         for _, node in self.nodes():
             node.id = i
+            node.leaking = False 
+            node.bursting = False
+            node.emitter_coeff = 0.
             i+=1     ## Graph the network
 
         # calculate the slope for each pipe
@@ -81,7 +83,7 @@ class TransientModel (WaterNetworkModel):
             i+=1
 
 
-    def add_leak(self, name=None, coeff=None, t0=0):
+    def add_leak(self, name, coeff, t0=0):
         """[summary]
 
         Parameters
@@ -95,24 +97,31 @@ class TransientModel (WaterNetworkModel):
         """
         # determine leak location based on input node name
         # and add the leak to initial condition calculation
-        if name != None :
-            for node in name:
-                leak_node = self.get_node(node)
-                leak_node.add_leak(self, area=coeff/np.sqrt(2*9.8),
-                                    discharge_coeff = 1, start_time = t0)
-                leak_node.emitter_coeff = coeff
 
-                # set initial conditions as a new attribute to TransientModel
-                self.leak_node.append(leak_node)
+        leak_node = self.get_node(name)
+        leak_node.add_leak(self, area=coeff/np.sqrt(2*9.8),
+                            discharge_coeff = 1, start_time = t0)
+        leak_node.emitter_coeff += coeff
+        leak_node.leaking = True
+    
+    def add_burst(self, name, ts, tc,final_burst):
+        
+        burst_node = self.get_node(name)
+        burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_peroid,ts,tc, final_burst)
+        burst_node.bursting = True
 
-    def valve_closure(self, name=None, rule=None):
+
+    def valve_closure(self, name, rule):
         valve = self.get_link(name)
         valve.operating = True
         valve.operation_rule = valvesetting(self.time_step, self.simulation_peroid, rule)
 
-    def pump_shut_off(self, name=None, rule=None):
+    def pump_shut_off(self, name, rule):
         pump = self.get_link(name)
         pump.operating = True
         pump.operation_rule = pumpsetting(self.time_step, self.simulation_peroid, rule)
+
+
+        
 
 

@@ -80,3 +80,19 @@ def pumpsetting(dt, tf, pump_op):
         s[s<1] = se  
         
     return s
+
+def burstsetting(dt,tf,ts,tc,final_burst):
+    # calculate the burst area as a function of simulation time
+    tn = int(tf/dt)
+    if tc !=0 :
+        s = np.array([(i*dt- ts)/tc    for i in range(tn)])
+        s[s>1] = 1
+        s[s<0] = 0
+        burst_A = final_burst * s
+    else:
+        s = np.array([(i*dt- ts)/tc    for i in range(tn)])
+        s[s>1] = 1
+        s[s<0] = 0
+        burst_A = final_burst * s
+    return burst_A
+    
