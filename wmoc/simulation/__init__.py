@@ -4,4 +4,4 @@ using MOC method
 
 """
 from .main import MOCSimulator
-from .initialize import initialize
+from .initialize import Initializer

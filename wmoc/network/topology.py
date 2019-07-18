@@ -5,7 +5,7 @@ store the information in lists.
 
 """
 
-def topology(wn, npipe):
+def topology(wn):
     """Figure out the topology of the network
     
     Parameters
@@ -41,7 +41,7 @@ def topology(wn, npipe):
         will be recorded.
     """
     G = wn.get_graph()
-    
+    npipe = wn.num_pipes
     length = wn.query_link_attribute('length')
     G.weight_graph(link_attribute = length)
 

@@ -9,7 +9,12 @@
  3               	0           	0           	                	;
  5               	0           	0           	                	;
  6               	0           	0           	                	;
- 7               	0           	100          	                	;
+ 7               	0           	100         	                	;
+ 8               	0           	0           	                	;
+ 9               	0           	0           	                	;
+ 10              	0           	50          	                	;
+ 11              	0           	0           	                	;
+ 12              	0           	0           	                	;
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
@@ -21,21 +26,26 @@
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
  0               	0               	2               	610         	900         	92          	0           	Open  	;
- 1               	2               	3               	914         	750         	107         	0           	Open  	;
- 2               	2               	1               	610         	600         	98         	    0           	Open  	;
- 3               	3               	5               	457         	450         	105         	0           	Open  	;
+ 2               	2               	1               	610         	600         	98          	0           	Open  	;
  4               	3               	1               	549         	450         	100         	0           	Open  	;
  5               	4               	1               	671         	750         	93          	0           	Open  	;
  6               	4               	6               	610         	900         	105         	0           	Open  	;
  7               	5               	4               	457         	600         	105         	0           	Open  	;
- 8               	1               	5               	488         	450         	140       	    0           	Open  	;
+ 8               	1               	5               	488         	450         	140         	0           	Open  	;
+ 10              	2               	8               	500         	750         	107         	0           	Open  	;
+ 11              	9               	3               	414         	750         	107         	0           	Open  	;
+ 12              	5               	10              	700         	700         	100         	0           	Open  	;
+ 13              	3               	11              	200         	450         	105         	0           	Open  	;
+ 14              	12              	5               	257         	450         	105         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
+ 1               	8               	9               	HEAD 1	;
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
- 9              	6               	7               	184         	FCV 	10000        	0           	;
+ EndValve        	6               	7               	184         	FCV 	10000       	0           	;
+ InlineValve     	11              	12              	184         	FCV 	100000      	0           	;
 
 [TAGS]
 
@@ -44,17 +54,27 @@
 
 [STATUS]
 ;ID              	Status/Setting
- 9              	Open
+ EndValve        	Open
 
 [PATTERNS]
 ;ID              	Multipliers
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
+;PUMP: PUMP: PUMP: 
+ 1               	0           	222         
+ 1               	1400        	152.4       
+ 1               	2000        	79.3        
 
 [CONTROLS]
 
+
+
+
 [RULES]
+
+
+
 
 [ENERGY]
  Global Efficiency  	75
@@ -87,15 +107,15 @@
 ;Tank            	Model
 
 [TIMES]
- Duration           	0
- Hydraulic Timestep 	1:00
- Quality Timestep   	0:05
- Pattern Timestep   	1:00
- Pattern Start      	0:00
- Report Timestep    	1:00
- Report Start       	0:00
+ Duration           	0:00 
+ Hydraulic Timestep 	1:00 
+ Quality Timestep   	0:05 
+ Pattern Timestep   	1:00 
+ Pattern Start      	0:00 
+ Report Timestep    	1:00 
+ Report Start       	0:00 
  Start ClockTime    	12 am
- Statistic          	None
+ Statistic          	NONE
 
 [REPORT]
  Status             	No
@@ -129,6 +149,11 @@
  5               	2361.11         	6965.02         
  6               	3750.55         	5656.40         
  7               	4091.79         	5653.12         
+ 8               	516.88          	6719.41         
+ 9               	896.62          	6888.19         
+ 10              	3177.22         	7607.59         
+ 11              	1784.81         	6962.03         
+ 12              	1911.39         	6962.03         
  0               	-529.84         	7427.98         
 
 [VERTICES]
@@ -137,9 +162,9 @@
 [LABELS]
 ;X-Coord           Y-Coord          Label & Anchor Node
  -147.48          7044.34          "P1"                 
- 649.84           6798.25          "P2"                 
+ 658.23           6797.47          "P2"                 
  561.25           6138.74          "P3"                 
- 1926.22          7027.93          "P4"                 
+ 1924.05          7025.32          "P4"                 
  1138.74          6443.89          "P5"                 
  1781.85          5725.31          "P6"                 
  3278.06          5705.62          "P7"                 

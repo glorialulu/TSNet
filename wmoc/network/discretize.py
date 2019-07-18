@@ -1,117 +1,123 @@
 """
-The wmoc.network.discretize contains methods to perform 
-spatial and temporal discritization by adjusting wave speed 
-and time step to solve compatibility equations in case of 
-uneven wave travel time. 
+The wmoc.network.discretize contains methods to perform
+spatial and temporal discritization by adjusting wave speed
+and time step to solve compatibility equations in case of
+uneven wave travel time.
 
 """
 
 from __future__ import print_function
 import numpy as np
 
-def max_time_step(wn):
-    """Detrtmine the maximum time step based onCourant's criteria.
-    
+def discretization(tm, dt):
+    """Discritize in temporal and spatial space using wave speed adjustement scheme.
+
     Parameters
     ----------
-    wn : wntr.network.model.WaterNetworkModel
-        Network 
-    
+    tm : wmoc.network.geometry.TransientModel
+        Network
+    dt : float
+        User defined time step
+
     Returns
     -------
-    max_dt : float 
+    tm : wmoc.network.geometry.TransientModel
+        Network with updated parameters
+    """
+
+    max_dt = max_time_step(tm)
+    if dt > max_dt:
+        raise ValueError("time step is too large. Please define \
+                    a time step that is less than %s " %max_dt)
+    else :
+        Ndis = cal_N(tm, dt)
+        tm, dt = adjust_wavev(tm, Ndis)
+
+    # add number of segements as a new attribute to each pipe
+    i = 0
+    for _, pipe in tm.pipes():
+        pipe.number_of_segments = lambda: None
+        setattr(pipe, 'number_of_segments',int(Ndis[i]))
+        i+=1
+
+    # set time step as a new attribute to TransientModel
+    tm.time_step = lambda: None
+    setattr(tm, 'time_step',dt)
+
+    return  tm
+
+
+def max_time_step(tm):
+    """Detrtmine the maximum time step based onCourant's criteria.
+
+    Parameters
+    ----------
+    tm : wmoc.network.geometry.TransientModel
+        Network
+
+    Returns
+    -------
+    max_dt : float
         Maximum time step allowed for this network
     """
     max_dt = np.inf
- 
-    for _, pipe in wn.pipes():
+
+    for _, pipe in tm.pipes():
         dt = pipe.length / (2. * pipe.wavev)
         if max_dt > dt :
-            max_dt = dt           
+            max_dt = dt
     return max_dt
 
-def cal_N(wn, npipe, dt):
+def cal_N(tm,  dt):
     """Determine the number of computation uites ($N_i$) for each pipes.
-    
+
     Parameters
     ----------
-    wn : wntr.network.model.WaterNetworkModel
+    tm : wmoc.network.geometry.TransientModel
         Network
-    npipe : integer
-        Number of pipes
-    dt : float 
+    dt : float
         Time step for transient simulation
     """
-    N = np.zeros((npipe,1))
+    N = np.zeros((tm.num_pipes,1))
 
-    for _, pipe in wn.pipes() :
+    for _, pipe in tm.pipes() :
 
         N[int(pipe.id)-1] =  int(2*np.int(pipe.length/ (2. * pipe.wavev *dt)))
     return N
 
 
-def adjust_wavev( wn, N):
+def adjust_wavev( tm, N):
     """Adjust wave speed and time step to solve compatibility equations.
-    
+
     Parameters
     ----------
-    wn : wntr.network.model.WaterNetworkModel
+    tm : wmoc.network.geometry.TransientModel
         Network
     N : numpy.ndarray
         Number of discretization for each pipe
-    
+
     Returns
     -------
-    wn : wntr.network.model.WaterNetworkModel
+    tm : wmoc.network.geometry.TransientModel
         Network with adjusted wave speed.
-    dt : float 
+    dt : float
         Adjusted time step
     """
 
-    from numpy import transpose as trans  
+    from numpy import transpose as trans
 
     phi = [np.longdouble(pipe.length / pipe.wavev / N[int(pipe.id)-1])
-                            for _, pipe in wn.pipes()]
+                            for _, pipe in tm.pipes()]
     phi = np.array(phi).reshape((len(phi), 1))
     theta = np.longdouble(1/ np.matmul(trans(phi), phi) * \
         np.matmul(trans(phi), np.ones((len(phi), 1))))
-    
-    # adjust time step 
+
+    # adjust time step
     dt = np.float64(1/theta)
 
-    # adjust the wave speed of each links    
-    for _, pipe in wn.pipes():    
+    # adjust the wave speed of each links
+    for _, pipe in tm.pipes():
         pipe.wavev = np.float64(pipe.wavev * phi[int(pipe.id)-1] * theta)
-    
-    return wn, dt 
 
-def discretization( wn, npipe, dt):
-    """Discritize in temporal and spatial space using wave speed adjustement scheme. 
-    
-    Parameters
-    ----------
-    wn : wntr.network.model.WaterNetworkModel
-        Network
-    npipe : integer 
-        Number of pipes
-    dt : float 
-        User defined time step
+    return tm, dt
 
-    Returns
-    -------
-    wn : wntr.network.model.WaterNetworkModel
-        Network with updated parameters
-    dt : float 
-        Adjusted time step
-    Ndis : numpy.ndarray 
-        Number of discritization for each pipe
-    """
-    
-    max_dt = max_time_step(wn)
-    if dt > max_dt: 
-        print("""time step is too large. Please define a time step that is
-              less than %s """ %max_dt)
-    else :
-        Ndis = cal_N(wn, npipe, dt) 
-        wn, dt = adjust_wavev(wn, Ndis)       
-    return  wn, dt, Ndis

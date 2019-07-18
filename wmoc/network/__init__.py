@@ -8,6 +8,6 @@ The wmoc.network package contains methods to define
 """
 
 from .topology import topology
-from .geometry import geometry
+from .geometry import TransientModel
 from .discretize import discretization
 from .control import valvesetting, pumpsetting
