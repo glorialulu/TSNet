@@ -47,14 +47,16 @@ class TransientModel (WaterNetworkModel):
 
         # calculate the slope for each pipe
         for _, pipe in self.pipes():
-            
             try:
                 theta = np.sin(np.arctan(pipe.end_node.elevation -
                     pipe.start_node.elevation)/pipe.length)
             except:
                 theta = 0.0
             pipe.theta = theta
-
+        
+        # set operating defualt value as False
+        for _, link in self.links():
+            link.operating = False
 
     def set_wavespeed(self, wavespeed=1200.):
 
@@ -107,5 +109,10 @@ class TransientModel (WaterNetworkModel):
         valve = self.get_link(name)
         valve.operating = True
         valve.operation_rule = valvesetting(self.time_step, self.simulation_peroid, rule)
+
+    def pump_shut_off(self, name=None, rule=None):
+        pump = self.get_link(name)
+        pump.operating = True
+        pump.operation_rule = pumpsetting(self.time_step, self.simulation_peroid, rule)
 
 

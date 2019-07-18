@@ -34,7 +34,6 @@ def memo(f):
 
 
 def MOC(links1, links2, utype, dtype, tm, t0,
-    pump_to_operate=None, po=None,
     burst_loc=None, final_burst=None, burst_t=None):
     r"""Transient Simulation using MOC method
 
@@ -202,8 +201,9 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                     pump[0] = tm.links[utype[pn][1]].get_pump_curve().points
                     # calculate the coordinate of the three points
                     # based on the pump speed
-                    if utype[pn][1] in pump_to_operate:
-                        pump[0]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0]]
+                    if tm.links[utype[pn][1]].operating == True:
+                        po = tm.links[utype[pn][1]].operation_rule[ts]
+                        pump[0]=[(i*po,j*po**2) for (i,j) in pump[0]]
 
                 elif utype[pn][0] == 'Valve':
                     # determine valve fricton coefficients based on
@@ -215,11 +215,12 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 # downstream
                 if dtype[pn][0] == 'Pump':
                     pump[1] = tm.links[dtype[pn][1]].get_pump_curve().points
-                    if dtype[pn][1] in pump_to_operate:
-                        pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
+                    if tm.links[dtype[pn][1]].operating == True:
+                        po = tm.links[dtype[pn][1]].operation_rule[ts]
+                        pump[1]=[(i*po,j*po**2) for (i,j) in pump[1]]
 
                 elif dtype[pn][0] == 'Valve':
-                    if tm.links[dtype[pn][0]].operating == True:
+                    if tm.links[dtype[pn][1]].operating == True:
                         valve[1] = valve_curve(tm.links[dtype[pn][0]].operation_rule[ts]*100)
                     else :
                          valve[1] = valve_curve(100)
@@ -265,8 +266,9 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                     pump[0] = [tm.links[utype[pn][1]].start_node.base_head,
                          tm.links[utype[pn][1]].get_pump_curve().points]
 
-                    if utype[pn][1] in pump_to_operate:
-                        pump[0][1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0][1]]
+                    if tm.links[utype[pn][1]].operating == True:
+                        po = tm.links[utype[pn][1]].operation_rule[ts]
+                        pump[0][1]=[(i*po,j*po**2) for (i,j) in pump[0][1]]
                         print('Operating pump %s' %utype[pn][1])
                 else:
                      warnings.warn ('Pipe %s miss %s upstream.' %(pipe, utype[pn][0]))
@@ -274,7 +276,8 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 # RIGHT BOUNDARY
                 if dtype[pn][0] == 'Pump':
                     pump[1] = tm.links[dtype[pn][1]].get_pump_curve().points
-                    if dtype[pn][1] in pump_to_operate:
+                    if tm.links[dtype[pn][1]].operating == True:
+                        po = tm.links[dtype[pn][1]].operation_rule[ts]
                         pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
 
                 elif dtype[pn][0] == 'Valve':
@@ -320,8 +323,9 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                     # pump[0][0]: elevation of the reservoir/tank
                     # pump[0][1]: three points for pump characteristic curve
                     pump[0] = tm.links[utype[pn][1]].get_pump_curve().points
-                    if utype[pn][1] in pump_to_operate:
-                        pump[0]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0]]
+                    if tm.links[utype[pn][1]].operating == True:
+                        po = tm.links[utype[pn][1]].operation_rule[ts]
+                        pump[0]=[(i*po,j*po**2) for (i,j) in pump[0]]
 
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:

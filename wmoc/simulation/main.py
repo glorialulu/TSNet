@@ -12,8 +12,7 @@ from wmoc.simulation.core import MOC
 from datetime import datetime
 import numpy as np
 
-def MOCSimulator(tm, valve_to_close=[], valve_op=None,
-    pump_to_operate=[], pump_op=None,
+def MOCSimulator(tm,
     burst_loc=None, burst_A=None, burst_t=None):
     r""" MOC Main Function
 

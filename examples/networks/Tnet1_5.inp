@@ -45,7 +45,7 @@
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
  EndValve        	6               	7               	184         	FCV 	10000       	0           	;
- InlineValve     	11              	12              	184         	FCV 	100000      	0           	;
+ InlineValve     	11              	12              	184         	TCV 	0.02        	0           	;
 
 [TAGS]
 
@@ -61,7 +61,7 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: PUMP: PUMP: 
+;PUMP: PUMP: PUMP: PUMP: 
  1               	0           	222         
  1               	1400        	152.4       
  1               	2000        	79.3        
@@ -71,7 +71,9 @@
 
 
 
+
 [RULES]
+
 
 
 

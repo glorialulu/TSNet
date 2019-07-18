@@ -104,7 +104,6 @@ def Initializer(tm, t0, dt, tf):
         hl = abs(Hs - He)
         pipe = cal_roughness_coef(pipe, Vp, hl )
 
-
     # set initial conditions as a new attribute to TransientModel
     tm.initial_head = H
     tm.initial_velocity = V
