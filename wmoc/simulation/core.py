@@ -34,7 +34,6 @@ def memo(f):
 
 
 def MOC(links1, links2, utype, dtype, tm, t0,
-    valve_to_close=[], vo=None,
     pump_to_operate=None, po=None,
     burst_loc=None, final_burst=None, burst_t=None):
     r"""Transient Simulation using MOC method
@@ -209,8 +208,8 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 elif utype[pn][0] == 'Valve':
                     # determine valve fricton coefficients based on
                     # open percentage
-                    if utype[pn][1] in valve_to_close:
-                        valve[0] = valve_curve(vo[ts]*100)
+                    if tm.links[utype[pn][1]].operating == True:
+                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100)
                     else :
                          valve[0] = valve_curve(100)
                 # downstream
@@ -220,8 +219,8 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                         pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
 
                 elif dtype[pn][0] == 'Valve':
-                    if dtype[pn][1] in valve_to_close:
-                        valve[1] = valve_curve(vo[ts]*100)
+                    if tm.links[dtype[pn][0]].operating == True:
+                        valve[1] = valve_curve(tm.links[dtype[pn][0]].operation_rule[ts]*100)
                     else :
                          valve[1] = valve_curve(100)
 
@@ -253,9 +252,10 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 elif utype[pn][0] == 'Junction':
                     VN[pn][0] = pipe.initial_velocity[0]
                 elif utype[pn][0] == 'Valve':
-                    if utype[pn][1] in valve_to_close:
+                    if tm.links[utype[pn][1]].operating == True:
                         # velocity B.C.
-                        VN[pn][0]   = pipe.initial_velocity[0] *vo[ts]
+                        VN[pn][0]   = pipe.initial_velocity[0] * \
+                            tm.links[utype[pn][1]].operation_rule[ts]
                     else :
                         VN[pn][0]   = pipe.initial_velocity[0]
                 # source pump
@@ -278,8 +278,8 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                         pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
 
                 elif dtype[pn][0] == 'Valve':
-                    if dtype[pn][1] in valve_to_close:
-                        valve[1] = valve_curve(vo[ts]*100)
+                    if tm.links[dtype[pn][1]].operating == True:
+                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule*100)
                     else :
                          valve[1] = valve_curve(100)
 
@@ -306,8 +306,10 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                 elif dtype[pn][0] == 'Junction':
                     VN[pn][-1] = pipe.initial_velocity[-1]
                 elif dtype[pn][0] == 'Valve':
-                    if dtype[pn][1] in valve_to_close:
-                        VN[pn][-1] = pipe.initial_velocity[-1]*vo[ts]  # valve velocity condition
+                    if tm.links[dtype[pn][1]].operating == True:
+                        # valve velocity condition
+                        VN[pn][-1] = pipe.initial_velocity[-1]* \
+                        tm.links[dtype[pn][1]].operation_rule[ts]  
                     else :
                         VN[pn][-1] = pipe.initial_velocity[-1]
                 else :
@@ -322,8 +324,8 @@ def MOC(links1, links2, utype, dtype, tm, t0,
                         pump[0]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[0]]
 
                 elif utype[pn][0] == 'Valve':
-                    if utype[pn][1] in valve_to_close:
-                        valve[0] = valve_curve(vo[ts]*100)
+                    if tm.links[utype[pn][1]].operating == True:
+                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100)
                     else :
                          valve[0] = valve_curve(100)
 

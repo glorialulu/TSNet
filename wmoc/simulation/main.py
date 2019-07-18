@@ -5,7 +5,7 @@ simulation for the given .inp file.
 
 """
 from __future__ import print_function
-from wmoc.network import geometry, topology, discretization
+from wmoc.network import  topology, discretization
 from wmoc.network import valvesetting, pumpsetting
 from wmoc.simulation.initialize import Initializer
 from wmoc.simulation.core import MOC
@@ -19,7 +19,7 @@ def MOCSimulator(tm, valve_to_close=[], valve_op=None,
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : wmoc.network.model.TransientModel
         Network
     valve_to_close : list, optional
         The list of valves to be closed to generate transient, by default None
@@ -52,7 +52,7 @@ def MOCSimulator(tm, valve_to_close=[], valve_op=None,
 
     Returns
     ------
-    tm : wmoc.network.geometry.TransientModel
+    tm : wmoc.network.model.TransientModel
             Simulated network
     H[npipe][nnode,tn] : numpy.array [m]
         Head results
@@ -65,14 +65,7 @@ def MOCSimulator(tm, valve_to_close=[], valve_op=None,
     startttime = datetime.now()
     dt = tm.time_step
     tf = tm.simulation_peroid
-    vo=None; po = None
-    # valve closure curve
-    if valve_to_close != []:
-        vo = valvesetting(dt, tf, valve_op)
 
-    # pump operation curve
-    if pump_to_operate != []:
-        po = pumpsetting(dt, tf, pump_op)
 
     # initial condition calculated at t0
     t0 = 0
@@ -86,9 +79,7 @@ def MOCSimulator(tm, valve_to_close=[], valve_op=None,
     links1, links2, utype, dtype = topology(tm)
 
     # startMOC transient simulation
-    tm = MOC(links1, links2, utype, dtype, tm, t0,
-                    valve_to_close, vo, pump_to_operate, po,
-                     burst_loc, burst_A, burst_t)
+    tm = MOC(links1, links2, utype, dtype, tm, t0)
 
     simtime = datetime.now() - startttime
     print('Running Time:', simtime)

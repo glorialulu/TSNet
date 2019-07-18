@@ -14,25 +14,25 @@ tm.set_wavespeed(1200.)
 
 # Initialize
 t0 = 0. # initialize the simulation at 0s
-dt = 0.01  # time step [s]
+dt = 0.05  # time step [s]
 tf = 20 # simulation peroid [s]
 tm = wmoc.simulation.Initializer(tm, t0, dt, tf)
 
-# set pump operation
-# tm.pump_shut_off
-
-# seet valve operation
-# valve = tm.getlink('')
-# valve.closure()
-
-# Transient simulation
+# set valve operation
 # valve operation rule
 tc = 2 # valve closure peroid
 ts = 0 # valve closure start time
 se = 0 # end open percentage
 m = 1 # closure constant
 valve_op = [tc,ts,se,m]
-tm = wmoc.simulation.MOCSimulator(tm,'9',valve_op)
+tm.valve_closure('9',valve_op)
+
+# set pump operation
+# tm.pump_shut_off
+
+# Transient simulation
+
+tm = wmoc.simulation.MOCSimulator(tm)
 
 import matplotlib.pyplot as plt
 pipe = tm.get_link('0')

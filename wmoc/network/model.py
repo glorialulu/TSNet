@@ -52,9 +52,6 @@ class TransientModel (WaterNetworkModel):
                 theta = 0.0
             setattr(pipe, 'theta',theta)
 
-        
-
-
 
     def set_wavespeed(self, wavespeed=1200.):
 
@@ -104,9 +101,9 @@ class TransientModel (WaterNetworkModel):
                 # set initial conditions as a new attribute to TransientModel
                 self.leak_node.append(leak_node)
 
-    # def valve_closure(self, name=None, coeff=None, t0=0):
-    #     if Name != None:
-    #         import collections
-    #         ValveOperation = collections.namedtuple('ValveOperation', 'name setting')
+    def valve_closure(self, name=None, rule=None):
+        valve = self.get_link(name)
+        valve.operating = True
+        valve.operation_rule = valvesetting(self.time_step, self.simulation_peroid, rule)
 
 
