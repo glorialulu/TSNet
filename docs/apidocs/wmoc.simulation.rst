@@ -4,14 +4,6 @@ wmoc.simulation package
 Submodules
 ----------
 
-wmoc.simulation.core module
----------------------------
-
-.. automodule:: wmoc.simulation.core
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 wmoc.simulation.initialize module
 ---------------------------------
 

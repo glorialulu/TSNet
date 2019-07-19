@@ -20,10 +20,10 @@ wmoc.network.discretize module
     :undoc-members:
     :show-inheritance:
 
-wmoc.network.geometry module
-----------------------------
+wmoc.network.model module
+-------------------------
 
-.. automodule:: wmoc.network.geometry
+.. automodule:: wmoc.network.model
     :members:
     :undoc-members:
     :show-inheritance:

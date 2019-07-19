@@ -12,6 +12,14 @@ wmoc.utils.calc\_parabola\_vertex module
     :undoc-members:
     :show-inheritance:
 
+wmoc.utils.memo module
+----------------------
+
+.. automodule:: wmoc.utils.memo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 wmoc.utils.valve\_curve module
 ------------------------------
 
