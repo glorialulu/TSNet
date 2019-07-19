@@ -1,7 +1,7 @@
 import wmoc
 
 # open an example network and creat a transient model
-inp_file = 'examples/networks/Tnet1.inp'
+inp_file = 'examples/networks/Tnet1_5.inp'
 tm = wmoc.network.TransientModel(inp_file)
 
 # set wavespeed
@@ -26,20 +26,29 @@ tm.set_time(tf)
 # tm.valve_closure('9',valve_op)
 
 # set valve opening
-tc = 2 # valve opening peroid
-ts = 0 # valve opening start time
-se = 1 # end open percentage
-m = 1 # closure constant
-valve_op = [tc,ts,se,m]
-tm.valve_opening('9',valve_op)
+# tc = 2 # valve opening peroid
+# ts = 0 # valve opening start time
+# se = 1 # end open percentage
+# m = 1 # closure constant
+# valve_op = [tc,ts,se,m]
+# tm.valve_opening('9',valve_op)
 
-# set pump operation
+# set pump shut off
 # tc = 2 # pump closure peroid
 # ts = 0 # pump closure start time
 # se = 0.001 # end open percentage
 # m = 1 # closure constant
 # pump_op = [tc,ts,se,m]
 # tm.pump_shut_off('1', pump_op)
+
+# set pump start up
+tc = 2 # valve opening peroid
+ts = 0 # valve opening start time
+se = 1 # end open percentage
+m = 1 # closure constant
+pump_op = [tc,ts,se,m]
+tm.pump_start_up('1',pump_op)
+
 
 # add burst
 # ts = 1 # burst start time

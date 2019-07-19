@@ -80,7 +80,7 @@ def valveopening(dt, tf, valve_op):
         s[s>se] = se
     return s
 
-def pumpsetting(dt, tf, pump_op):
+def pumpclosing(dt, tf, pump_op):
     """Define pump operation curve (percentage open v.s. time)
 
     Parameters
@@ -103,6 +103,10 @@ def pumpsetting(dt, tf, pump_op):
         valve operation curve
     """
     [tc,ts,se,m] = pump_op
+    # do not allow the pump to be fully cloased due to numerical issues
+    if se == 0.:
+        se = 0.0001
+
     tn = int(tf/dt)
     # gradual closure
     if tc != 0:
@@ -116,6 +120,43 @@ def pumpsetting(dt, tf, pump_op):
         s[s>1] = 1
         s[s<1] = se
 
+    return s
+
+def pumpopening(dt, tf, pump_op):
+    """Define pump operation curve (percentage open v.s. time)
+
+    Parameters
+    ----------
+    dt : float
+        Time step
+    tf : float
+        Simulation Time
+    pump_op : list
+        Contains paramtes to defie pump operation rule
+        pump_op = [tc,ts,se,m]
+        tc : the duration takes to start up the pump [s]
+        ts : open start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+
+    Returns
+    -------
+    s : list
+        valve operation curve
+    """
+
+    [tc,ts,se,m] = pump_op
+    tn = int(tf/dt)
+    # aburupt opening
+    if tc ==0:
+        s =  np.array([((i*dt- ts))**1    for i in range(tn)])
+        s[s>0] = se
+        s[s<0] = 0
+    # gradual opening
+    else:
+        s =  np.array([((i*dt- ts)/tc)**m    for i in range(tn)])
+        s[s<0] = 0
+        s[s>se] = se
     return s
 
 def burstsetting(dt,tf,ts,tc,final_burst_coeff):

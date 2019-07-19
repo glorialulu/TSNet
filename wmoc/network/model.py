@@ -7,6 +7,7 @@ simution later in wmoc.
 
 from __future__ import print_function
 import wntr
+from wntr.network.elements import LinkStatus
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -17,7 +18,8 @@ from wmoc.network.discretize import discretization, max_time_step
 from wmoc.network.control import (
     valveclosing, 
     valveopening, 
-    pumpsetting, 
+    pumpclosing, 
+    pumpopening,
     burstsetting
 )
 
@@ -160,7 +162,7 @@ class TransientModel (WaterNetworkModel):
             The name of the valve to close
         rule : list
             Contains paramtes to defie valve operation rule
-            valve_op = [tc,ts,se,m]
+            rule = [tc,ts,se,m]
             tc : the duration takes to close the valve [s]
             ts : closure start time [s]
             se : final open percentage [s]
@@ -168,10 +170,13 @@ class TransientModel (WaterNetworkModel):
         """
 
         valve = self.get_link(name)
+        if vavle.link_type.lower() != 'valve':
+            raise RuntimeError('The name of valve to operate is not associated with a vale')
+
         if valve.status.name == 'Closed':
             warnings.warn("Valve %s is already closed in its initial setting. \
 The initial setting has been changed to open to perform the closure." %name)
-            valve.status.name == 'Open'
+            valve.status = LinkStatus.Open
 
         valve.operating = True
         valve.operation_rule = valveclosing(self.time_step, self.simulation_peroid, rule)
@@ -185,18 +190,21 @@ The initial setting has been changed to open to perform the closure." %name)
             The name of the valve to close
         rule : list
             Contains paramtes to defie valve operation rule
-            valve_op = [tc,ts,se,m]
+            rule = [tc,ts,se,m]
             tc : the duration takes to open the valve [s]
             ts : opening start time [s]
             se : final open percentage [s]
             m  : closure constant [unitless]
         """
-
         valve = self.get_link(name)
-        if valve.status.name == 'Open':
+        if vavle.link_type.lower() != 'valve':
+            raise RuntimeError('The name of valve to operate is not associated with a vale')
+
+
+        if valve.initial_status.name == 'Open' or valve.initial_status.name == 'Active':
             warnings.warn("Valve %s is already open in its initial setting. \
 The initial setting has been changed to closed to perform the opening." %name)
-            valve.status.name == 'Closed'
+            valve.status = LinkStatus.Closed
 
         valve.operating = True
         valve.operation_rule = valveopening(self.time_step, self.simulation_peroid, rule)
@@ -210,16 +218,58 @@ The initial setting has been changed to closed to perform the opening." %name)
             The name of the pump to shut off
         rule : list
             Contains paramtes to defie valve operation rule
-            valve_op = [tc,ts,se,m]
+            rule = [tc,ts,se,m]
+            tc : the duration takes to close the pump [s]
+            ts : closure start time [s]
+            se : final open percentage [s]
+            m  : closure constant [unitless]
+        """
+        pump = self.get_link(name)
+        
+        if pump.link_type.lower() != 'pump':
+            raise RuntimeError('The name of pump to operate is not associated with a pump')
+
+        if pump.initial_status.name == 'Closed':
+            warnings.warn("Pump %s is already closed in its initial setting. \
+The initial setting has been changed to open to perform the closure." %name)
+            pump.status= LinkStatus.Open
+        pump.operating = True
+        pump.operation_rule = pumpclosing(self.time_step, self.simulation_peroid, rule)
+
+    def pump_start_up(self, name, rule):
+        """Set pump start up rule
+
+        Parameters
+        ----------
+        name : str
+            The name of the pump to shut off
+        rule : list
+            Contains paramtes to defie valve operation rule
+            rule = [tc,ts,se,m]
             tc : the duration takes to close the valve [s]
             ts : closure start time [s]
             se : final open percentage [s]
             m  : closure constant [unitless]
         """
         pump = self.get_link(name)
-        pump.operating = True
-        pump.operation_rule = pumpsetting(self.time_step, self.simulation_peroid, rule)
+        if pump.link_type.lower() != 'pump':
+            raise RuntimeError('The name of pump to operate is not associated with a pump')
 
+        # Turn the pump on and run initial calculation 
+        # to get the nominal flow and head
+        pump.status = LinkStatus.Open
+        sim = wntr.sim.EpanetSimulator(self)
+        results = sim.run_sim()
+        pump.nominal_flow = results.link['flowrate'].loc[0,name]
+        node1 = self.links[name].start_node.name
+        node2 = self.links[name].end_node.name
+        pump.nominal_pump_head = abs(results.node['head'].loc[0,node1]-
+                        results.node['head'].loc[0,node2])
+
+        # Turn the pump back to closed
+        pump.status = LinkStatus.Closed
+        pump.operating = True
+        pump.operation_rule = pumpopening(self.time_step, self.simulation_peroid, rule)
 
 
 
