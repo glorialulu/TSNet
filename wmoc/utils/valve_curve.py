@@ -1,13 +1,13 @@
 """
-The wmoc.utils.valve_curve contains function to define 
-valve characteristics curve, gate valve by default. 
+The wmoc.utils.valve_curve contains function to define
+valve characteristics curve, gate valve by default.
 
 """
 import numpy as np
 
 def valve_curve(s,valve='Gate'):
     """Define valve curve
-    
+
     Parameters
     ----------
     s : float
@@ -17,7 +17,7 @@ def valve_curve(s,valve='Gate'):
 
     Returns
     -------
-    k : float 
+    k : float
         Friction coeffient with given open percentage
     """
     percent_open = np.linspace(100,0,11)

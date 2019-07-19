@@ -28,7 +28,7 @@ def discretization(tm, dt):
     max_dt = max_time_step(tm)
     if dt > max_dt:
         raise ValueError("time step is too large. Please define \
-                    a time step that is less than %s " %max_dt)
+                    a time step that is less than %.5f " %max_dt)
     else :
         Ndis = cal_N(tm, dt)
         tm, dt = adjust_wavev(tm, Ndis)

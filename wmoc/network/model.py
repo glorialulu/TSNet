@@ -18,13 +18,14 @@ from wmoc.network.control import valvesetting, pumpsetting,burstsetting
 logger = logging.getLogger(__name__)
 
 class TransientModel (WaterNetworkModel):
-    """[summary]
-
+    """ Transient model class.
     Parameters
-    ----------
-    WaterNetworkModel : [type]
-        [description]
+    -------------------
+    inp_file_name: string
+        Directory and filename of EPANET inp file to load into the
+        WaterNetworkModel object.
     """
+
     def __init__ (self, inp_file):
         super().__init__(inp_file)
         self.simulation_timestamps = []
@@ -42,7 +43,7 @@ class TransientModel (WaterNetworkModel):
         i =1
         for _, node in self.nodes():
             node.id = i
-            node.leaking = False 
+            node.leaking = False
             node.bursting = False
             node.emitter_coeff = 0.
             i+=1     ## Graph the network
@@ -55,12 +56,21 @@ class TransientModel (WaterNetworkModel):
             except:
                 theta = 0.0
             pipe.theta = theta
-        
+
         # set operating defualt value as False
         for _, link in self.links():
             link.operating = False
 
     def set_wavespeed(self, wavespeed=1200.):
+        """Set wave speed for pipes in the network
+
+        Parameters
+        ----------
+        wavespeed : float or int or list, optional
+            If given as float or int, set the value as wavespeed
+            for all pipe; If given as list set the correspondiing
+            value to each pipe, by default 1200.
+        """
 
         if isinstance(wavespeed,float):
             # if wavespeed is a float, assign it to all pipes
@@ -83,45 +93,82 @@ class TransientModel (WaterNetworkModel):
             i+=1
 
 
-    def add_leak(self, name, coeff, t0=0):
-        """[summary]
+    def add_leak(self, name, coeff):
+        """Add leak to the transient model
 
         Parameters
         ----------
-        name : list or str, optional
+        name : str, optional
             The name of the leak nodes, by default None
         coeff : list or float, optional
             Emitter coefficient at the leak nodes, by default None
-        t0 : int, optional
-            [description], by default 0
         """
-        # determine leak location based on input node name
-        # and add the leak to initial condition calculation
 
         leak_node = self.get_node(name)
-        leak_node.add_leak(self, area=coeff/np.sqrt(2*9.8),
-                            discharge_coeff = 1, start_time = t0)
         leak_node.emitter_coeff += coeff
         leak_node.leaking = True
-    
-    def add_burst(self, name, ts, tc,final_burst):
-        
+
+    def add_burst(self, name, ts, tc, final_burst_coeff):
+        """Add leak to the transient model
+
+        Parameters
+        ----------
+        name : str
+            The name of the leak nodes, by default None
+        ts : float
+            Burst start time
+        tc : float
+            Time for burst to fully develop
+        final_burst_coeff : list or float
+            Final emitter coefficient at the burst nodes
+        """
+
         burst_node = self.get_node(name)
-        burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_peroid,ts,tc, final_burst)
+        burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_peroid,
+                                                ts,tc, final_burst_coeff)
         burst_node.bursting = True
 
 
     def valve_closure(self, name, rule):
+        """Set valve closure rule
+
+        Parameters
+        ----------
+        name : str
+            The name of the valve to close
+        rule : list
+            Contains paramtes to defie valve operation rule
+            valve_op = [tc,ts,se,m]
+            tc : the duration takes to close the valve [s]
+            ts : closure start time [s]
+            se : final open percentage [s]
+            m  : closure constant [unitless]
+        """
+
         valve = self.get_link(name)
         valve.operating = True
         valve.operation_rule = valvesetting(self.time_step, self.simulation_peroid, rule)
 
     def pump_shut_off(self, name, rule):
+        """Set pump shut off rule
+
+        Parameters
+        ----------
+        name : str
+            The name of the pump to shut off
+        rule : list
+            Contains paramtes to defie valve operation rule
+            valve_op = [tc,ts,se,m]
+            tc : the duration takes to close the valve [s]
+            ts : closure start time [s]
+            se : final open percentage [s]
+            m  : closure constant [unitless]
+        """
         pump = self.get_link(name)
         pump.operating = True
         pump.operation_rule = pumpsetting(self.time_step, self.simulation_peroid, rule)
 
 
-        
+
 
 

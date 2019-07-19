@@ -35,10 +35,6 @@ def Initializer(tm, t0, dt, tf):
     -------
     tm : wmoc.network.geometry.TransientModel
         Network with updated parameters
-    H : list
-        Initialized list of numpy.ndarray to store latest head results
-    V : list
-        Initialized list of numpy.ndarray to store latest velocity results
     """
     # adjust the time step and discretize each pipe
     tm = discretization(tm, dt)
@@ -57,6 +53,10 @@ def Initializer(tm, t0, dt, tf):
         pipe.end_node_velocity = np.zeros(tn)
 
     # calculate initial conditions using EPAnet engine
+    for _,node in tm.nodes():
+        if node.leaking == True:
+            node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.8),
+                    discharge_coeff = 1, start_time = t0)
     sim = wntr.sim.WNTRSimulator(tm)
     results = sim.run_sim()
 
@@ -72,7 +72,7 @@ def Initializer(tm, t0, dt, tf):
                        results.node['head'].loc[t0, pipe.start_node_name])/
                        pipe.number_of_segments)
                     for i in range(pipe.number_of_segments+1)]
-                    
+
         H = np.array(H)
         pipe.initial_head = H
         pipe.initial_velocity = V
@@ -133,7 +133,6 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
         Pipe object with calculated demand coefficient
     """
 
-
     try:
         start_demand_coeff = demand[0]/ np.sqrt(Hs)
     except :
@@ -166,6 +165,7 @@ def cal_roughness_coef(pipe, V, hl):
     pipe : object
         Pipe object with calculated D-W roughness coefficient.
     """
+
     g = 9.8
     H_tol = 1e-4
     V_tol = 1e-5
