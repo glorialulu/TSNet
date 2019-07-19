@@ -11,9 +11,15 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import logging
+import warnings
 from wntr.network import WaterNetworkModel
-import collections
-from wmoc.network.control import valvesetting, pumpsetting,burstsetting
+from wmoc.network.discretize import discretization, max_time_step
+from wmoc.network.control import (
+    valveclosing, 
+    valveopening, 
+    pumpsetting, 
+    burstsetting
+)
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +97,22 @@ class TransientModel (WaterNetworkModel):
         for _, pipe in self.pipes():
             pipe.wavev = wavev[i]
             i+=1
+    
+    def set_time(self, tf, dt=None):
+        """Set time step and duration for the simulation.
+        
+        Parameters
+        ----------
+        tf : float
+            Simulation peroid
+        dt : float, optional
+            time step, by default maximum allowed dt
+        """
+        if dt == None:
+            dt = max_time_step(self)
+        self.simulation_peroid = tf
+        self = discretization(self, dt)
+        print('Simulation time step %.5f s' % self.time_step)
 
 
     def add_leak(self, name, coeff):
@@ -146,8 +168,38 @@ class TransientModel (WaterNetworkModel):
         """
 
         valve = self.get_link(name)
+        if valve.status.name == 'Closed':
+            warnings.warn("Valve %s is already closed in its initial setting. \
+The initial setting has been changed to open to perform the closure." %name)
+            valve.status.name == 'Open'
+
         valve.operating = True
-        valve.operation_rule = valvesetting(self.time_step, self.simulation_peroid, rule)
+        valve.operation_rule = valveclosing(self.time_step, self.simulation_peroid, rule)
+
+    def valve_opening(self, name, rule):
+        """Set valve opening rule
+
+        Parameters
+        ----------
+        name : str
+            The name of the valve to close
+        rule : list
+            Contains paramtes to defie valve operation rule
+            valve_op = [tc,ts,se,m]
+            tc : the duration takes to open the valve [s]
+            ts : opening start time [s]
+            se : final open percentage [s]
+            m  : closure constant [unitless]
+        """
+
+        valve = self.get_link(name)
+        if valve.status.name == 'Open':
+            warnings.warn("Valve %s is already open in its initial setting. \
+The initial setting has been changed to closed to perform the opening." %name)
+            valve.status.name == 'Closed'
+
+        valve.operating = True
+        valve.operation_rule = valveopening(self.time_step, self.simulation_peroid, rule)
 
     def pump_shut_off(self, name, rule):
         """Set pump shut off rule
@@ -167,6 +219,10 @@ class TransientModel (WaterNetworkModel):
         pump = self.get_link(name)
         pump.operating = True
         pump.operation_rule = pumpsetting(self.time_step, self.simulation_peroid, rule)
+
+
+
+
 
 
 

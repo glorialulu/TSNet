@@ -10,9 +10,8 @@ The wmoc.simulation.initialize contains functions to
 import wntr
 import numpy as np
 import warnings
-from wmoc.network import discretization
 
-def Initializer(tm, t0, dt, tf):
+def Initializer(tm, t0, engine='WNTR'):
     """Initial Condition Calculation.
 
     Initialize the list containing numpy arrays for velocity and head.
@@ -26,10 +25,9 @@ def Initializer(tm, t0, dt, tf):
         Simulated network
     t0 : float
         time to calculate initial condition
-    dt : float
-        User defined time step
-    tf : float or int
-        Simulation duration
+    engine : string
+        steady state calculation engine, by default WNTR
+
 
     Returns
     -------
@@ -37,10 +35,8 @@ def Initializer(tm, t0, dt, tf):
         Network with updated parameters
     """
     # adjust the time step and discretize each pipe
-    tm = discretization(tm, dt)
-    print('Simulation time step %.5f s' % tm.time_step)
-    tm.simulation_peroid = tf
-    tn = int(tf/tm.time_step) # Total time steps
+
+    tn = int(tm.simulation_peroid/tm.time_step) # Total time steps
     print ('Total Time Step in this simulation %s'  %tn)
 
     # create new atributes for each pipe to store head and velocity results
@@ -57,8 +53,15 @@ def Initializer(tm, t0, dt, tf):
         if node.leaking == True:
             node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.8),
                     discharge_coeff = 1, start_time = t0)
-    sim = wntr.sim.WNTRSimulator(tm)
-    results = sim.run_sim()
+    if engine.lower() == 'wntr':
+        sim = wntr.sim.WNTRSimulator(tm)
+        results = sim.run_sim()
+    elif engine.lower() == 'epanet':
+        sim = wntr.sim.EpanetSimulator(tm)
+        results = sim.run_sim()
+    else:
+        raise Exception("Uknown initial calculation engine. \
+            The engine can only be 'WNTR' or 'EPANET'.")
 
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays

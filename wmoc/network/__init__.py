@@ -9,5 +9,3 @@ The wmoc.network package contains methods to define
 
 from .topology import topology
 from .model import TransientModel
-from .discretize import discretization
-from .control import valvesetting, pumpsetting

@@ -6,7 +6,7 @@ parameters in the network during trasient simulation.
 """
 import numpy as np
 
-def valvesetting(dt, tf, valve_op):
+def valveclosing(dt, tf, valve_op):
     """Define valve operation curve (percentage open v.s. time)
 
     Parameters
@@ -41,6 +41,43 @@ def valvesetting(dt, tf, valve_op):
         s =  np.array([(1- (i*dt- ts)/tc)**m    for i in range(tn)])
         s[s>1] = 1
         s[s<se] = se
+    return s
+
+def valveopening(dt, tf, valve_op):
+    """Define valve operation curve (percentage open v.s. time)
+
+    Parameters
+    ----------
+    dt : float
+        Time step
+    tf : float
+        Simulation Time
+    valve_op : list
+        Contains paramtes to defie valve operation rule
+        valve_op = [tc,ts,se,m]
+        tc : the duration takes to close the valve [s]
+        ts : closure start time [s]
+        se : final open percentage [s]
+        m  : closure constant [unitless]
+
+    Returns
+    -------
+    s : list
+        valve operation curve
+    """
+
+    [tc,ts,se,m] = valve_op
+    tn = int(tf/dt)
+    # aburupt opening
+    if tc ==0:
+        s =  np.array([((i*dt- ts))**1    for i in range(tn)])
+        s[s>0] = se
+        s[s<0] = 0
+    # gradual opening
+    else:
+        s =  np.array([((i*dt- ts)/tc)**m    for i in range(tn)])
+        s[s<0] = 0
+        s[s>se] = se
     return s
 
 def pumpsetting(dt, tf, pump_op):
@@ -103,10 +140,10 @@ def burstsetting(dt,tf,ts,tc,final_burst_coeff):
         s = np.array([(i*dt- ts)/tc    for i in range(tn)])
         s[s>1] = 1
         s[s<0] = 0
-        burst_A = final_burst * s
+        burst_A = final_burst_coeff * s
     else:
         s = np.array([(i*dt- ts)/tc    for i in range(tn)])
         s[s>1] = 1
         s[s<0] = 0
-        burst_A = final_burst * s
+        burst_A = final_burst_coeff * s
     return burst_A
