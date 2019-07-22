@@ -41,16 +41,20 @@ def Initializer(tm, t0, engine='WNTR'):
 
     # create new atributes for each pipe to store head and velocity results
     # at its start and end node.
-
     for _, pipe in tm.pipes():
         pipe.start_node_head = np.zeros(tn)
         pipe.start_node_velocity = np.zeros(tn)
         pipe.end_node_head = np.zeros(tn)
         pipe.end_node_velocity = np.zeros(tn)
 
+    # create new atributes for each node to store head and discharge results
+    for _,node in tm.nodes():
+        node.demand_discharge = np.zeros(tn)
+        node.emitter_discharge = np.zeros(tn)
+
     # calculate initial conditions using EPAnet engine
     for _,node in tm.nodes():
-        if node.leaking == True:
+        if node.leak_status == True:
             node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.8),
                     discharge_coeff = 1, start_time = t0)
     if engine.lower() == 'wntr':
@@ -85,7 +89,19 @@ def Initializer(tm, t0, engine='WNTR'):
         pipe.end_node_velocity[0] = V[-1]
         pipe.start_node_head[0] = H[0]
         pipe.end_node_head[0] = H[-1]
-        # print('test', pipe.name, pipe.start_node_velocity[0],V[0])
+
+        try:
+            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0])
+            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0])
+        except:
+            pass # reservoir does not have emitter_discharge attribute
+
+        try:
+            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1])
+            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1])
+        except:
+            pass # reservoir does not have emitter_discharge attribute
+            
         # calculate demand coefficient
         Hs = H[0]
         He = H[-1]
@@ -145,8 +161,8 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
         end_demand_coeff = demand[1] / np.sqrt(He)
     except :
         end_demand_coeff = 0.
-    pipe.start_demand_coeff = start_demand_coeff # [m^3/s/(m H20)^(1/2)]
-    pipe.end_demand_coeff = end_demand_coeff   # [m^3/s/(m H20)^(1/2)]
+    pipe.start_node.demand_coeff = start_demand_coeff # [m^3/s/(m H20)^(1/2)]
+    pipe.end_node.demand_coeff = end_demand_coeff   # [m^3/s/(m H20)^(1/2)]
 
 
     return pipe

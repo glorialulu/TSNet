@@ -62,7 +62,7 @@ def MOCSimulator(tm):
 
         # for burst node: emitter_coeff = burst_coeff[ts]
         for _,node in tm.nodes():
-            if node.bursting == True:
+            if node.burst_status == True:
                 node.emitter_coeff = node.burst_coeff[ts]
 
         # initilaize the results at this time step
@@ -122,11 +122,18 @@ def MOCSimulator(tm):
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      pump, valve)
-
+                # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
+
+                # pipe.start_node.head[ts] = HN[pn][0]
+                # pipe.end_node.head[ts] = HN[pn][-1]
+                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
 
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:
@@ -180,11 +187,18 @@ def MOCSimulator(tm):
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      utype[pn], dtype[pn])
-
+                # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
+
+                # pipe.start_node.head[ts] = HN[pn][0]
+                # pipe.end_node.head[ts] = HN[pn][-1]
+                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
 
             #  right boundary pipe
             elif not links2[pn] or links2[pn] == ['End']:
@@ -227,17 +241,30 @@ def MOCSimulator(tm):
                      [H[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      utype[pn], dtype[pn])
-
+                # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
+
+                # pipe.start_node.head[ts] = HN[pn][0]
+                # pipe.end_node.head[ts] = HN[pn][-1]
+                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
 
         # march in time
         for _, pipe in tm.pipes():
             pn = pipe.id-1
             H[pn] = HN[pn]
             V[pn] = VN[pn]
+
+    for _,pipe in tm.pipes():
+        if not isinstance(pipe.start_node.head, np.ndarray ):
+            pipe.start_node.head = np.copy(pipe.start_node_head)
+        if not isinstance(pipe.end_node.head, np.ndarray):
+            pipe.end_node.head = np.copy(pipe.end_node_head)
 
     tm.simulation_timestamps = tt[1:]
     return tm

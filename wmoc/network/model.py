@@ -51,8 +51,8 @@ class TransientModel (WaterNetworkModel):
         i =1
         for _, node in self.nodes():
             node.id = i
-            node.leaking = False
-            node.bursting = False
+            node.leak_status = False
+            node.burst_status = False
             node.emitter_coeff = 0.
             i+=1     ## Graph the network
 
@@ -130,7 +130,7 @@ class TransientModel (WaterNetworkModel):
 
         leak_node = self.get_node(name)
         leak_node.emitter_coeff += coeff
-        leak_node.leaking = True
+        leak_node.leak_status = True
 
     def add_burst(self, name, ts, tc, final_burst_coeff):
         """Add leak to the transient model
@@ -149,8 +149,8 @@ class TransientModel (WaterNetworkModel):
 
         burst_node = self.get_node(name)
         burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_peroid,
-                                                ts,tc, final_burst_coeff)
-        burst_node.bursting = True
+                                                ts, tc, final_burst_coeff)
+        burst_node.burst_status = True
 
 
     def valve_closure(self, name, rule):
