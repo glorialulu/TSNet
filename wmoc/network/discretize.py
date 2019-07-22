@@ -112,6 +112,5 @@ def adjust_wavev( tm):
 
     # set time step as a new attribute to TransientModel
     tm.time_step =dt
-    print ('time step', dt)
     return tm
 

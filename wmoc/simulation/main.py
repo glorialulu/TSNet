@@ -186,7 +186,7 @@ def MOCSimulator(tm):
                     pump[1] = tm.links[dtype[pn][1]].get_pump_curve().points
                     if tm.links[dtype[pn][1]].operating == True:
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
-                        pump[1]=[(i*po[ts],j*po[ts]**2) for (i,j) in pump[1]]
+                        pump[1]=[(i*po,j*po**2) for (i,j) in pump[1]]
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:

@@ -18,20 +18,20 @@ tm.set_time(tf)
 # tm.add_leak(leak_node, emitter_coeff)
 
 # set valve opening
-tc = 2 # valve opening peroid
-ts = 0 # valve opening start time
-se = 1 # end open percentage
-m = 1 # closure constant
-valve_op = [tc,ts,se,m]
-tm.valve_opening('TCV-1',valve_op)
+# tc = 2 # valve opening peroid
+# ts = 0 # valve opening start time
+# se = 1 # end open percentage
+# m = 1 # closure constant
+# valve_op = [tc,ts,se,m]
+# tm.valve_opening('TCV-1',valve_op)
 
 # set pump shut off
-# tc = 2 # pump closure peroid
-# ts = 0 # pump closure start time
-# se = 0.001 # end open percentage
-# m = 1 # closure constant
-# pump_op = [tc,ts,se,m]
-# tm.pump_shut_off('1', pump_op)
+tc = 2 # pump closure peroid
+ts = 0 # pump closure start time
+se = 0.001 # end open percentage
+m = 1 # closure constant
+pump_op = [tc,ts,se,m]
+tm.pump_shut_off('335', pump_op)
 
 # set pump start up
 # tc = 2 # valve opening peroid
