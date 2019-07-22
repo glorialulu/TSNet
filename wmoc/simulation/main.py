@@ -59,7 +59,9 @@ def MOCSimulator(tm):
     for ts in range(1,tn):
         t = ts*dt
         tt.append(t)
-
+        tp = ts/tn*100
+        if ts % int(tn/10) == 0 :
+            print('Computation completed %i %%...' %tp )
         # for burst node: emitter_coeff = burst_coeff[ts]
         for _,node in tm.nodes():
             if node.burst_status == True:
@@ -128,12 +130,23 @@ def MOCSimulator(tm):
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
-                # pipe.start_node.head[ts] = HN[pn][0]
-                # pipe.end_node.head[ts] = HN[pn][-1]
-                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
-                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                if HN[pn][0] >0:
+                    pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                    pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                else: # assume reverse flow preventer installed
+                    pipe.start_node.emitter_discharge[ts] = 0.
+                    pipe.start_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s.\
+                    Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+
+                if HN[pn][-1] >0:
+                    pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                    pipe.end_node.demand_discharge[ts] = pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                else: # assume reverse flow preventer installed
+                    pipe.end_node.emitter_discharge[ts] = 0.
+                    pipe.end_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s.\
+                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
 
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:
@@ -193,12 +206,23 @@ def MOCSimulator(tm):
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
-                # pipe.start_node.head[ts] = HN[pn][0]
-                # pipe.end_node.head[ts] = HN[pn][-1]
-                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
-                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                if HN[pn][0] >0:
+                    pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                    pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                else: # assume reverse flow preventer installed
+                    pipe.start_node.emitter_discharge[ts] = 0.
+                    pipe.start_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s. \
+                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+
+                if HN[pn][-1] >0:
+                    pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                    pipe.end_node.demand_discharge[ts] = pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                else: # assume reverse flow preventer installed
+                    pipe.end_node.emitter_discharge[ts] = 0.
+                    pipe.end_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s. \
+                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
 
             #  right boundary pipe
             elif not links2[pn] or links2[pn] == ['End']:
@@ -247,12 +271,23 @@ def MOCSimulator(tm):
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
-                # pipe.start_node.head[ts] = HN[pn][0]
-                # pipe.end_node.head[ts] = HN[pn][-1]
-                pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.demand_discharge[ts] =  pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
-                pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
-                pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                if HN[pn][0] >0:
+                    pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
+                    pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])
+                else: # assume reverse flow preventer installed
+                    pipe.start_node.emitter_discharge[ts] = 0.
+                    pipe.start_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s. \
+                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+
+                if HN[pn][-1] >0:
+                    pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
+                    pipe.end_node.demand_discharge[ts] = pipe.end_node.demand_coeff * np.sqrt(HN[pn][-1])
+                else: # assume reverse flow preventer installed
+                    pipe.end_node.emitter_discharge[ts] = 0.
+                    pipe.end_node.demand_discharge[ts] = 0.
+                    warnings.warn("Negative pressure on node %s. \
+                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
 
         # march in time
         for _, pipe in tm.pipes():

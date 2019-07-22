@@ -516,7 +516,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
     A = np.pi/4. * linkp.diameter**2.
 
     if nn == 0:
-        k = linkp.start_demand_coeff
+        k = linkp.start_node.demand_coeff
         aq = 1
         bq = -a/g*k/A
         cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1
@@ -536,7 +536,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
 The resuls might not be accurate.")
         VP = V1 - g/a *H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP
     else :
-        k = linkp.end_demand_coeff
+        k = linkp.end_node.demand_coeff
         aq = 1
         bq = a/g*k/A
         cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1

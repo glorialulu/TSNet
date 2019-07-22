@@ -31,17 +31,14 @@ def discretization(tm, dt):
                     a time step that is less than %.5f " %max_dt)
     else :
         Ndis = cal_N(tm, dt)
-        tm, dt = adjust_wavev(tm, Ndis)
 
-    # add number of segements as a new attribute to each pipe
-    i = 0
-    for _, pipe in tm.pipes():
-        pipe.number_of_segments = int(Ndis[i])
-        i+=1
-
-    # set time step as a new attribute to TransientModel
-    tm.time_step =dt
-
+        # add number of segements as a new attribute to each pipe
+        i = 0
+        for _, pipe in tm.pipes():
+            pipe.number_of_segments = int(Ndis[i])
+            i+=1
+        # adjust wave speed and calculate time step
+        tm = adjust_wavev(tm)
     return  tm
 
 
@@ -63,7 +60,7 @@ def max_time_step(tm):
     for _, pipe in tm.pipes():
         dt = pipe.length / (2. * pipe.wavev)
         if max_dt > dt :
-            max_dt = dt
+            max_dt = dt - 0.001  # avaoid numerical issue which cause N = 0
     return max_dt
 
 def cal_N(tm,  dt):
@@ -79,20 +76,17 @@ def cal_N(tm,  dt):
     N = np.zeros((tm.num_pipes,1))
 
     for _, pipe in tm.pipes() :
-
         N[int(pipe.id)-1] =  int(2*np.int(pipe.length/ (2. * pipe.wavev *dt)))
     return N
 
 
-def adjust_wavev( tm, N):
+def adjust_wavev( tm):
     """Adjust wave speed and time step to solve compatibility equations.
 
     Parameters
     ----------
     tm : wmoc.network.geometry.TransientModel
         Network
-    N : numpy.ndarray
-        Number of discretization for each pipe
 
     Returns
     -------
@@ -103,8 +97,7 @@ def adjust_wavev( tm, N):
     """
 
     from numpy import transpose as trans
-
-    phi = [np.longdouble(pipe.length / pipe.wavev / N[int(pipe.id)-1])
+    phi = [np.longdouble(pipe.length / pipe.wavev / pipe.number_of_segments)
                             for _, pipe in tm.pipes()]
     phi = np.array(phi).reshape((len(phi), 1))
     theta = np.longdouble(1/ np.matmul(trans(phi), phi) * \
@@ -117,5 +110,8 @@ def adjust_wavev( tm, N):
     for _, pipe in tm.pipes():
         pipe.wavev = np.float64(pipe.wavev * phi[int(pipe.id)-1] * theta)
 
-    return tm, dt
+    # set time step as a new attribute to TransientModel
+    tm.time_step =dt
+    print ('time step', dt)
+    return tm
 

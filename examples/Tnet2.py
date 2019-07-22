@@ -1,7 +1,7 @@
 import wmoc
 
 # open an example network and creat a transient model
-inp_file = 'examples/networks/Tnet1.inp'
+inp_file = 'examples/networks/Tnet2_v2.inp'
 tm = wmoc.network.TransientModel(inp_file)
 
 # set wavespeed
@@ -13,9 +13,9 @@ tf = 20 # simulation peroid [s]
 tm.set_time(tf)
 
 # add leak
-leak_node = '2'
-emitter_coeff = 0.1 #[ m^3/s/(m H20)^(1/2)]
-tm.add_leak(leak_node, emitter_coeff)
+# leak_node = '2'
+# emitter_coeff = 0.1 #[ m^3/s/(m H20)^(1/2)]
+# tm.add_leak(leak_node, emitter_coeff)
 
 # set valve closing 
 tc = 2 # valve closure peroid
@@ -23,7 +23,7 @@ ts = 0 # valve closure start time
 se = 0 # end open percentage
 m = 1 # closure constant
 valve_op = [tc,ts,se,m]
-tm.valve_closure('9',valve_op)
+tm.valve_closure('TCV-1',valve_op)
 
 # set valve opening
 # tc = 2 # valve opening peroid
@@ -79,10 +79,10 @@ import matplotlib.pyplot as plt
 # plt.grid(True)
 # plt.show()
 
-node = '2'
+node = '305-A'
 node = tm.get_node(node)
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,node.emitter_discharge)
+plt.plot(tm.simulation_timestamps,node.head)
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Pressure Head at Node %s '%node)
 plt.xlabel("Time")
