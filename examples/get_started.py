@@ -18,12 +18,12 @@ tm.set_time(tf)
 # tm.add_leak('1', emitter_coeff)
 
 # set valve closing 
-# tc = 2 # valve closure peroid
-# ts = 0 # valve closure start time
-# se = 0 # end open percentage
-# m = 1 # closure constant
-# valve_op = [tc,ts,se,m]
-# tm.valve_closure('9',valve_op)
+tc = 2 # valve closure peroid
+ts = 0 # valve closure start time
+se = 0 # end open percentage
+m = 1 # closure constant
+valve_op = [tc,ts,se,m]
+tm.valve_closure('InlineValve',valve_op)
 
 # set valve opening
 # tc = 2 # valve opening peroid
@@ -31,7 +31,7 @@ tm.set_time(tf)
 # se = 1 # end open percentage
 # m = 1 # closure constant
 # valve_op = [tc,ts,se,m]
-# tm.valve_opening('9',valve_op)
+# tm.valve_opening('InlineValve',valve_op)
 
 # set pump shut off
 # tc = 2 # pump closure peroid
@@ -42,12 +42,12 @@ tm.set_time(tf)
 # tm.pump_shut_off('1', pump_op)
 
 # set pump start up
-tc = 2 # valve opening peroid
-ts = 0 # valve opening start time
-se = 1 # end open percentage
-m = 1 # closure constant
-pump_op = [tc,ts,se,m]
-tm.pump_start_up('1',pump_op)
+# tc = 2 # valve opening peroid
+# ts = 0 # valve opening start time
+# se = 1 # end open percentage
+# m = 1 # closure constant
+# pump_op = [tc,ts,se,m]
+# tm.pump_start_up('1', pump_op)
 
 
 # add burst

@@ -110,7 +110,7 @@ def MOCSimulator(tm):
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
-                        valve[1] = valve_curve(tm.links[dtype[pn][0]].operation_rule[ts]*100)
+                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule[ts]*100)
                     else :
                          valve[1] = valve_curve(100)
 

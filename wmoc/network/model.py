@@ -170,7 +170,7 @@ class TransientModel (WaterNetworkModel):
         """
 
         valve = self.get_link(name)
-        if vavle.link_type.lower() != 'valve':
+        if valve.link_type.lower() != 'valve':
             raise RuntimeError('The name of valve to operate is not associated with a vale')
 
         if valve.status.name == 'Closed':
@@ -197,7 +197,7 @@ The initial setting has been changed to open to perform the closure." %name)
             m  : closure constant [unitless]
         """
         valve = self.get_link(name)
-        if vavle.link_type.lower() != 'valve':
+        if valve.link_type.lower() != 'valve':
             raise RuntimeError('The name of valve to operate is not associated with a vale')
 
 

@@ -13,7 +13,6 @@ for different grid configurations, including:
 """
 from __future__ import print_function
 import numpy as np
-import sys
 import warnings
 
 def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
@@ -214,7 +213,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
         VP = (-bq)/(2*aq)
     else:
         VP = (-bq)/(2*aq)
-        sys.exit('Error: The quadratic equation has no real solution (valve)')
+        warnings.warn('Error: The quadratic equation has no real solution (valve)')
 
     if VP >=0 : # positive flow
         if nn == 0:  # pipe start
@@ -240,7 +239,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
             VP = (-bq)/(2*aq)
         else:
             VP = (-bq)/(2*aq)
-            sys.exit('Error: The quadratic equation has no real solution (valve)')
+            warnings.warn('Error: The quadratic equation has no real solution (valve)')
 
         if nn == 0:  # pipe start
             VP = VP*A1[0]/A2[0]
@@ -353,7 +352,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
         VP = (-bq)/(2*aq)
     else:
         VP = (-bq)/(2*aq)
-        sys.exit('Error: The quadratic equation has no real solution (pump)')
+        warnings.warn('Error: The quadratic equation has no real solution (pump)')
 
     if VP > 0 : # positive flow
         if nn == 0:  # pipe start
@@ -440,7 +439,7 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
         HP = (-bq)/(2*aq)
     else:
         HP = (-bq)/(2*aq)
-        sys.exit('Error: The quadratic equation has no real solution (pump)')
+        warnings.warn('Error: The quadratic equation has no real solution (pump)')
 
     if HP > Hsump:
         VP = np.float64(-C2[0,0]+ C2[0,1]*HP)
@@ -533,7 +532,8 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         else:
             HP = (-bq)/(2*aq)
             HP = HP**2.
-            sys.exit('Error: The quadratic equation has no real solution (dead end)')
+            warnings.warn("The quadratic equation has no real solution (dead end).\
+The resuls might not be accurate.")
         VP = V1 - g/a *H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP
     else :
         k = linkp.end_demand_coeff
@@ -551,7 +551,8 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         else:
             HP = (-bq)/(2*aq)
             HP = HP**2.
-            sys.exit('Error: The quadratic equation has no real solution (dead end)')
+            warnings.warn("The quadratic equation has no real solution (dead end).\
+The resuls might not be accurate.")
         VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP
     return HP,VP
 
@@ -690,7 +691,7 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
         HP = (-b1)/(2*a1)
     else:
         HP = (-b1)/(2*a1)
-        sys.exit('Error: The quadratic equation has no real solution (leakage)')
+        warnings.warn('Error: The quadratic equation has no real solution (leakage)')
 
     if nn == 0:  # pipe start
         VP = np.float64(-C2[:,0]+ C2[:,1]*HP)
