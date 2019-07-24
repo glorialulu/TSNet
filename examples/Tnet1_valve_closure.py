@@ -27,12 +27,27 @@ tm = wmoc.simulation.Initializer(tm, t0, engine)
 # Transient simulation
 tm = wmoc.simulation.MOCSimulator(tm)
 
+# add leak
+leak_node = 'N2'
+emitter_coeff = 0.1 #[ m^3/s/(m H20)^(1/2)]
+tm.add_leak(leak_node, emitter_coeff)
+
+# Initialize
+t0 = 0. # initialize the simulation at 0 [s]
+engine = 'DD' # demand driven simulator
+tm_leak = wmoc.simulation.Initializer(tm, t0, engine)
+
+# Transient simulation
+tm_leak = wmoc.simulation.MOCSimulator(tm)
+
 # report results
 import matplotlib.pyplot as plt
 node = 'N3'
 node = tm.get_node(node)
+node_leak = tm_leak.get_node(node)
 fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,node.head)
+plt.plot(tm.simulation_timestamps,node.head, label='Base')
+plt.plot(tm.simulation_timestamps,node_leak.head, label='Leak')
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Pressure Head at Node %s '%node)
 plt.xlabel("Time")
