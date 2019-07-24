@@ -94,6 +94,8 @@ def Initializer(tm, t0, engine='DD'):
         pipe.end_node_velocity[0] = V[-1]
         pipe.start_node_head[0] = H[0]
         pipe.end_node_head[0] = H[-1]
+        pipe.start_node_flowrate[0] = V[0]*pipe.area
+        pipe.end_node_flowrate[0] = V[-1]*pipe.area
 
         try:
             pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0])

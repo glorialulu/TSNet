@@ -13,7 +13,7 @@ five steps that the application woule need to take:
 .. _tnet1:
 .. figure:: figures/Tnet1.PNG
    :scale: 100 %
-   :alt: Network
+   :alt: tnet1
 
 
 1. Import wmoc packae and read the Epanet .inp file.
@@ -46,6 +46,38 @@ five steps that the application woule need to take:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 27-28
+
+After the transient simulation, the results at nodes and links
+will be returned and stored in the transient model (tm) instance.
+The time history of head at N3 throughout the simulation can be retrived by:
+
+.. docstring::
+    >>> print(pipe.start_node_flowrate)
+
+To plot the head results at N3:
+
+.. literalinclude:: ../examples/Tnet1_valve_closure.py
+    :lines: 31-42
+
+yields :numref:`tnet1_node`:
+
+.. _tnet1_node:
+.. figure:: figures/tnet1_node.pdf
+   :scale: 100 %
+   :alt: tnet1_node
+
+Similarily, to plot the flowrate results in pipe P2:
+
+.. literalinclude:: ../examples/Tnet1_valve_closure.py
+    :lines: 46-57
+
+yields :numref:`tnet1_node`:
+
+.. _tnet1_pipe:
+.. figure:: figures/tnet1_pipe.pdf
+   :scale: 100 %
+   :alt: tnet1_pipe
+
 
 
 

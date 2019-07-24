@@ -3,39 +3,39 @@
 
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
- 2               	0           	0           	                	;
- 1               	0           	0           	                	;
- 4               	0           	0           	                	;
- 3               	0           	0           	                	;
- 5               	0           	0           	                	;
- 6               	0           	0           	                	;
- 7               	0           	100          	                	;
+ N3              	0           	0           	                	;
+ N2              	0           	0           	                	;
+ N5              	0           	0           	                	;
+ N4              	0           	0           	                	;
+ N6              	0           	0           	                	;
+ N7              	0           	0           	                	;
+ N8              	0           	100         	                	;
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
- 0               	191         	                	;
+ R1              	191         	                	;
 
 [TANKS]
 ;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- 0               	0               	2               	610         	900         	92          	0           	Open  	;
- 1               	2               	3               	914         	750         	107         	0           	Open  	;
- 2               	2               	1               	610         	600         	98         	    0           	Open  	;
- 3               	3               	5               	457         	450         	105         	0           	Open  	;
- 4               	3               	1               	549         	450         	100         	0           	Open  	;
- 5               	4               	1               	671         	750         	93          	0           	Open  	;
- 6               	4               	6               	610         	900         	105         	0           	Open  	;
- 7               	5               	4               	457         	600         	105         	0           	Open  	;
- 8               	1               	5               	488         	450         	140       	    0           	Open  	;
+ P1              	R1              	N3              	610         	900         	92          	0           	Open  	;
+ P2              	N3              	N4              	914         	750         	107         	0           	Open  	;
+ P3              	N3              	N2              	610         	600         	98          	0           	Open  	;
+ P4              	N4              	N6              	457         	450         	105         	0           	Open  	;
+ P5              	N4              	N2              	549         	450         	100         	0           	Open  	;
+ P6              	N5              	N2              	671         	750         	93          	0           	Open  	;
+ P7              	N5              	N7              	610         	900         	105         	0           	Open  	;
+ P8              	N6              	N5              	457         	600         	105         	0           	Open  	;
+ P9              	N2              	N6              	488         	450         	140         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
- 9              	6               	7               	184         	FCV 	10000        	0           	;
+ VALVE           	N7              	N8              	184         	FCV 	10000       	0           	;
 
 [TAGS]
 
@@ -44,7 +44,7 @@
 
 [STATUS]
 ;ID              	Status/Setting
- 9              	Open
+ VALVE           	Open
 
 [PATTERNS]
 ;ID              	Multipliers
@@ -54,7 +54,9 @@
 
 [CONTROLS]
 
+
 [RULES]
+
 
 [ENERGY]
  Global Efficiency  	75
@@ -87,15 +89,15 @@
 ;Tank            	Model
 
 [TIMES]
- Duration           	0
- Hydraulic Timestep 	1:00
- Quality Timestep   	0:05
- Pattern Timestep   	1:00
- Pattern Start      	0:00
- Report Timestep    	1:00
- Report Start       	0:00
+ Duration           	0:00 
+ Hydraulic Timestep 	1:00 
+ Quality Timestep   	0:05 
+ Pattern Timestep   	1:00 
+ Pattern Start      	0:00 
+ Report Timestep    	1:00 
+ Report Start       	0:00 
  Start ClockTime    	12 am
- Statistic          	None
+ Statistic          	NONE
 
 [REPORT]
  Status             	No
@@ -122,36 +124,38 @@
 
 [COORDINATES]
 ;Node            	X-Coord         	Y-Coord
- 2               	87.45           	6543.21         
- 1               	961.93          	5658.44         
- 4               	2649.18         	5658.44         
- 3               	1414.36         	6965.59         
- 5               	2361.11         	6965.02         
- 6               	3750.55         	5656.40         
- 7               	4091.79         	5653.12         
- 0               	-529.84         	7427.98         
+ N3              	87.45           	6543.21         
+ N2              	961.93          	5658.44         
+ N5              	2649.18         	5658.44         
+ N4              	1414.36         	6965.59         
+ N6              	2361.11         	6965.02         
+ N7              	3750.55         	5656.40         
+ N8              	4091.79         	5653.12         
+ R1              	-529.84         	7427.98         
 
 [VERTICES]
 ;Link            	X-Coord         	Y-Coord
 
 [LABELS]
 ;X-Coord           Y-Coord          Label & Anchor Node
- -147.48          7044.34          "P1"                 
- 649.84           6798.25          "P2"                 
- 561.25           6138.74          "P3"                 
- 1926.22          7027.93          "P4"                 
- 1138.74          6443.89          "P5"                 
- 1781.85          5725.31          "P6"                 
- 3278.06          5705.62          "P7"                 
+ -149.18          7047.33          "P1"                 
+ 601.85           6944.44          "P2"                 
+ 478.40           6296.30          "P3"                 
+ 1887.86          7170.78          "P4"                 
+ 992.80           6522.63          "P5"                 
+ 1774.69          5617.28          "P6"                 
+ 3184.16          5607.00          "P7"                 
  2582.45          6306.08          "P8"                 
- 1696.54          6453.73          "P9"                 
- -610.13          7398.71          "R1"                 
- 42.82            6525.91          "N3"                 
+ 1620.37          6584.36          "P9"                 
+ -632.72          7366.26          "R1"                 
+ -77.16           6481.48          "N3"                 
  1404.32          7201.65          "N4"                 
  2350.82          7160.49          "N6"                 
- 964.83           5571.09          "N2"                 
+ 859.05           5576.13          "N2"                 
  2677.61          5561.25          "N5"                 
- 3940.86          5807.34          "VALVE"                 
+ 3636.83          5596.71          "VALVE"                 
+ 3667.70          5864.20          "N7"                 
+ 4048.35          5853.91          "N8"                 
 
 [BACKDROP]
  DIMENSIONS     	0.00            	0.00            	10000.00        	10000.00        

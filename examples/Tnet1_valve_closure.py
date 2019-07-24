@@ -6,7 +6,7 @@ tm = wmoc.network.TransientModel(inp_file)
 # set wavespeed
 tm.set_wavespeed(1200.)
 #set time options
-dt = 0.2  # time step [s], if not given, use the maximum allowed dt
+dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 20   # simulation peroid [s]
 tm.set_time(tf,dt)
 
@@ -17,7 +17,7 @@ ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
 valve_op = [tc,ts,se,m]
-tm.valve_closure('9',valve_op)
+tm.valve_closure('VALVE',valve_op)
 
 # Initialize
 t0 = 0. # initialize the simulation at 0 [s]
@@ -29,10 +29,9 @@ tm = wmoc.simulation.MOCSimulator(tm)
 
 # report results
 import matplotlib.pyplot as plt
-
-node = '2'
+node = 'N3'
 node = tm.get_node(node)
-fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
+fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
 plt.plot(tm.simulation_timestamps,node.head)
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Pressure Head at Node %s '%node)
@@ -41,10 +40,12 @@ plt.ylabel("Pressure Head (m)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
+plt.savefig('./docs/figures/tnet1_node.pdf', format='pdf',dpi=1000)
 
-pipe = '2'
+
+pipe = 'P2'
 pipe = tm.get_link(pipe)
-fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
+fig2 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
 plt.plot(tm.simulation_timestamps,pipe.start_node_flowrate,label='Start Node')
 plt.plot(tm.simulation_timestamps,pipe.end_node_flowrate,label='End Node')
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
@@ -54,3 +55,4 @@ plt.ylabel("Flow rate (m^3/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
+plt.savefig('./docs/figures/tnet1_pipe.pdf', format='pdf',dpi=1000)
