@@ -165,19 +165,19 @@ Similarly, to plot the velocity results in PIPE-109:
 yields :numref:`tnet2_pipe`:
 
 .. _tnet2_pipe:
-.. figure:: figures/tnet1_pipe.png
+.. figure:: figures/tnet2_pipe.png
    :width: 600
    :alt: tnet2_pipe
 
    Velocity at the start and end node of PIPE-109.
 
 
-Example 2 - Burst
+Example 3 - Burst and leak
 ---------------------------
 
 This example reveals how wmoc simulate .This example
 network is shown below in :numref:`tnet3`. It comprises 168 pipes,
-126 junctions, 8 valve, two pumps, one reservoir, and two tanks.
+126 junctions, 8 valve, two pumps, one reservoir, and two tanks. (time:
 There are five steps that the application would need to take:
 
 
@@ -249,9 +249,9 @@ yields :numref:`tnet3_burst`:
 .. _tnet3_burst:
 .. figure:: figures/tnet2_burst.png
    :width: 600
-   :alt: tnet2_burst
+   :alt: tnet3_burst
 
-   Leak discharge at node JUNCTION-22.
+   Burst discharge at node JUNCTION-20.
 
 Similarly, to plot the velocity results in LINK-40:
 

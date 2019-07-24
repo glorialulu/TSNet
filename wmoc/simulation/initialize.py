@@ -42,7 +42,7 @@ def Initializer(tm, t0, engine='PDD'):
     tn = int(tm.simulation_peroid/tm.time_step) # Total time steps
     print ('Total Time Step in this simulation %s'  %tn)
 
-    # create new atributes for each pipe to store head and velocity results
+    # create new attributes for each pipe to store head and velocity results
     # at its start and end node.
     for _, pipe in tm.pipes():
         pipe.start_node_head = np.zeros(tn)
@@ -69,7 +69,7 @@ def Initializer(tm, t0, engine='PDD'):
         sim = wntr.sim.WNTRSimulator(tm,mode='PDD')
         results = sim.run_sim()
     else:
-        raise Exception("Uknown initial calculation engine. \
+        raise Exception("Unknown initial calculation engine. \
             The engine can only be 'WNTR' or 'EPANET'.")
 
     for _, pipe in tm.pipes():
