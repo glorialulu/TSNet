@@ -23,7 +23,7 @@ tm.valve_closure('9',valve_op)
 
 # Initialize
 t0 = 0. # initialize the simulation at 0 [s]
-engine = 'DD'
+engine = 'DD' # demand driven simulator
 tm = wmoc.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
