@@ -63,7 +63,7 @@ yields :numref:`tnet1_node`:
 
 .. _tnet1_node:
 .. figure:: figures/tnet1_node.png
-   :scale: 100 %
+   :width: 600
    :alt: tnet1_node
 
    Head at node N3.
@@ -77,7 +77,7 @@ yields :numref:`tnet1_node`:
 
 .. _tnet1_pipe:
 .. figure:: figures/tnet1_pipe.png
-   :scale: 100 %
+   :width: 600
    :alt: tnet1_pipe
 
    Flowrate at the start and end node of pipe P2.
@@ -88,6 +88,9 @@ Example 2 - Pump operations
 ---------------------------
 
 
+
+Example 2 - Burst
+---------------------------
 
 
 
