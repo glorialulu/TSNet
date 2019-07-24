@@ -66,6 +66,8 @@ yields :numref:`tnet1_node`:
    :scale: 100 %
    :alt: tnet1_node
 
+   Head at node N3.
+
 Similarily, to plot the flowrate results in pipe P2:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
@@ -77,6 +79,9 @@ yields :numref:`tnet1_node`:
 .. figure:: figures/tnet1_pipe.pdf
    :scale: 100 %
    :alt: tnet1_pipe
+
+   Flowrate at the start and end node of pipe P2.
+
 
 
 

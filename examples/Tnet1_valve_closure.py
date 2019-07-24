@@ -12,7 +12,7 @@ tm.set_time(tf,dt)
 
 
 # set valve closing
-tc = 2 # valve closure peroid [s]
+tc = 0.6 # valve closure peroid [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
@@ -40,7 +40,7 @@ plt.ylabel("Pressure Head (m)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-plt.savefig('./docs/figures/tnet1_node.pdf', format='pdf',dpi=1000)
+fig1.savefig('./docs/figures/tnet1_node.pdf', format='pdf',dpi=1000)
 
 
 pipe = 'P2'
@@ -55,4 +55,4 @@ plt.ylabel("Flow rate (m^3/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-plt.savefig('./docs/figures/tnet1_pipe.pdf', format='pdf',dpi=1000)
+fig2.savefig('./docs/figures/tnet1_pipe.pdf', format='pdf',dpi=1000)
