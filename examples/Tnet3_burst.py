@@ -1,17 +1,17 @@
 import wmoc
-
-# open an example network and creat a transient model
+# open an example network and create a transient model
 inp_file = 'examples/networks/Tnet3.inp'
 tm = wmoc.network.TransientModel(inp_file)
 
 # set wavespeed
 tm.set_wavespeed(1200.)
-
 #set time step
-dt = 0.05  # time step [s], if not given, use the maximum allowed dt
-tf = 20 # simulation peroid [s]
+tf = 20 # simulation period [s]
 tm.set_time(tf)
 
+# add leak
+emitter_coeff = 0.01 # [ m^3/s/(m H20)^(1/2)]
+tm.add_leak('JUNCTION-22', emitter_coeff)
 
 # add burst
 ts = 1 # burst start time
@@ -21,7 +21,7 @@ tm.add_burst('JUNCTION-20', ts, tc, final_burst_coeff)
 
 # Initialize
 t0 = 0. # initialize the simulation at 0s
-engine = 'WNTR' # or Epanet
+engine = 'DD' # or Epanet
 tm = wmoc.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
@@ -32,14 +32,29 @@ import matplotlib.pyplot as plt
 node = 'JUNCTION-22'
 node = tm.get_node(node)
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,node.head)
+plt.plot(tm.simulation_timestamps,node.emitter_discharge)
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
-plt.title('Pressure Head at Node %s '%node)
+plt.title('Leak discharge at Node %s '%node)
 plt.xlabel("Time")
-plt.ylabel("Pressure Head (m)")
+plt.ylabel("Leak discharge (m^3/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
+fig.savefig('./docs/figures/tnet3_leak.png', format='png',dpi=100)
+
+node = 'JUNCTION-20'
+node = tm.get_node(node)
+fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
+plt.plot(tm.simulation_timestamps,node.emitter_discharge)
+plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
+plt.title('Burst discharge at Node %s '%node)
+plt.xlabel("Time")
+plt.ylabel("Burst discharge (m^3/s)")
+plt.legend(loc='best')
+plt.grid(True)
+plt.show()
+fig.savefig('./docs/figures/tnet3_burst.png', format='png',dpi=100)
+
 
 pipe = 'LINK-40'
 pipe = tm.get_link(pipe)
@@ -53,3 +68,4 @@ plt.ylabel("Velocity (m/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
+fig.savefig('./docs/figures/tnet3_pipe.png', format='png',dpi=100)

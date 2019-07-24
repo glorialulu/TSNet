@@ -193,7 +193,7 @@ def cal_roughness_coef(pipe, V, hl):
     """
 
     g = 9.8
-    H_tol = 1e-4
+    H_tol = 1e-3
     V_tol = 1e-5
 
     if abs(V) >= V_tol and hl >= H_tol:

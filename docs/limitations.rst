@@ -29,18 +29,22 @@ Assumptions and Limitations
 
 Current software limitations are noted:
 
-* Demands on the start and end nodes of pumps and valves are not supported.
+*   Demands on the start and end nodes of pumps and valves are not supported.
     If demands are defined on these nodes in the .inp file, they will be
     ignored in transient simulation, and the simulation results may
     not be accurate.
 
-* Multi-branch junctions on the start and end nods of pumps and valves
+*   Multi-branch junctions on the start and end nods of pumps and valves
     are not supported. It is assumed that valves and pumps are connected
     by series pipes.
 
-* Demands are pressure dependent during transient simulation.
+*   Demands are pressure dependent during transient simulation.
 
-* Friction coefficients are converted to D-W coefficients based on initial conditions.
+*   Friction coefficients are converted to D-W coefficients based
+    on initial conditions.
+
+*   Pipe bursts and leaks occur on the node.
+
 
 
 
