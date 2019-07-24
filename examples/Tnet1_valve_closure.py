@@ -1,17 +1,17 @@
 import wmoc
-# open an example network and creat a transient model
+# open an example network and create a transient model
 inp_file = 'examples/networks/Tnet1.inp'
 tm = wmoc.network.TransientModel(inp_file)
 
 # set wavespeed
-tm.set_wavespeed(1200.)
+tm.set_wavespeed(1200.) # m/s
 #set time options
 dt = 0.1  # time step [s], if not given, use the maximum allowed dt
-tf = 20   # simulation peroid [s]
+tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 
 # set valve closing
-tc = 0.6 # valve closure peroid [s]
+tc = 0.6 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
@@ -45,8 +45,10 @@ fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
 pipe = 'P2'
 pipe = tm.get_link(pipe)
 fig2 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,pipe.start_node_flowrate,label='Start Node')
-plt.plot(tm.simulation_timestamps,pipe.end_node_flowrate,label='End Node')
+plt.plot(tm.simulation_timestamps,pipe.start_node_flowrate,
+        label='Start Node')
+plt.plot(tm.simulation_timestamps,pipe.end_node_flowrate,
+        label='End Node')
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Flowrate of Pipe %s '%pipe)
 plt.xlabel("Time")

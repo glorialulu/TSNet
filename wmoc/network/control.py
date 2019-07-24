@@ -1,7 +1,7 @@
 """
 The wmoc.network.control module includes method to define
 network controls of the pump and valve.These control modify
-parameters in the network during trasient simulation.
+parameters in the network during transient simulation.
 
 """
 import numpy as np
@@ -16,7 +16,7 @@ def valveclosing(dt, tf, valve_op):
     tf : float
         Simulation Time
     valve_op : list
-        Contains paramtes to defie valve operation rule
+        Contains parameters to define valve operation rule
         valve_op = [tc,ts,se,m]
         tc : the duration takes to close the valve [s]
         ts : closure start time [s]
@@ -31,7 +31,7 @@ def valveclosing(dt, tf, valve_op):
 
     [tc,ts,se,m] = valve_op
     tn = int(tf/dt)
-    # aburupt closure
+    # abrupt closure
     if tc ==0:
         s =  np.array([(1- (i*dt- ts))**1    for i in range(tn)])
         s[s>1] = 1
@@ -53,7 +53,7 @@ def valveopening(dt, tf, valve_op):
     tf : float
         Simulation Time
     valve_op : list
-        Contains paramtes to defie valve operation rule
+        Contains parameters to define valve operation rule
         valve_op = [tc,ts,se,m]
         tc : the duration takes to close the valve [s]
         ts : closure start time [s]
@@ -68,7 +68,7 @@ def valveopening(dt, tf, valve_op):
 
     [tc,ts,se,m] = valve_op
     tn = int(tf/dt)
-    # aburupt opening
+    # abrupt opening
     if tc ==0:
         s =  np.array([((i*dt- ts))**1    for i in range(tn)])
         s[s>0] = se
@@ -90,7 +90,7 @@ def pumpclosing(dt, tf, pump_op):
     tf : float
         Simulation Time
     valve_op : list
-        Contains paramtes to defie valve operation rule
+        Contains parameters to define valve operation rule
         valve_op = [tc,ts,se,m]
         tc : the duration takes to close the valve [s]
         ts : closure start time [s]
@@ -132,7 +132,7 @@ def pumpopening(dt, tf, pump_op):
     tf : float
         Simulation Time
     pump_op : list
-        Contains paramtes to defie pump operation rule
+        Contains parameters to define pump operation rule
         pump_op = [tc,ts,se,m]
         tc : the duration takes to start up the pump [s]
         ts : open start time [s]
@@ -147,7 +147,7 @@ def pumpopening(dt, tf, pump_op):
 
     [tc,ts,se,m] = pump_op
     tn = int(tf/dt)
-    # aburupt opening
+    # abrupt opening
     if tc ==0:
         s =  np.array([((i*dt- ts))**1    for i in range(tn)])
         s[s>0] = se

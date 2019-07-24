@@ -274,7 +274,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     dt : float
         Time step
     g : float
-        Gravity aceleration
+        Gravity acceleration
     nn : int
         The index of the calculation node
     s1 : list
@@ -389,7 +389,7 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
     dt : float
         Time step
     g : float
-        Gravity aceleration
+        Gravity acceleration
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
@@ -426,7 +426,7 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
     ap = ap * A2[0]**2.
     bp = bp * A2[0]
 
-    # parameters of the quatratic polinomial
+    # parameters of the quadratic polynomial
     aq = ap * C2[0,1]**2.
     bq = bp*C2[0,1] - 2.*ap*C2[0,0]*C2[0,1] - 1
     cq = ap*C2[0,0]**2. - bp*C2[0,0] + Hsump + cp
@@ -439,13 +439,13 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
         HP = (-bq)/(2*aq)
     else:
         HP = (-bq)/(2*aq)
-        warnings.warn('Error: The quadratic equation has no real solution (pump)')
+        warnings.warn('The quadratic equation has no real solution (pump)')
 
     if HP > Hsump:
-        VP = np.float64(-C2[0,0]+ C2[0,1]*HP)
+        VP = np.float64(-C2[0,0] + C2[0,1]*HP)
     else :
         HP = Hsump
-        VP = np.float64(-C2[0,0]+ C2[0,1]*HP)
+        VP = np.float64(-C2[0,0] + C2[0,1]*HP)
 
     if VP <= 0 : # positive flow
         warnings.warn( "Reverse flow stopped by check valve!")

@@ -38,6 +38,11 @@ Current software limitations are noted:
     are not supported. It is assumed that valves and pumps are connected
     by series pipes.
 
+* Demands are pressure dependent during transient simulation.
+
+* Friction coefficients are converted to D-W coefficients based on initial conditions.
+
+
 
 
 

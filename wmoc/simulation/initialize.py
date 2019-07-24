@@ -11,7 +11,7 @@ import wntr
 import numpy as np
 import warnings
 
-def Initializer(tm, t0, engine='DD'):
+def Initializer(tm, t0, engine='PDD'):
     """Initial Condition Calculation.
 
     Initialize the list containing numpy arrays for velocity and head.
@@ -66,7 +66,7 @@ def Initializer(tm, t0, engine='DD'):
         sim = wntr.sim.WNTRSimulator(tm)
         results = sim.run_sim()
     elif engine.lower() == 'pdd':
-        sim = wntr.sim.EpanetSimulator(tm,mode='PDD')
+        sim = wntr.sim.WNTRSimulator(tm,mode='PDD')
         results = sim.run_sim()
     else:
         raise Exception("Uknown initial calculation engine. \

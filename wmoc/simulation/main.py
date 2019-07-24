@@ -179,7 +179,6 @@ def MOCSimulator(tm):
                     if tm.links[utype[pn][1]].operating == True:
                         po = tm.links[utype[pn][1]].operation_rule[ts]
                         pump[0][1]=[(i*po,j*po**2) for (i,j) in pump[0][1]]
-                        print('Operating pump %s' %utype[pn][1])
                 else:
                      warnings.warn ('Pipe %s miss %s upstream.' %(pipe, utype[pn][0]))
 
@@ -276,7 +275,7 @@ def MOCSimulator(tm):
                 pipe.end_node_head[ts] = HN[pn][-1]
                 pipe.start_node_flowrate[ts] = VN[pn][0]*pipe.area
                 pipe.end_node_flowrate[ts] = VN[pn][-1]*pipe.area
-                
+
                 if HN[pn][0] >0:
                     pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
                     pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])

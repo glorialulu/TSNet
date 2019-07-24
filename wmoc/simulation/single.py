@@ -21,7 +21,7 @@ from wmoc.simulation.solver import (
 
 def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H0, V0, H, V, H10, V10, H20, V20, pump, valve):
-    """MOC solution for an indivial inner pipe.
+    """MOC solution for an individual inner pipe.
 
     Parameters
     ----------
@@ -38,7 +38,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
     links1 : list
         Upstream adjacent pipes
     links2 : list
-        Downstream ajacent pipes
+        Downstream adjacent pipes
     utype : list
         Upstream adjacent link type, and if not pipe, their name
     dtype : list
@@ -72,7 +72,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
     g = 9.8                          # m/s^2
     link1 = [p[abs(i)-1] for i in links1]
     link2 = [p[abs(i)-1] for i in links2]
-    n = linkp.number_of_segments    # spatial discritization
+    n = linkp.number_of_segments    # spatial discretization
 
     for i in range(n+1):
         # Pipe start
