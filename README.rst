@@ -26,14 +26,13 @@ Overview
 ---------
 
 A number of commercial softwares for transient simulation in water
-distribution systems are available in the market; however, he use of
-these softwares for research purposes is limited. The major restriction is
-due to the fact that the softwares are packed as black boxes and the source
+distribution systems are available in the market; however, the use of
+these softwares for research purposes is restricted. The major restriction is
+due to the fact that the softwares are packed as black boxes, and the source
 code is not visible, thus prohibiting any changes, including modification of
-existing and implementation of new elements in the source code.
+existing and implementation of new elements, in the source code.
 Therefore, the authors find it imperative to develop an open source package
 rendering easiness for interaction, modification, and extension.
-
 
 Features
 --------

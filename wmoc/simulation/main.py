@@ -127,6 +127,8 @@ def MOCSimulator(tm):
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
+                pipe.start_node_flowrate[ts] = VN[pn][0]*pipe.area
+                pipe.end_node_flowrate[ts] = VN[pn][-1]*pipe.area
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
@@ -205,6 +207,8 @@ def MOCSimulator(tm):
                 pipe.end_node_velocity[ts] = VN[pn][-1]
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
+                pipe.start_node_flowrate[ts] = VN[pn][0]*pipe.area
+                pipe.end_node_flowrate[ts] = VN[pn][-1]*pipe.area
 
                 if HN[pn][0] >0:
                     pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
@@ -270,7 +274,9 @@ def MOCSimulator(tm):
                 pipe.end_node_velocity[ts] = VN[pn][-1]
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
-
+                pipe.start_node_flowrate[ts] = VN[pn][0]*pipe.area
+                pipe.end_node_flowrate[ts] = VN[pn][-1]*pipe.area
+                
                 if HN[pn][0] >0:
                     pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(HN[pn][0])
                     pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(HN[pn][0])

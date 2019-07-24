@@ -47,8 +47,10 @@ def Initializer(tm, t0, engine='DD'):
     for _, pipe in tm.pipes():
         pipe.start_node_head = np.zeros(tn)
         pipe.start_node_velocity = np.zeros(tn)
+        pipe.start_node_flowrate = np.zeros(tn)
         pipe.end_node_head = np.zeros(tn)
         pipe.end_node_velocity = np.zeros(tn)
+        pipe.end_node_flowrate = np.zeros(tn)
 
     # create new atributes for each node to store head and discharge results
     for _,node in tm.nodes():

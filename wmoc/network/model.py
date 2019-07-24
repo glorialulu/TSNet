@@ -56,8 +56,9 @@ class TransientModel (WaterNetworkModel):
             node.emitter_coeff = 0.
             i+=1     ## Graph the network
 
-        # calculate the slope for each pipe
+        # calculate the slope and area for each pipe
         for _, pipe in self.pipes():
+            pipe.area = pipe.diameter**2. * np.pi / 4.
             try:
                 theta = np.sin(np.arctan(pipe.end_node.elevation -
                     pipe.start_node.elevation)/pipe.length)
