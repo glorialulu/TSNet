@@ -62,7 +62,7 @@ To plot the head results at N3:
 yields :numref:`tnet1_node`:
 
 .. _tnet1_node:
-.. figure:: figures/tnet1_node.pdf
+.. figure:: figures/tnet1_node.png
    :scale: 100 %
    :alt: tnet1_node
 
@@ -76,7 +76,7 @@ Similarily, to plot the flowrate results in pipe P2:
 yields :numref:`tnet1_node`:
 
 .. _tnet1_pipe:
-.. figure:: figures/tnet1_pipe.pdf
+.. figure:: figures/tnet1_pipe.png
    :scale: 100 %
    :alt: tnet1_pipe
 
@@ -84,7 +84,8 @@ yields :numref:`tnet1_node`:
 
 
 
-
+Example 2 - Pump operations
+---------------------------
 
 
 
