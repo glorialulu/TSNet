@@ -61,7 +61,7 @@ def MOCSimulator(tm):
         tt.append(t)
         tp = ts/tn*100
         if ts % int(tn/10) == 0 :
-            print('Computation completed %i %%...' %tp )
+            print('Transit simulation completed %i %%...' %tp )
         # for burst node: emitter_coeff = burst_coeff[ts]
         for _,node in tm.nodes():
             if node.burst_status == True:

@@ -11,10 +11,28 @@ Simple example
 ---------------
 
 A simple example, get_startted.py is included in the examples folder.
-Thie example demonstrate how to
+Thie example demonstrate how to::
 
-* Simulate valve closure in a simple network.
+* Import wmoc
 
-* Plot time history results on the start and end node of a specified pipe. 
+* Gnerate a transient model
 
-.. literalinclude:: ../examples/get_started.py
+* Set wave speed
+
+* Set time step and simulation peroid
+
+* Perform initial condition calculation
+
+* Define valve closure rule
+
+* Run transient simulation
+
+* Plot simulation results
+
+.. literalinclude:: ../examples/Tnet1_valve_closure.py
+
+Additional examples are included in the wmoc documentation.
+
+Three EPANET INP files and example files are also included in the wmoc
+repository in the examples folder. Example networks range from a simple
+8 node network to a 126 node network.

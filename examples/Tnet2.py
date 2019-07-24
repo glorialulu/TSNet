@@ -17,36 +17,23 @@ tm.set_time(tf)
 # emitter_coeff = 0.1 #[ m^3/s/(m H20)^(1/2)]
 # tm.add_leak(leak_node, emitter_coeff)
 
-# set valve opening
-# tc = 2 # valve opening peroid
-# ts = 0 # valve opening start time
-# se = 1 # end open percentage
-# m = 1 # closure constant
-# valve_op = [tc,ts,se,m]
-# tm.valve_opening('TCV-1',valve_op)
-
 # set pump shut off
-tc = 2 # pump closure peroid
-ts = 0 # pump closure start time
-se = 0.001 # end open percentage
-m = 1 # closure constant
-pump_op = [tc,ts,se,m]
-tm.pump_shut_off('335', pump_op)
-
-# set pump start up
-# tc = 2 # valve opening peroid
-# ts = 0 # valve opening start time
-# se = 1 # end open percentage
+# tc = 2 # pump closure peroid
+# ts = 0 # pump closure start time
+# se = 0.001 # end open percentage
 # m = 1 # closure constant
 # pump_op = [tc,ts,se,m]
-# tm.pump_start_up('1', pump_op)
+# tm.pump_shut_off('335', pump_op)
+
+# set pump start up
+tc = 2 # valve opening peroid
+ts = 0 # valve opening start time
+se = 1 # end open percentage
+m = 1 # closure constant
+pump_op = [tc,ts,se,m]
+tm.pump_start_up('335', pump_op)
 
 
-# add burst
-# ts = 1 # burst start time
-# tc = 1 # time for burst to fully develop
-# final_burst_coeff = 0.01 # final burst coeff [ m^3/s/(m H20)^(1/2)]
-# tm.add_burst('3', ts, tc, final_burst_coeff)
 
 # Initialize
 t0 = 0. # initialize the simulation at 0s
@@ -56,22 +43,10 @@ tm = wmoc.simulation.Initializer(tm, t0, engine)
 # Transient simulation
 tm = wmoc.simulation.MOCSimulator(tm)
 
-# report results 
+# report results
 import matplotlib.pyplot as plt
-# pipe = '0'
-# pipe = tm.get_link(pipe)
-# fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-# plt.plot(tm.simulation_timestamps,pipe.start_node_head,label='Start Node')
-# plt.plot(tm.simulation_timestamps,pipe.end_node_head,label='End Node')
-# plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
-# plt.title('Pressure Head of Pipe %s '%pipe)
-# plt.xlabel("Time")
-# plt.ylabel("Pressure Head (m)")
-# plt.legend(loc='best')
-# plt.grid(True)
-# plt.show()
 
-node = '305-A'
+node = '61'
 node = tm.get_node(node)
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
 plt.plot(tm.simulation_timestamps,node.head)
@@ -79,6 +54,19 @@ plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Pressure Head at Node %s '%node)
 plt.xlabel("Time")
 plt.ylabel("Pressure Head (m)")
+plt.legend(loc='best')
+plt.grid(True)
+plt.show()
+
+pipe = '329'
+pipe = tm.get_link(pipe)
+fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
+plt.plot(tm.simulation_timestamps,pipe.start_node_velocity,label='Start Node')
+plt.plot(tm.simulation_timestamps,pipe.end_node_velocity,label='End Node')
+plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
+plt.title('Velocity of Pipe %s '%pipe)
+plt.xlabel("Time")
+plt.ylabel("Velocity (m/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()

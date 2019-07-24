@@ -8,9 +8,8 @@ Welcome to wmoc's documentation!
    readme
    installation
    limitations
-   units
    usage
-   simulation
+   initial
    transient
    results
    contributing

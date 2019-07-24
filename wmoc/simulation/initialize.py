@@ -11,7 +11,7 @@ import wntr
 import numpy as np
 import warnings
 
-def Initializer(tm, t0, engine='WNTR'):
+def Initializer(tm, t0, engine='DD'):
     """Initial Condition Calculation.
 
     Initialize the list containing numpy arrays for velocity and head.
@@ -26,7 +26,10 @@ def Initializer(tm, t0, engine='WNTR'):
     t0 : float
         time to calculate initial condition
     engine : string
-        steady state calculation engine, by default WNTR
+        steady state calculation engine:
+        DD: demand driven;
+        PDD: pressure dependent demand,
+        by default DD
 
 
     Returns
@@ -57,11 +60,11 @@ def Initializer(tm, t0, engine='WNTR'):
         if node.leak_status == True:
             node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.8),
                     discharge_coeff = 1, start_time = t0)
-    if engine.lower() == 'wntr':
+    if engine.lower() == 'dd':
         sim = wntr.sim.WNTRSimulator(tm)
         results = sim.run_sim()
-    elif engine.lower() == 'epanet':
-        sim = wntr.sim.EpanetSimulator(tm)
+    elif engine.lower() == 'pdd':
+        sim = wntr.sim.EpanetSimulator(tm,mode='PDD')
         results = sim.run_sim()
     else:
         raise Exception("Uknown initial calculation engine. \
@@ -101,7 +104,7 @@ def Initializer(tm, t0, engine='WNTR'):
             pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1])
         except:
             pass # reservoir does not have emitter_discharge attribute
-            
+
         # calculate demand coefficient
         Hs = H[0]
         He = H[-1]
