@@ -10,7 +10,6 @@ dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 20   # simulation peroid [s]
 tm.set_time(tf,dt)
 
-
 # set valve closing
 tc = 0.6 # valve closure peroid [s]
 ts = 0 # valve closure start time [s]
@@ -18,7 +17,6 @@ se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
 valve_op = [tc,ts,se,m]
 tm.valve_closure('VALVE',valve_op)
-
 
 # Initialize
 t0 = 0. # initialize the simulation at 0 [s]
@@ -28,44 +26,11 @@ tm = wmoc.simulation.Initializer(tm, t0, engine)
 # Transient simulation
 tm = wmoc.simulation.MOCSimulator(tm)
 
-#leak
-tm_leak = wmoc.network.TransientModel(inp_file)
-
-# set wavespeed
-tm_leak.set_wavespeed(1200.)
-#set time options
-dt = 0.1  # time step [s], if not given, use the maximum allowed dt
-tf = 20   # simulation peroid [s]
-tm_leak.set_time(tf,dt)
-
-
-# set valve closing
-tc = 0.6 # valve closure peroid [s]
-ts = 0 # valve closure start time [s]
-se = 0 # end open percentage [s]
-m = 1 # closure constant [dimensionless]
-valve_op = [tc,ts,se,m]
-tm_leak.valve_closure('VALVE',valve_op)
-
-# add leak
-leak_node = 'N2'
-emitter_coeff = 0.1 #[ m^3/s/(m H20)^(1/2)]
-tm_leak.add_leak(leak_node, emitter_coeff)
-
-# Initialize
-t0 = 0. # initialize the simulation at 0 [s]
-engine = 'DD' # demand driven simulator
-tm_leak = wmoc.simulation.Initializer(tm_leak, t0, engine)
-
-# Transient simulation
-tm_leak = wmoc.simulation.MOCSimulator(tm_leak)
-
 # report results
 import matplotlib.pyplot as plt
 
 node = 'N3'
 node = tm.get_node(node)
-node_leak = tm_leak.get_node(node)
 fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
 plt.plot(tm.simulation_timestamps,node.head)
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
@@ -76,23 +41,6 @@ plt.legend(loc='best')
 plt.grid(True)
 plt.show()
 fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
-
-
-node = 'N3'
-node = tm.get_node(node)
-node_leak = tm_leak.get_node(node)
-fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,node.head, label='Base')
-plt.plot(tm.simulation_timestamps,node_leak.head, label='Leak')
-plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
-plt.title('Pressure Head at Node %s '%node)
-plt.xlabel("Time")
-plt.ylabel("Pressure Head (m)")
-plt.legend(loc='best')
-plt.grid(True)
-plt.show()
-fig1.savefig('./docs/figures/tnet1_leak.png', format='png',dpi=100)
-
 
 pipe = 'P2'
 pipe = tm.get_link(pipe)

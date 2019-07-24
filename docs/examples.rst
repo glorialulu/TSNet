@@ -16,17 +16,17 @@ five steps that the application woule need to take:
    :alt: tnet1
 
 
-1. Import wmoc packae and read the Epanet .inp file.
+1.  Import wmoc package and read the Epanet .inp file.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 1-4
 
-2. Set wavespeed for the pipes and time options.
+#.  Set wavespeed for the pipes and time options.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 6-11
 
-3. Set valve operation rules, including how long it takes
+#.  Set valve operation rules, including how long it takes
     to close the valve (:math: `t_c`), when to start close the
     valve (:math: `t_s`), the open percentage when the closure
     is completed (:math: `se`), and the shape of the closure
@@ -34,30 +34,30 @@ five steps that the application woule need to take:
     :math: `2` stands for quadratic closure).
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 14-20
+    :lines: 13-19
 
-4. Compute steady state results to establish the initial
+#.  Compute steady state results to establish the initial
     condition for transient simulation.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 22-25
+    :lines: 21-24
 
-5. Run transient simultion.
+#. Run transient simultion.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 27-28
+    :lines: 26-27
 
 After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
 The time history of head at N3 throughout the simulation can be retrived by:
 
-.. docstring::
+.. doctest::
     >>> print(pipe.start_node_flowrate)
 
 To plot the head results at N3:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 31-42
+    :lines: 32-43
 
 yields :numref:`tnet1_node`:
 
@@ -71,7 +71,7 @@ yields :numref:`tnet1_node`:
 Similarily, to plot the flowrate results in pipe P2:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 46-57
+    :lines: 45-57
 
 yields :numref:`tnet1_node`:
 
