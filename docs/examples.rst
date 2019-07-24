@@ -23,19 +23,19 @@ application would need to take:
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 1-4
 
-2.  Set wave speed for all pipes to be :math: `1200m/s`,
-    time step to be :math: `0.1m/s`, and simulation period
-    to be :math: `60s`.
+2.  Set wave speed for all pipes to be :math:`1200m/s`,
+    time step to be :math:`0.1m/s`, and simulation period
+    to be :math:`60s`.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 6-11
 
 3.  Set valve operation rules, including how long it takes
-    to close the valve (:math: `tc`), when to start close the
-    valve (:math: `ts`), the open percentage when the closure
-    is completed (:math: `se`), and the shape of the closure
-    operation curve (:math: `m`, :math: `1` stands for linear closure,
-    :math: `2` stands for quadratic closure).
+    to close the valve (:math:`tc`), when to start close the
+    valve (:math:`ts`), the open percentage when the closure
+    is completed (:math:`se`), and the shape of the closure
+    operation curve (:math:`m`, :math:`1` stands for linear closure,
+    :math:`2` stands for quadratic closure).
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 13-19
@@ -108,19 +108,19 @@ application would need to take:
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 1-4
 
-2.  Set wave speed for all pipes to be :math: `1200m/s` and
-    simulation period to be :math: `60s`. Use suggested time
+2.  Set wave speed for all pipes to be :math:`1200m/s` and
+    simulation period to be :math:`60s`. Use suggested time
     step.
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 6-10
 
 3.  Set pump operation rules, including how long it takes
-    to shutdown the pump (:math: `tc`), when to the shut-down starts
-    (:math: `ts`), the pump speed multiplier value when the shut-down
-    is completed (:math: `se`), and the shape of the shut-down
-    operation curve (:math: `m`, :math: `1` stands for linear closure,
-    :math: `2` stands for quadratic closure).
+    to shutdown the pump (:math:`tc`), when to the shut-down starts
+    (:math:`ts`), the pump speed multiplier value when the shut-down
+    is completed (:math:`se`), and the shape of the shut-down
+    operation curve (:math:`m`, :math:`1` stands for linear closure,
+    :math:`2` stands for quadratic closure).
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 12-18
@@ -191,8 +191,8 @@ There are five steps that the application would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 1-4
 
-2.  Set wave speed for all pipes to be :math: `1200m/s` and
-    simulation period to be :math: `20s`. Use suggested time
+2.  Set wave speed for all pipes to be :math:`1200m/s` and
+    simulation period to be :math:`20s`. Use suggested time
     step.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
@@ -203,9 +203,9 @@ There are five steps that the application would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 12-14
 
-4.  Set up burst event, including burst start time (:math: `ts`),
-    time for burst to fully develop (:math: `tc`), and the final emitter
-    coefficient (:math: `final_burst_coeff`).
+4.  Set up burst event, including burst start time (:math:`ts`),
+    time for burst to fully develop (:math:`tc`), and the final emitter
+    coefficient (:math:`final_burst_coeff`).
 
 .. literalinclude:: ../examples/Tnet3_burst.py
     :lines: 16-20
@@ -247,7 +247,7 @@ To plot the burst discharge results at JUNCTION-20:
 yields :numref:`tnet3_burst`:
 
 .. _tnet3_burst:
-.. figure:: figures/tnet2_burst.png
+.. figure:: figures/tnet3_burst.png
    :width: 600
    :alt: tnet3_burst
 
