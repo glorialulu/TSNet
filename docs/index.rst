@@ -12,6 +12,7 @@ Welcome to wmoc's documentation!
    initial
    transient
    results
+   examples
    contributing
    authors
    history
