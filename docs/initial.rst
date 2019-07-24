@@ -11,7 +11,7 @@ the upcoming transient simulations.
 **WNTRSimulators** can be used to run demand-driven (DD) or 
 pressure dependent demand (PDD) hydraulics simulations. The 
 default simulation engine is DD. The initial condition simulation
-can be run using the following code::
+can be run using the following code:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 25-27
