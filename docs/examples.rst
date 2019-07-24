@@ -51,8 +51,7 @@ After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
 The time history of head at N3 throughout the simulation can be retrived by:
 
-.. doctest::
-    >>> print(pipe.start_node_flowrate)
+>>> print(pipe.start_node_flowrate)
 
 To plot the head results at N3:
 
