@@ -19,10 +19,15 @@ governing equations transient flow [WYSS93]_.
 
 .. math::
     \frac{\partial H}{\partial t} + a^2 /g * \frac{\partial V}{\partial t} = 0
-    \frac{\partial V}{\partial t} + g * \frac{\partial H}{\partial t} + h_f = 0
 
-where :math:H is the piezometric head, :math:V is the flow velocity
-in the pipe, :math:a is the wave speed, :math:g is the gravity acceleration,
+..math::
+    \frac{\partial V}{\partial t} + g*\frac{\partial H}{\partial t} + h_f = 0
+
+where
+:math:H is the piezometric head,
+:math:V is the flow velocity in the pipe,
+:math:a is the wave speed,
+:math:g is the gravity acceleration,
 and :math:h_f represents the head loss.
 
 Method of Characteristics (MOC)

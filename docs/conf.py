@@ -43,7 +43,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx'
     ]
-    
+
 # Napoleon settings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
