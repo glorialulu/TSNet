@@ -33,13 +33,25 @@ and :math:`h_f` represents the head loss.
 
 Method of Characteristics (MOC)
 -------------------------------
-The Method of Characteristics (MOC) method is used to solve the 
+The Method of Characteristics (MOC) method is used to solve the system of
+governing equations above. The essence of MOC is to transform the set of
+partial differential equations to an equivalent set of ordinary differential
+equations, as shown below [LAJW99]_:
 
+.. math::
+    \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    only when \frac{dx}{dt} = a
+
+    \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    only when \frac{dx}{dt} = -a
 
 Headloss in pipes
 ---------------------
 
+Darcy-Weisbach equation.
 
+.. math::
+    h_f = \frac{f}{2gD} V |V|
 
 Pressure-driven Demand
 ----------------------

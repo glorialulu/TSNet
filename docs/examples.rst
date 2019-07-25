@@ -188,6 +188,7 @@ would need to take:
    :width: 600
    :alt: tnet3
 
+
 1.  Import wmoc package and read the Epanet .inp file.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
@@ -200,7 +201,8 @@ would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 6-10
 
-3. Add leak, and specify the emitter coefficient.
+3.  Define background leak, and specify the emitter coefficient.
+    The leak will be included in the initial condition calculation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 12-14
@@ -233,6 +235,7 @@ To plot the leak discharge results at JUNCTION-22:
     :lines: 30-43
 
 yields :numref:`tnet3_leak`:
+
 
 .. _tnet3_node:
 .. figure:: figures/tnet3_leak.png
