@@ -14,9 +14,9 @@ capacity of simulating leaks. The default simulation engine is DD.
 An initial condition simulation can be run using the following code:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 25-27
+    :lines: 22-24
 
-:math: `t_0` stands for the time when the initial condition will be
+:math:`t_0` stands for the time when the initial condition will be
 calculated. More information on the initializer can be found in
 the API documentation, under
 :class: `~wmoc.simulation.initialize.Initializer`.

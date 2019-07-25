@@ -18,6 +18,7 @@ Welcome to wmoc's documentation!
    history
    API documentation <apidocs/wmoc>
    abbrev
+   reference
 
 Indices and tables
 ==================
