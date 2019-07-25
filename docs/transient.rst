@@ -18,9 +18,8 @@ The Method of Characteristics (MOC) method is used to solve the following
 governing equations transient flow [WYSS93]_.
 
 .. math::
-    \frac{\partial H}{\partial t} + a^2 /g * \frac{\partial V}{\partial t} = 0
+    \frac{\partial H}{\partial t} + \frac{a^2}{g} * \frac{\partial V}{\partial t} = 0
 
-..math::
     \frac{\partial V}{\partial t} + g*\frac{\partial H}{\partial t} + h_f = 0
 
 where

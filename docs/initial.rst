@@ -2,11 +2,9 @@
 Initial Condition
 =================
 
-WMOC employed WNTRSimulators_ for simulating the steady state
+WMOC employed [WNTRSi]_ for simulating the steady state
 in the network to establish the initial flow conditions for
 the upcoming transient simulations.
-
-.. _WNTRSimulators: https://wntr.readthedocs.io/en/latest/index.html
 
 **WNTRSimulators** can be used to run demand-driven (DD) or
 pressure-dependent demand (PDD) hydraulics simulations, with the
