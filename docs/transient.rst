@@ -45,12 +45,12 @@ equations, as shown below [LAJW99]_:
     \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{only when} \frac{dx}{dt} = -a
 
-Headloss in pipes
+Headloss in Pipes
 ---------------------
 
 WMOC adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANet .inp file. This package computes
-Darcy-Weisbach coeffients (:math:`f`) based on the head loss (:math:`{h_l}_0`)
+Darcy-Weisbach coefficients (:math:`f`) based on the head loss (:math:`{h_l}_0`)
 and flow velocity (:math:`V_0`) in initial condition, using the following equation:
 
 .. math::
@@ -85,33 +85,33 @@ It should be noted that if the head is negative, the demand flow will be
 treated zero, assuming that a backflow preventer exists on each node.
 
 
-
-Inner nodal boundary
---------------------
-
-
-
-
-Nodal leakage boundary
-----------------------
-
-
-
-
-Choice of time step
+Choice of Time Step
 -----------------------
 
 
 
-Valve closure
---------------
+
+
+
+
+
+
+
+
+Valve Operation (Closure and Opening)
+-------------------------------------
 Simulate valve closure
 
 
 
-Pump Shut-off
---------------
+Pump Operation (Shut-off and Start-up)
+--------------------------------------
 simulate pump controlled shut-off
+
+
+
+Leakage
+--------
 
 
 

@@ -4,7 +4,9 @@ inp_file = 'examples/networks/Tnet3.inp'
 tm = wmoc.network.TransientModel(inp_file)
 
 # set wavespeed
-tm.set_wavespeed(1200.)
+import numpy as np
+wavespeed = np.random.normal(1200., 100., size=tm.num_pipes)
+tm.set_wavespeed(wavespeed)
 #set time step
 tf = 20 # simulation period [s]
 tm.set_time(tf)
@@ -69,3 +71,21 @@ plt.legend(loc='best')
 plt.grid(True)
 plt.show()
 fig.savefig('./docs/figures/tnet3_pipe.png', format='png',dpi=100)
+
+node1 = tm.get_node('JUNCTION-8')
+node2 = tm.get_node('JUNCTION-16')
+node3 = tm.get_node('JUNCTION-45')
+node4 = tm.get_node('JUNCTION-90')
+fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
+plt.plot(tm.simulation_timestamps,node1.head,label='JUNCTION-8')
+plt.plot(tm.simulation_timestamps,node2.head,label='JUNCTION-16')
+plt.plot(tm.simulation_timestamps,node3.head,label='JUNCTION-45')
+plt.plot(tm.simulation_timestamps,node4.head,label='JUNCTION-90')
+plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
+plt.title('Head on Junctions')
+plt.xlabel("Time")
+plt.ylabel("Head (m)")
+plt.legend(loc='best')
+plt.grid(True)
+plt.show()
+fig.savefig('./docs/figures/tnet3_multi.png', format='png',dpi=100)

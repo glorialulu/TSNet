@@ -77,7 +77,7 @@ class TransientModel (WaterNetworkModel):
         ----------
         wavespeed : float or int or list, optional
             If given as float or int, set the value as wavespeed
-            for all pipe; If given as list set the correspondiing
+            for all pipe; If given as list set the corresponding
             value to each pipe, by default 1200.
         """
 

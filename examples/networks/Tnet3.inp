@@ -330,7 +330,6 @@
 
 [DEMANDS]
 ;Junction        	Demand      	Pattern         	Category
-   
 
 [STATUS]
 ;ID              	Status/Setting
@@ -408,15 +407,15 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: PUMP: PUMP:   
+;PUMP: PUMP: PUMP: PUMP:   
  CURVE-0         	0.000000    	445.000000  
  CURVE-0         	790.000000  	365.000000  
  CURVE-0         	1460.000000 	120.000000  
-;PUMP: PUMP: PUMP:   
+;PUMP: PUMP: PUMP: PUMP:   
  CURVE-1         	0.000000    	730.000000  
  CURVE-1         	1000.000000 	500.000000  
  CURVE-1         	1350.000000 	260.000000  
-;PUMP: PUMP: PUMP:   
+;PUMP: PUMP: PUMP: PUMP:   
  CURVE-2         	0.000000    	740.000000  
  CURVE-2         	2000.000000 	530.000000  
  CURVE-2         	3240.000000 	205.000000  
@@ -424,7 +423,9 @@
 [CONTROLS]
 
 
+
 [RULES]
+
 
 
 
@@ -459,7 +460,7 @@
 ;Tank            	Model
 
 [TIMES]
- Duration           	1:00
+ Duration           	1:00 
  Hydraulic Timestep 	0:30 
  Quality Timestep   	0:05 
  Pattern Timestep   	0:30 
@@ -629,6 +630,13 @@
 
 [LABELS]
 ;X-Coord           Y-Coord          Label & Anchor Node
+ 16759.25         11079.85         "JUNCTION-20"                 
+ 16667.28         9546.98          "LINK-40"                 
+ 17326.41         8029.44          "JUNCTION-22"                 
+ 9539.44          8075.43          "JUNCTION-90"                 
+ 9064.25          10589.33         "JUNCTION-8"                 
+ 5891.21          11815.63         "JUNCTION-16"                 
+ 21235.22         8719.23          "JUNCTION-45"                 
 
 [BACKDROP]
  DIMENSIONS     	-1295.01        	-677.25         	27195.15        	14222.23        

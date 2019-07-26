@@ -194,45 +194,49 @@ would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 1-4
 
-2.  Set wave speed for all pipes to be :math:`1200m/s` and
-    simulation period to be :math:`20s`. Use suggested time
-    step.
+2.  Assume that the wave speed for the pipes is normally distributed
+    with mean equal to :math:`1200 m/s` and standard deviation equal
+    to :math: `100m/s`. Then, assign the randomly generated wave speed
+    to each pipe in the network according to the order the pipes are
+    defined in the .inp file. Subsequently, set the simulation period
+    as :math:`20s`, and use suggested time step.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 6-10
+    :lines: 6-12
 
 3.  Define background leak, and specify the emitter coefficient.
     The leak will be included in the initial condition calculation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 12-14
+    :lines: 14-16
 
 4.  Set up burst event, including burst start time (:math:`ts`),
     time for burst to fully develop (:math:`tc`), and the final emitter
     coefficient (final_burst_coeff).
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 16-20
+    :lines: 18-22
 
 4.  Compute steady state results to establish the initial
     condition for transient simulation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 22-25
+    :lines: 24-27
 
 5. Run transient simulation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 27-28
+    :lines: 29-30
 
 After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
 
 
-To plot the leak discharge results at JUNCTION-22:
+To understand how much water has been lost through the leakage
+at JUNCTION-22, we can plot the leak discharge results at JUNCTION-22:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 30-43
+    :lines: 33-45
 
 yields :numref:`tnet3_leak`:
 
@@ -244,10 +248,11 @@ yields :numref:`tnet3_leak`:
 
    Leak discharge at node JUNCTION-22.
 
-To plot the burst discharge results at JUNCTION-20:
+Similarly, to understand how much water has been lost through the burst
+at JUNCTION-20, we can plot the burst discharge results at JUNCTION-20:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 45-56
+    :lines: 47-58
 
 yields :numref:`tnet3_burst`:
 
@@ -258,10 +263,10 @@ yields :numref:`tnet3_burst`:
 
    Burst discharge at node JUNCTION-20.
 
-Similarly, to plot the velocity results in LINK-40:
+Additionally, to plot the velocity results in LINK-40:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 59-71
+    :lines: 61-73
 
 yields :numref:`tnet3_pipe`:
 
@@ -271,3 +276,21 @@ yields :numref:`tnet3_pipe`:
    :alt: tnet3_pipe
 
    Velocity at the start and end node of LINK-40.
+
+Moreover, we can plot head results at some further nodes, such as
+JUNCTION-8, JUNCTION-16, JUNCTION-45, JUNCTION-90, by:
+
+.. literalinclude:: ../examples/Tnet3_burst_leak.py
+    :lines: 75-91
+
+The results are shown in :numref:`tnet3_multi`. It can be noticed that
+the amplitude of the pressure transient at JUNCTION-8 and JUNCTION-16
+is more significant than that at other two junctions, since they are closer
+to JUNCTION-20, where the burst occurred.
+
+.. _tnet3_multi:
+.. figure:: figures/tnet3_multi.png
+   :width: 600
+   :alt: tnet3_multi
+
+   Head at multiple junctions.
