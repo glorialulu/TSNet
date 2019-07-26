@@ -100,8 +100,6 @@ conflicting constraints that have to be satisfied simultaneously::
 
 2.  The Courant;s criterion has to be satisfied for each pipe as well:
 
-.. math:: 
-
 
 
 
