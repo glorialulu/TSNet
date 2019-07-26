@@ -41,10 +41,10 @@ as shown below [LAJW99]_:
 
 .. math::
     \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    \text{only when} \frac{dx}{dt} = a
+    \text{  only when  } \frac{dx}{dt} = a
 
     \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    \text{only when} \frac{dx}{dt} = -a
+    \text{  only when  } \frac{dx}{dt} = -a
 
 The explicit MOC technique is then adopted to solve the above systems of
 equations along the characteristics lines [LAJW99]_.
@@ -93,19 +93,63 @@ Choice of Time Step
 -----------------------
 
 The determination of time step in MOC is not a trivial task. There are two
-conflicting constraints that have to be satisfied simultaneously::
+constraints that have to be satisfied simultaneously:
 
-1.  the time step has to be the same for any pipe in the network, no matter
-    how long or short they are;
+1. The Courant's criterion has to be satisfied for each pipe as well, thus
+indicating the maximum time step allowed in the network transient analysis
+will be:
 
-2.  The Courant;s criterion has to be satisfied for each pipe as well:
+.. math::
+    \Delta t <= \min{\frac{L_i}{N_i a_i}} \text{,       }
+    i = 1 \text{, } 2 \text{, ..., } n_p
 
+2.  The time step has to be the same for any pipe in the network, thus
+    restricting the wave travel time :math:`L_i/N_i/a_i` to be the same
+    for any computational unit in the network. However, this is not the
+    realistic situation in a real network, because different pipe lengths
+    and wave speeds usually cause different wave travel times. Moreover,
+    the number of sections in the :math:`i^{th}` pipe (:math:`N_i`) has to
+    be an even integer due to the grid configuration in MOC; however, the
+    combination of time step and pipe length is likely to produce
+    non-integer value of :math:`N_i`, which then requires further adjustment.
 
+This package adopted the wave speed adjustment scheme  [WYSS93]_ to make
+sure the two criterion stated above are satisfied.
 
+To begin with, the maximum allowed time step (:math:`{\Delta t}_{max}`) is
+calculated, assuming there are two computation segments on the shortest pipe:
 
+.. math::
+    \Delta t_{max} = \min{\frac{L_i}{2a_i}} \text{,       }
+    i = 1 \text{, } 2 \text{, ..., } n_p
 
+If the user defined time step is greater than :math:`{\Delta t}_{max}`, a
+fatal error will be raised and the program will be killed; if not, the
+user defined value will be used as the initial guess for the upcoming
+adjustment. The determination of time step might not be straightforward,
+especially in a large network. Thus, we allow the user to ignore the time
+step setting, and if the user does not define the time step,
+:math:`{\Delta t}_{max}` will be used as the
+initial guess for the upcoming adjustment.
 
+Subsequently, the pipes (:math:`p_i`) in the network will be discretized into
+(:math:`N_i`) segments:
 
+.. math::
+    N_i = 2\text{int}\frac{L_i}{1a_i\Delta_t} \text{,       }
+    i = 1 \text{, } 2 \text{, ..., } n_p
+
+Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
+can be compensated by correcting the wave speed (:math:`a_i`). 
+
+.. math::
+    \Delta t = \min{\frac{L_i}{a_i(1 \pm \phi_i)N_i}} \text{,       }
+    i = 1 \text{, } 2 \text{, ..., } n_p
+
+Least squares approximation is then used to determine :math:`\Delta t`
+such that the sum of squares of the wave speed adjustments
+(:math:\sum{{\phi_i}^2}) is minimized. Ultimately, an adjusted :math:`dt`
+can be determined and then used in the transient simulation.
 
 
 Valve Operation (Closure and Opening)
