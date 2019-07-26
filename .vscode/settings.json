@@ -2,5 +2,8 @@
     "restructuredtext.confPath": "${workspaceFolder}\\docs",
     "cSpell.words": [
         "wmoc"
+    ],
+    "cSpell.ignoreWords": [
+        "d"
     ]
 }
