@@ -40,25 +40,49 @@ equations, as shown below [LAJW99]_:
 
 .. math::
     \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    only when \frac{dx}{dt} = a
+    \text{only when} \frac{dx}{dt} = a
 
     \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    only when \frac{dx}{dt} = -a
+    \text{only when} \frac{dx}{dt} = -a
 
 Headloss in pipes
 ---------------------
 
-Darcy-Weisbach equation.
+WMOC adopts Darcy-Weisbach equation to compute head loss, regardless of the
+friction method defined in the EPANet .inp file. This package computes
+Darcy-Weisbach coeffients (:math:`f`) based on the head loss (:math:`h_l_0`)
+and flow velocity (:math:`V_0`) in initial condition, using the following equation:
 
 .. math::
-    h_f = \frac{f}{2gD} V |V|
+    f = \frac{h_l_0}{(L/D)(V_0^2/2g)}
+
+where
+:math:`L` is the pipe length,
+:math:`D` is the pipe diameter,
+and :math:`g` is gravity acceleration.
 
 Pressure-driven Demand
 ----------------------
 
+During the transient simulation is WMOC, the demands are treated as pressure-
+dependent discharge, thus indicating that the actual demands are not
+equivalent to the demands defined in the .inp file.
 
+The actual demands (:math:`D_{actual}`) are modeled based on the
+instantaneous pressure, and the demand discharge coefficients,
+using the following equation:
 
+.. math::
+    D_{actual} = k \sqrt(H)
 
+where :math:`H` is the head and :math:`k` is the demand discharge coefficient,
+which is calculated from the initial demand (:math:`D_0`) and head (:math:`H_0`):
+
+.. math::
+    k = D_0/sqrt(H_0)
+
+It should be noted that if the head is negative, the demand flow will be
+treated zero, assuming that a backflow preventer exists on each node.
 
 
 
