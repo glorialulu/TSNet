@@ -50,11 +50,11 @@ Headloss in pipes
 
 WMOC adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANet .inp file. This package computes
-Darcy-Weisbach coeffients (:math:`f`) based on the head loss (:math:`h_l_0`)
+Darcy-Weisbach coeffients (:math:`f`) based on the head loss (:math:`{h_l}_0`)
 and flow velocity (:math:`V_0`) in initial condition, using the following equation:
 
 .. math::
-    f = \frac{h_l_0}{(L/D)(V_0^2/2g)}
+    f = \frac{{h_l}_0}{(L/D)(V_0^2/2g)}
 
 where
 :math:`L` is the pipe length,
