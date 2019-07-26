@@ -32,7 +32,7 @@ def discretization(tm, dt):
     else :
         Ndis = cal_N(tm, dt)
 
-        # add number of segements as a new attribute to each pipe
+        # add number of segments as a new attribute to each pipe
         i = 0
         for _, pipe in tm.pipes():
             pipe.number_of_segments = int(Ndis[i])
@@ -43,7 +43,7 @@ def discretization(tm, dt):
 
 
 def max_time_step(tm):
-    """Detrtmine the maximum time step based onCourant's criteria.
+    """Determine the maximum time step based on Courant's criteria.
 
     Parameters
     ----------

@@ -11,7 +11,7 @@ Simple example
 ---------------
 
 A simple example, get_startted.py is included in the examples folder.
-Thie example demonstrate how to::
+Thie example demonstrate how to:
 
 * Import wmoc
 
@@ -30,6 +30,7 @@ Thie example demonstrate how to::
 * Plot simulation results
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
+    :lines: 2-27
 
 Additional examples are included in the wmoc documentation.
 

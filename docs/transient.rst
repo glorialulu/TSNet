@@ -83,7 +83,7 @@ where :math:`H` is the head and :math:`k` is the demand discharge coefficient,
 which is calculated from the initial demand (:math:`D_0`) and head (:math:`H_0`):
 
 .. math::
-    k = D_0/ \sqrt{H_0}
+    k = \frac{D_0}{\sqrt{H_0}}
 
 It should be noted that if the head is negative, the demand flow will be
 treated zero, assuming that a backflow preventer exists on each node.
@@ -104,7 +104,7 @@ will be:
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 2.  The time step has to be the same for any pipe in the network, thus
-    restricting the wave travel time :math:`L_i/N_i/a_i` to be the same
+    restricting the wave travel time :math:`\frac{L_i}{N_ia_i}` to be the same
     for any computational unit in the network. However, this is not the
     realistic situation in a real network, because different pipe lengths
     and wave speeds usually cause different wave travel times. Moreover,
@@ -148,8 +148,8 @@ can be compensated by correcting the wave speed (:math:`a_i`).
 
 Least squares approximation is then used to determine :math:`\Delta t`
 such that the sum of squares of the wave speed adjustments
-(:math:\sum{{\phi_i}^2}) is minimized. Ultimately, an adjusted :math:`dt`
-can be determined and then used in the transient simulation.
+(:math:`\sum{{\phi_i}^2`}) is minimized. Ultimately, an adjusted
+:math:`\Delta t` can be determined and then used in the transient simulation.
 
 It should be noted that even if the user defined time step satisfied the
 Courant's criterion, it will still be adjusted.
@@ -159,6 +159,15 @@ Valve Operation (Closure and Opening)
 -------------------------------------
 Simulate valve closure
 
+.. _valve_closure:
+.. figure:: figures/valve_closure.PNG
+   :width: 600
+   :alt: valve_closure
+
+.. _valve_opening:
+.. figure:: figures/valve_opening.PNG
+   :width: 600
+   :alt: valve_opening
 
 
 Pump Operation (Shut-off and Start-up)
@@ -170,8 +179,34 @@ simulate pump controlled shut-off
 Leakage
 --------
 
+In MOC, leaks and burst are assigned to the junctions. The leak is defined by
+specifying the leaking node name and the emitter coefficient (:math:`k`):
 
+.. literalinclude:: ../examples/Tnet3_burst_leak.py
+    :lines: 15-16
+
+The leakage is then included in the initial condition solver; thus, it is
+important to define the leakage before performing the initial condition
+calculation. During the transient simulation, the leaking node is modeled
+using the two compatibility equations, a continuity equation, and an orifice
+equation which quantifies the leakage discharge (:math:`Q_l`):
+
+.. math::
+    Q_l = k \sqrt{H_l}
 
 Burst
 -----
-simulate pipe burst
+The simulation of burst and leakage is very similar. They shared the
+same set of governing equations. The only difference is that the burst event
+is simulated only during the transient calculation and not included in the
+initial condition calculation. In WMOC, the burst is assumed to be developed
+linearly, indicating that the burst area increases linearly from zero to the
+a specific size during a certain time period.
+Thus, a burst event can be added by defined the start and end time of the
+burst development process and the final emitter coefficient when the burst
+is fully developed:
+
+.. literalinclude:: ../examples/Tnet3_burst_leak.py
+    :lines: 21-22
+
+
