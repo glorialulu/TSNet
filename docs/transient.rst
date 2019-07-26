@@ -151,6 +151,9 @@ such that the sum of squares of the wave speed adjustments
 (:math:\sum{{\phi_i}^2}) is minimized. Ultimately, an adjusted :math:`dt`
 can be determined and then used in the transient simulation.
 
+It should be noted that even if the user defined time step satisfied the
+Courant's criterion, it will still be adjusted.
+
 
 Valve Operation (Closure and Opening)
 -------------------------------------
