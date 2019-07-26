@@ -126,14 +126,18 @@ calculated, assuming there are two computation segments on the shortest pipe:
 If the user defined time step is greater than :math:`{\Delta t}_{max}`, a
 fatal error will be raised and the program will be killed; if not, the
 user defined value will be used as the initial guess for the upcoming
-adjustment. The determination of time step might not be straightforward,
+adjustment.
+
+.. literalinclude:: ../examples/Tnet1_valve_closure.py
+    :lines: 9-11
+
+However, the determination of time step might not be straightforward,
 especially in a large network. Thus, we allow the user to ignore the time
 step setting, and if the user does not define the time step,
-:math:`{\Delta t}_{max}` will be used as the
-initial guess for the upcoming adjustment.
+:math:`{\Delta t}_{max}` will be used as the initial guess for the upcoming adjustment.
 
-Subsequently, the pipes (:math:`p_i`) in the network will be discretized into
-(:math:`N_i`) segments:
+All the steps after this will then be behind the scene. Firstly, the pipes (:math:`p_i`)
+in the network will be discretized into (:math:`N_i`) segments:
 
 .. math::
     N_i = 2\text{int}\frac{L_i}{1a_i\Delta_t} \text{,       }
@@ -160,12 +164,12 @@ Valve Operation (Closure and Opening)
 Simulate valve closure
 
 .. _valve_closure:
-.. figure:: figures/valve_closure.PNG
+.. figure:: figures/valve_closure.png
    :width: 600
    :alt: valve_closure
 
 .. _valve_opening:
-.. figure:: figures/valve_opening.PNG
+.. figure:: figures/valve_opening.png
    :width: 600
    :alt: valve_opening
 
@@ -207,6 +211,6 @@ burst development process and the final emitter coefficient when the burst
 is fully developed:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 21-22
+    :lines: 19-22
 
 
