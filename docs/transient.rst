@@ -64,7 +64,7 @@ and :math:`g` is gravity acceleration.
 Pressure-driven Demand
 ----------------------
 
-During the transient simulation is WMOC, the demands are treated as pressure-
+During the transient simulation in WMOC, the demands are treated as pressure-
 dependent discharge, thus indicating that the actual demands are not
 equivalent to the demands defined in the .inp file.
 
@@ -73,13 +73,13 @@ instantaneous pressure, and the demand discharge coefficients,
 using the following equation:
 
 .. math::
-    D_{actual} = k \sqrt(H)
+    D_{actual} = k \sqrt{H}
 
 where :math:`H` is the head and :math:`k` is the demand discharge coefficient,
 which is calculated from the initial demand (:math:`D_0`) and head (:math:`H_0`):
 
 .. math::
-    k = D_0/sqrt(H_0)
+    k = D_0/ \sqrt{H_0}
 
 It should be noted that if the head is negative, the demand flow will be
 treated zero, assuming that a backflow preventer exists on each node.
