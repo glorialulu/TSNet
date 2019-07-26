@@ -137,6 +137,8 @@ application would need to take:
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 25-26
 
+.. comments 
+
 After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
 The actual demand discharge at JUNCTION-105 throughout the simulation
