@@ -16,9 +16,9 @@ import warnings
 from wntr.network import WaterNetworkModel
 from wmoc.network.discretize import discretization, max_time_step
 from wmoc.network.control import (
-    valveclosing, 
-    valveopening, 
-    pumpclosing, 
+    valveclosing,
+    valveopening,
+    pumpclosing,
     pumpopening,
     burstsetting
 )
@@ -66,7 +66,7 @@ class TransientModel (WaterNetworkModel):
                 theta = 0.0
             pipe.theta = theta
 
-        # set operating defualt value as False
+        # set operating default value as False
         for _, link in self.links():
             link.operating = False
 
@@ -100,14 +100,14 @@ class TransientModel (WaterNetworkModel):
         for _, pipe in self.pipes():
             pipe.wavev = wavev[i]
             i+=1
-    
+
     def set_time(self, tf, dt=None):
         """Set time step and duration for the simulation.
-        
+
         Parameters
         ----------
         tf : float
-            Simulation peroid
+            Simulation period
         dt : float, optional
             time step, by default maximum allowed dt
         """
@@ -162,7 +162,7 @@ class TransientModel (WaterNetworkModel):
         name : str
             The name of the valve to close
         rule : list
-            Contains paramtes to defie valve operation rule
+            Contains paramters to define valve operation rule
             rule = [tc,ts,se,m]
             tc : the duration takes to close the valve [s]
             ts : closure start time [s]
@@ -190,7 +190,7 @@ The initial setting has been changed to open to perform the closure." %name)
         name : str
             The name of the valve to close
         rule : list
-            Contains paramtes to defie valve operation rule
+            Contains paramters to define valve operation rule
             rule = [tc,ts,se,m]
             tc : the duration takes to open the valve [s]
             ts : opening start time [s]

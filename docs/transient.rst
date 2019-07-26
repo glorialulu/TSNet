@@ -36,7 +36,8 @@ Method of Characteristics (MOC)
 The Method of Characteristics (MOC) method is used to solve the system of
 governing equations above. The essence of MOC is to transform the set of
 partial differential equations to an equivalent set of ordinary differential
-equations, as shown below [LAJW99]_:
+equations that apply along specific lines, i.e., characteristics lines,
+as shown below [LAJW99]_:
 
 .. math::
     \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
@@ -44,6 +45,9 @@ equations, as shown below [LAJW99]_:
 
     \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{only when} \frac{dx}{dt} = -a
+
+The explicit MOC technique is then adopted to solve the above systems of
+equations along the characteristics lines [LAJW99]_.
 
 Headloss in Pipes
 ---------------------
@@ -88,7 +92,15 @@ treated zero, assuming that a backflow preventer exists on each node.
 Choice of Time Step
 -----------------------
 
+The determination of time step in MOC is not a trivial task. There are two
+conflicting constraints that have to be satisfied simultaneously::
 
+1.  the time step has to be the same for any pipe in the network, no matter
+    how long or short they are;
+
+2.  The Courant;s criterion has to be satisfied for each pipe as well:
+
+.. math:: 
 
 
 

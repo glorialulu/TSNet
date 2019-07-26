@@ -38,10 +38,15 @@ def valveclosing(dt, tf, valve_op):
         s[s<1] = se
     # gradual closure
     else:
-        s =  np.array([(1- (i*dt- ts)/tc)**m    for i in range(tn)])
+        t = np.array([(i*dt- ts)/tc for i in range(tn)])
+        t[t>1] = 1
+        t[t<0] = 0
+        s =  np.array([1 - (1-se)*t[i]**m for i in range(tn)])
         s[s>1] = 1
         s[s<se] = se
+
     return s
+
 
 def valveopening(dt, tf, valve_op):
     """Define valve operation curve (percentage open v.s. time)
@@ -75,7 +80,10 @@ def valveopening(dt, tf, valve_op):
         s[s<0] = 0
     # gradual opening
     else:
-        s =  np.array([((i*dt- ts)/tc)**m    for i in range(tn)])
+        t = np.array([(i*dt- ts)/tc for i in range(tn)])
+        t[t>1] = 1
+        t[t<0] = 0
+        s =  np.array([se* (t[i])**m for i in range(tn)])
         s[s<0] = 0
         s[s>se] = se
     return s
@@ -114,12 +122,14 @@ def pumpclosing(dt, tf, pump_op):
         s[s>1] = 1
         s[s<se] = se
 
-    # aburupt closure
+    # abrupt closure
     if tc ==0:
-        s =  np.array([(1- (i*dt- ts))**1    for i in range(tn)])
+        t = np.array([(i*dt- ts)/tc for i in range(tn)])
+        t[t>1] = 1
+        t[t<0] = 0
+        s =  np.array([1 - (1-se)*t[i]**m for i in range(tn)])
         s[s>1] = 1
-        s[s<1] = se
-
+        s[s<se] = se
     return s
 
 def pumpopening(dt, tf, pump_op):
@@ -154,7 +164,10 @@ def pumpopening(dt, tf, pump_op):
         s[s<0] = 0
     # gradual opening
     else:
-        s =  np.array([((i*dt- ts)/tc)**m    for i in range(tn)])
+        t = np.array([(i*dt- ts)/tc for i in range(tn)])
+        t[t>1] = 1
+        t[t<0] = 0
+        s =  np.array([se* (t[i])**m for i in range(tn)])
         s[s<0] = 0
         s[s>se] = se
     return s
