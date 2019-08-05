@@ -54,8 +54,9 @@ Headloss in Pipes
 
 WMOC adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANet .inp file. This package computes
-Darcy-Weisbach coefficients (:math:`f`) based on the head loss (:math:`{h_l}_0`)
-and flow velocity (:math:`V_0`) in initial condition, using the following equation:
+Darcy-Weisbach coefficients (:math:`f`) based on the head loss
+(:math:`{h_l}_0`) and flow velocity (:math:`V_0`) in initial condition,
+using the following equation:
 
 .. math::
     f = \frac{{h_l}_0}{(L/D)(V_0^2/2g)}
@@ -95,12 +96,12 @@ Choice of Time Step
 The determination of time step in MOC is not a trivial task. There are two
 constraints that have to be satisfied simultaneously:
 
-1. The Courant's criterion has to be satisfied for each pipe as well, thus
-indicating the maximum time step allowed in the network transient analysis
-will be:
+1.  The Courant's criterion has to be satisfied for each pipe,
+    indicating the maximum time step allowed in the network transient analysis
+    will be:
 
 .. math::
-    \Delta t <= \min{\frac{L_i}{N_i a_i}} \text{,       }
+    \Delta t \leqslant \min{(\frac{L_i}{N_i a_i})} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 2.  The time step has to be the same for any pipe in the network, thus
@@ -131,20 +132,21 @@ adjustment.
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 9-11
 
-However, the determination of time step might not be straightforward,
-especially in a large network. Thus, we allow the user to ignore the time
-step setting, and if the user does not define the time step,
+It is acknowledged that the determination of time step might not be
+straightforward, especially in large networks. Thus, we allow the user
+to ignore the time step setting, and if that is the case,
 :math:`{\Delta t}_{max}` will be used as the initial guess for the upcoming adjustment.
 
-All the steps after this will then be behind the scene. Firstly, the pipes (:math:`p_i`)
-in the network will be discretized into (:math:`N_i`) segments:
+All the steps after this will then happen behind the scene. Firstly,
+the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
+speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
 
 .. math::
-    N_i = 2\text{int}\frac{L_i}{1a_i\Delta_t} \text{,       }
+    N_i = 2\text{int}\frac{L_i}{a_i \Delta t} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
-can be compensated by correcting the wave speed (:math:`a_i`). 
+can be compensated by correcting the wave speed (:math:`a_i`).
 
 .. math::
     \Delta t = \min{\frac{L_i}{a_i(1 \pm \phi_i)N_i}} \text{,       }

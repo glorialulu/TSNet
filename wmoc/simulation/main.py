@@ -7,9 +7,10 @@ simulation for the given .inp file.
 from __future__ import print_function
 from wmoc.network import  topology
 from wmoc.simulation.single import inner_pipe, left_boundary, right_boundary
-from wmoc.utils import valve_curve, memo
+from wmoc.utils import valve_curve, memo, print_time_delta
 import numpy as np
 import warnings
+from datetime import datetime
 
 @memo
 def MOCSimulator(tm):
@@ -33,8 +34,9 @@ def MOCSimulator(tm):
     dt = tm.time_step
     tn = int(tm.simulation_peroid/tm.time_step)  # Total time steps
 
-    # determine which node of the adjacant pipe should be call:
-    # if the adjacant pipe is entering the junction, then -2
+
+    # determine which node of the adjacent pipe should be call:
+    # if the adjacent pipe is entering the junction, then -2
     # if the adjacent pipe is leaving the junction, then 1
     a = {1:-2, -1:1}
     # generat a list of pipe
@@ -55,8 +57,21 @@ def MOCSimulator(tm):
         H[pn] = pipe.initial_head
         V[pn] = pipe.initial_velocity
 
-    # Start Claculation
+    starttime = datetime.now()
+    # Start Calculation
     for ts in range(1,tn):
+        # check the discrepency between initial condition and the
+        # first step in the transient simulation.
+        if ts == 2:
+            for _,pipe in tm.pipes():
+                if (pipe.start_node_head[1] - pipe.start_node_head[0])> 1e-1:
+                    print('Initial condition discrepency on the stat node of %s'%pipe)
+
+        if ts == 3:
+            timeperstep = (datetime.now() - starttime) /2.
+            est = timeperstep *tn
+            print ('Estimated simulation time %s' %est)
+
         t = ts*dt
         tt.append(t)
         tp = ts/tn*100
@@ -97,7 +112,7 @@ def MOCSimulator(tm):
                         pump[0]=[(i*po,j*po**2) for (i,j) in pump[0]]
 
                 elif utype[pn][0] == 'Valve':
-                    # determine valve fricton coefficients based on
+                    # determine valve friction coefficients based on
                     # open percentage
                     if tm.links[utype[pn][1]].operating == True:
                         valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100)
@@ -139,7 +154,7 @@ def MOCSimulator(tm):
                     pipe.start_node.emitter_discharge[ts] = 0.
                     pipe.start_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s.\
-                    Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                    Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
                 if HN[pn][-1] >0:
                     pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
@@ -148,37 +163,33 @@ def MOCSimulator(tm):
                     pipe.end_node.emitter_discharge[ts] = 0.
                     pipe.end_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s.\
-                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:
                 pump = [[],[]]; valve = [0,0]
                 # LEFT BOUNDARY
-                if utype[pn][0] == 'Reservoir':
+                if utype[pn][0] == 'Reservoir' or utype[pn][0] == 'Tank':
                     # head B.C.
-                    HN[pn][0]   =  tm.nodes[utype[pn][1]].base_head
-                elif utype[pn][0] == 'Tank':
-                    # head B.C.
-                    HN[pn][0]   =  tm.nodes[utype[pn][1]].head
+                    HN[pn][0] = pipe.initial_head[0]
                 elif utype[pn][0] == 'Junction':
                     VN[pn][0] = pipe.initial_velocity[0]
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:
                         # velocity B.C.
-                        VN[pn][0]   = pipe.initial_velocity[0] * \
+                        VN[pn][0] = pipe.initial_velocity[0] * \
                             tm.links[utype[pn][1]].operation_rule[ts]
                     else :
-                        VN[pn][0]   = pipe.initial_velocity[0]
+                        VN[pn][0] = pipe.initial_velocity[0]
                 # source pump
                 elif utype[pn][0] == 'Pump':
                     # pump[0][0]: elevation of the reservoir/tank
                     # pump[0][1]: three points for pump characteristic curve
-                    pump[0] = [tm.links[utype[pn][1]].start_node.base_head,
+                    pump[0] = [[tm.links[utype[pn][1]].start_node.head][0],
                          tm.links[utype[pn][1]].get_pump_curve().points]
-
                     if tm.links[utype[pn][1]].operating == True:
                         po = tm.links[utype[pn][1]].operation_rule[ts]
-                        pump[0][1]=[(i*po,j*po**2) for (i,j) in pump[0][1]]
+                        pump[0][1]= [(i*po,j*po**2) for (i,j) in pump[0][1]]
                 else:
                      warnings.warn ('Pipe %s miss %s upstream.' %(pipe, utype[pn][0]))
 
@@ -216,7 +227,7 @@ def MOCSimulator(tm):
                     pipe.start_node.emitter_discharge[ts] = 0.
                     pipe.start_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s. \
-                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
                 if HN[pn][-1] >0:
                     pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
@@ -225,16 +236,14 @@ def MOCSimulator(tm):
                     pipe.end_node.emitter_discharge[ts] = 0.
                     pipe.end_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s. \
-                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
             #  right boundary pipe
             elif not links2[pn] or links2[pn] == ['End']:
                 pump = [[],[]]; valve = [0,0]
                 # RIGHT boundary
-                if dtype[pn][0] == 'Reservoir':
-                    HN[pn][-1]   =  tm.nodes[dtype[pn][1]].base_head # head of reservoir
-                elif dtype[pn][0] == 'Tank':
-                    HN[pn][-1]   =  tm.nodes[dtype[pn][1]].head # head of tank
+                if dtype[pn][0] == 'Reservoir' or dtype[pn][0] == 'Tank':
+                    HN[pn][-1]   =  pipe.initial_head[-1] # head of reservoir
                 elif dtype[pn][0] == 'Junction':
                     VN[pn][-1] = pipe.initial_velocity[-1]
                 elif dtype[pn][0] == 'Valve':
@@ -244,13 +253,21 @@ def MOCSimulator(tm):
                         tm.links[dtype[pn][1]].operation_rule[ts]
                     else :
                         VN[pn][-1] = pipe.initial_velocity[-1]
+                                # source pump
+                elif dtype[pn][0] == 'Pump':
+                    # pump[1][0]: elevation of the reservoir/tank
+                    # pump[1][1]: three points for pump characteristic curve
+                    pump[1] = [[tm.links[utype[pn][1]].end_node.head][0],
+                         tm.links[dtype[pn][1]].get_pump_curve().points]
+
+                    if tm.links[dtype[pn][1]].operating == True:
+                        po = tm.links[dtype[pn][1]].operation_rule[ts]
+                        pump[1][1]=[(i*po,j*po**2) for (i,j) in pump[1][1]]
+
                 else :
                      warnings.warn('Pipe %s miss %s downstream.' %(pipe, dtype[pn][0]))
                 # LEFT boundary
-                # source pump
                 if utype[pn][0] == 'Pump':
-                    # pump[0][0]: elevation of the reservoir/tank
-                    # pump[0][1]: three points for pump characteristic curve
                     pump[0] = tm.links[utype[pn][1]].get_pump_curve().points
                     if tm.links[utype[pn][1]].operating == True:
                         po = tm.links[utype[pn][1]].operation_rule[ts]
@@ -283,7 +300,7 @@ def MOCSimulator(tm):
                     pipe.start_node.emitter_discharge[ts] = 0.
                     pipe.start_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s. \
-                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
                 if HN[pn][-1] >0:
                     pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(HN[pn][-1])
@@ -292,7 +309,7 @@ def MOCSimulator(tm):
                     pipe.end_node.emitter_discharge[ts] = 0.
                     pipe.end_node.demand_discharge[ts] = 0.
                     warnings.warn("Negative pressure on node %s. \
-                        Backflow stoped by reverse flow preventer." %pipe.start_node.name)
+                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
         # march in time
         for _, pipe in tm.pipes():

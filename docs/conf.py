@@ -66,7 +66,7 @@ templates_path = ['_templates']
 
 # autosummary
 import glob
-autosummary_generate = glob.glob("apidoc/*.rst")
+autosummary_generate = glob.glob("apidocs/*.rst")
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:

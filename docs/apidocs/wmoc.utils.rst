@@ -20,6 +20,14 @@ wmoc.utils.memo module
     :undoc-members:
     :show-inheritance:
 
+wmoc.utils.print\_time\_delta module
+------------------------------------
+
+.. automodule:: wmoc.utils.print_time_delta
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 wmoc.utils.valve\_curve module
 ------------------------------
 

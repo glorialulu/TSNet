@@ -52,7 +52,7 @@ def Initializer(tm, t0, engine='PDD'):
         pipe.end_node_velocity = np.zeros(tn)
         pipe.end_node_flowrate = np.zeros(tn)
 
-    # create new atributes for each node to store head and discharge results
+    # create new attributes for each node to store head and discharge results
     for _,node in tm.nodes():
         node.demand_discharge = np.zeros(tn)
         node.emitter_discharge = np.zeros(tn)

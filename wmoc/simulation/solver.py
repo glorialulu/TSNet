@@ -533,7 +533,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
             HP = (-bq)/(2*aq)
             HP = HP**2.
             warnings.warn("The quadratic equation has no real solution (dead end).\
-The resuls might not be accurate.")
+The results might not be accurate.")
         VP = V1 - g/a *H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP
     else :
         k = linkp.end_node.demand_coeff

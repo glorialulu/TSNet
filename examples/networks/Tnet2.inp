@@ -230,7 +230,7 @@ Date: 6/26/2019 2:45:30 PM
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
- TCV-1           	305-A           	305-B           	6           	TCV 	0.02        	0           	;
+ TCV-1           	305-A           	305-B           	6           	TCV 	0.2         	0           	;
 
 [TAGS]
 
@@ -239,6 +239,7 @@ Date: 6/26/2019 2:45:30 PM
 
 [STATUS]
 ;ID              	Status/Setting
+ TCV-1           	Open
 
 [PATTERNS]
 ;ID              	Multipliers
@@ -272,19 +273,19 @@ Date: 6/26/2019 2:45:30 PM
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: PUMP: PUMP: PUMP:
+;PUMP: PUMP: PUMP: PUMP: PUMP:
  335             	0           	200         
  335             	8000        	138         
  335             	14000       	86          
-;PUMP: PUMP: PUMP: EFFICIENCY:
+;PUMP: PUMP: PUMP: PUMP: EFFICIENCY:
  335E            	0           	75          
  335E            	8000        	75          
  335E            	14000       	75          
-;PUMP: PUMP: PUMP: PUMP:
+;PUMP: PUMP: PUMP: PUMP: PUMP:
  10              	0           	104         
  10              	2000        	92          
  10              	4000        	63          
-;PUMP: PUMP: PUMP: EFFICIENCY:
+;PUMP: PUMP: PUMP: PUMP: EFFICIENCY:
  10E             	0           	75          
  10E             	2000        	75          
  10E             	4000        	75          
@@ -293,7 +294,9 @@ Date: 6/26/2019 2:45:30 PM
 
 
 
+
 [RULES]
+
 
 
 
@@ -436,7 +439,7 @@ Date: 6/26/2019 2:45:30 PM
  121             	23.54           	25.50           
  120             	22.08           	23.10           
  119             	23.70           	22.76           
- 117             	21.69           	21.28           
+ 117             	21.67           	21.29           
  115             	20.98           	19.18           
  113             	22.04           	16.61           
  111             	20.21           	17.53           
@@ -445,14 +448,14 @@ Date: 6/26/2019 2:45:30 PM
  JUNCTION-105    	16.97           	21.28           
  103             	12.96           	21.31           
  101             	13.81           	22.94           
- 61              	23.71           	29.03           
+ 61              	23.70           	29.03           
  60              	23.90           	29.94           
  50              	33.01           	3.01            
  40              	27.02           	9.81            
  20              	29.44           	26.91           
  15              	38.68           	23.76           
  10              	9.00            	27.85           
- 305-A           	25.82           	22.10           
+ 305-A           	25.08           	22.31           
  305-B           	25.82           	22.10           
  River           	24.15           	31.06           
  Lake            	8.00            	27.53           

@@ -61,7 +61,7 @@ throughout the simulation can be retrieved by:
 To plot the head results at N3:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 32-43
+    :lines: 32-42
 
 yields :numref:`tnet1_node`:
 
@@ -75,7 +75,7 @@ yields :numref:`tnet1_node`:
 Similarly, to plot the flow rate results in pipe P2:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 45-59
+    :lines: 45-58
 
 yields :numref:`tnet1_pipe`:
 
@@ -148,7 +148,7 @@ can be retrieved by:
 To plot the head results at JUNCTION-105:
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
-    :lines: 31-42
+    :lines: 31-41
 
 yields :numref:`tnet2_node`:
 
@@ -162,7 +162,7 @@ yields :numref:`tnet2_node`:
 Similarly, to plot the velocity results in PIPE-109:
 
 .. literalinclude:: ../examples/tnet2_node.py
-    :lines: 44-56
+    :lines: 44-55
 
 yields :numref:`tnet2_pipe`:
 
@@ -237,7 +237,7 @@ To understand how much water has been lost through the leakage
 at JUNCTION-22, we can plot the leak discharge results at JUNCTION-22:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 33-45
+    :lines: 33-44
 
 yields :numref:`tnet3_leak`:
 
@@ -253,7 +253,7 @@ Similarly, to understand how much water has been lost through the burst
 at JUNCTION-20, we can plot the burst discharge results at JUNCTION-20:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 47-58
+    :lines: 47-57
 
 yields :numref:`tnet3_burst`:
 
@@ -267,7 +267,7 @@ yields :numref:`tnet3_burst`:
 Additionally, to plot the velocity results in LINK-40:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 61-73
+    :lines: 61-72
 
 yields :numref:`tnet3_pipe`:
 
@@ -282,7 +282,7 @@ Moreover, we can plot head results at some further nodes, such as
 JUNCTION-8, JUNCTION-16, JUNCTION-45, JUNCTION-90, by:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 75-91
+    :lines: 75-90
 
 The results are shown in :numref:`tnet3_multi`. It can be noticed that
 the amplitude of the pressure transient at JUNCTION-8 and JUNCTION-16
