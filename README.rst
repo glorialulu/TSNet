@@ -1,26 +1,26 @@
-WMOC
+tsnet
 ====
 
 
-.. image:: https://img.shields.io/pypi/v/wmoc.svg
-        :target: https://pypi.python.org/pypi/wmoc
+.. image:: https://img.shields.io/pypi/v/tsnet.svg
+        :target: https://pypi.python.org/pypi/tsnet
 
-.. image:: https://img.shields.io/travis/glorialulu/wmoc.svg
-        :target: https://travis-ci.com/glorialulu/wmoc
+.. image:: https://img.shields.io/travis/glorialulu/tsnet.svg
+        :target: https://travis-ci.com/glorialulu/tsnet
 
-.. image:: https://readthedocs.org/projects/wmoc/badge/?version=latest
-        :target: https://wmoc.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/tsnet/badge/?version=latest
+        :target: https://tsnet.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
 
 
-WMOC conducts transient simulation using MOC method for water distribution systems.
+tsnet conducts transient simulation using MOC method for water distribution systems.
 
 
 * Free software: MIT license
-* Github: https://github.com/glorialulu/wmoc.git
-* Documentation: https://wmoc.readthedocs.io.
+* Github: https://github.com/glorialulu/tsnet.git
+* Documentation: https://tsnet.readthedocs.io.
 
 Overview
 ---------
@@ -37,7 +37,7 @@ rendering easiness for interaction, modification, and extension.
 Features
 --------
 
-The WMOC is a Pyton package designed to perform transient simulation in water
+The tsnet is a Pyton package designed to perform transient simulation in water
 distribution networks. The software includes capability to:
 
 * Generate water network models based on .inp files 
@@ -46,23 +46,23 @@ distribution networks. The software includes capability to:
 * Perform transient simulation using MOC method
 * Visulize results
 
-For more information, go to https://wmoc.readthedocs.io.
+For more information, go to https://tsnet.readthedocs.io.
 
 
 Version
 -------
 
-WMOC is a ongoing research project, the current version is 0.1.0, which is 
+tsnet is a ongoing research project, the current version is 0.1.0, which is 
 still a pre-release. 
 
 
-Cite WMOC
+Cite tsnet
 ---------
 
-To cite WMOC, use one of the following references:
+To cite tsnet, use one of the following references:
 
 
 License
 -------
 
-WMOC is released under the Revised BSD license. See the LICENSE.txt file.
+tsnet is released under the Revised BSD license. See the LICENSE.txt file.

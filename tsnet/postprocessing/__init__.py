@@ -1,5 +1,5 @@
 """
-The wmoc.postprocessing package contains functions to 
+The tsnet.postprocessing package contains functions to 
 postprocess the simulation results. 
 
 """

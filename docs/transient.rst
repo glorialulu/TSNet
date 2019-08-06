@@ -52,7 +52,7 @@ equations along the characteristics lines [LAJW99]_.
 Headloss in Pipes
 ---------------------
 
-WMOC adopts Darcy-Weisbach equation to compute head loss, regardless of the
+tsnet adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANet .inp file. This package computes
 Darcy-Weisbach coefficients (:math:`f`) based on the head loss
 (:math:`{h_l}_0`) and flow velocity (:math:`V_0`) in initial condition,
@@ -69,7 +69,7 @@ and :math:`g` is gravity acceleration.
 Pressure-driven Demand
 ----------------------
 
-During the transient simulation in WMOC, the demands are treated as pressure-
+During the transient simulation in tsnet, the demands are treated as pressure-
 dependent discharge, thus indicating that the actual demands are not
 equivalent to the demands defined in the .inp file.
 
@@ -205,7 +205,7 @@ Burst
 The simulation of burst and leakage is very similar. They shared the
 same set of governing equations. The only difference is that the burst event
 is simulated only during the transient calculation and not included in the
-initial condition calculation. In WMOC, the burst is assumed to be developed
+initial condition calculation. In tsnet, the burst is assumed to be developed
 linearly, indicating that the burst area increases linearly from zero to the
 a specific size during a certain time period.
 Thus, a burst event can be added by defined the start and end time of the

@@ -1,5 +1,5 @@
 """
-The wmoc.postprocessing.time_history module contains functions
+The tsnet.postprocessing.time_history module contains functions
 to plot the time history of head and velocity at the start and
 end point of a pipe
 """

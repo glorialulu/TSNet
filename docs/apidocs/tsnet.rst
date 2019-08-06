@@ -1,20 +1,20 @@
-wmoc package
-============
+tsnet package
+=============
 
 Subpackages
 -----------
 
 .. toctree::
 
-    wmoc.network
-    wmoc.postprocessing
-    wmoc.simulation
-    wmoc.utils
+    tsnet.network
+    tsnet.postprocessing
+    tsnet.simulation
+    tsnet.utils
 
 Module contents
 ---------------
 
-.. automodule:: wmoc
+.. automodule:: tsnet
     :members:
     :undoc-members:
     :show-inheritance:

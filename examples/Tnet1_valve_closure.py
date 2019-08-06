@@ -1,7 +1,7 @@
-import wmoc
+import tsnet
 # open an example network and create a transient model
 inp_file = 'examples/networks/Tnet1.inp'
-tm = wmoc.network.TransientModel(inp_file)
+tm = tsnet.network.TransientModel(inp_file)
 
 # set wavespeed
 tm.set_wavespeed(1200.) # m/s
@@ -21,10 +21,10 @@ tm.valve_closure('VALVE',valve_op)
 # Initialize
 t0 = 0. # initialize the simulation at 0 [s]
 engine = 'DD' # demand driven simulator
-tm = wmoc.simulation.Initializer(tm, t0, engine)
+tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-tm = wmoc.simulation.MOCSimulator(tm)
+tm = tsnet.simulation.MOCSimulator(tm)
 
 # report results
 import matplotlib.pyplot as plt

@@ -1,5 +1,5 @@
 """
-The wmoc.utils.calc_parabola_vertex contains function to
+The tsnet.utils.calc_parabola_vertex contains function to
 calculate the parameters of a parabola based on the
 coordinated of three points on the curve.
 

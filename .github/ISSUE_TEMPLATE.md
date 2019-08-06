@@ -1,4 +1,4 @@
-* wmoc version:
+* tsnet version:
 * Python version:
 * Operating System:
 

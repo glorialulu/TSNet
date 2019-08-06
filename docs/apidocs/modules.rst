@@ -1,7 +1,7 @@
-wmoc
-====
+tsnet
+=====
 
 .. toctree::
    :maxdepth: 4
 
-   wmoc
+   tsnet

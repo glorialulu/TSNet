@@ -18,7 +18,7 @@ application would need to take:
    :alt: tnet1
 
 
-1.  Import wmoc package and read the Epanet .inp file.
+1.  Import tsnet package and read the Epanet .inp file.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 1-4
@@ -104,7 +104,7 @@ steps that the application would need to take:
    :width: 600
    :alt: tnet2
 
-1.  Import wmoc package and read the Epanet .inp file.
+1.  Import tsnet package and read the Epanet .inp file.
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 1-4
@@ -177,7 +177,7 @@ yields :numref:`tnet2_pipe`:
 Example 3 - Burst and leak
 ---------------------------
 
-This example reveals how wmoc simulate pipe bursts and leaks.This example
+This example reveals how tsnet simulate pipe bursts and leaks.This example
 network is shown below in :numref:`tnet3`. It comprises 168 pipes,
 126 junctions, 8 valve, two pumps, one reservoir, and two tanks. The runtime
 is around 7 minutes for a transient simulation of :math:`20s` with a time
@@ -190,7 +190,7 @@ would need to take:
    :alt: tnet3
 
 
-1.  Import wmoc package and read the Epanet .inp file.
+1.  Import tsnet package and read the Epanet .inp file.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 1-4

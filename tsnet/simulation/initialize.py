@@ -1,5 +1,5 @@
 """
-The wmoc.simulation.initialize contains functions to
+The tsnet.simulation.initialize contains functions to
 1. Initialize the list containing numpy arrays for velocity and head.
 2. Calculate initial conditions using Epanet engine.
 3. Calculate D-W coefficients based on initial conditions.
@@ -21,7 +21,7 @@ def Initializer(tm, t0, engine='PDD'):
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Simulated network
     t0 : float
         time to calculate initial condition
@@ -34,7 +34,7 @@ def Initializer(tm, t0, engine='PDD'):
 
     Returns
     -------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network with updated parameters
     """
     # adjust the time step and discretize each pipe

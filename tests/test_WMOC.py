@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `wmoc` package."""
+"""Tests for `tsnet` package."""
 
 import pytest
-import wmoc
+import tsnet
 
 @pytest.fixture
 def response():

@@ -15,4 +15,4 @@ Abbreviations
 
 **MOC**: Method of Characteristics
 
-**WMOC**: Water Method of Characteristics
+**TSNET**: Transient Simulation in water Networks

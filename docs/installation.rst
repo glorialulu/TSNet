@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install wmoc, run this command in your terminal:
+To install tsnet, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install wmoc
+    $ pip install tsnet
 
-This is the preferred method to install wmoc, as it will always install the most recent stable release.
+This is the preferred method to install tsnet, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,19 +26,19 @@ you through the process.
 From sources
 ------------
 
-The sources for wmoc can be downloaded from the `Github repo`_.
+The sources for tsnet can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/glorialulu/wmoc
+    $ git clone git://github.com/glorialulu/tsnet
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/glorialulu/wmoc/tarball/master
+    $ curl  -OL https://github.com/glorialulu/tsnet/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,17 +47,17 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/glorialulu/wmoc
-.. _tarball: https://github.com/glorialulu/wmoc/tarball/master
+.. _Github repo: https://github.com/glorialulu/tsnet
+.. _tarball: https://github.com/glorialulu/tsnet/tarball/master
 
 
 Dependencies 
 ------------
 
-WMOC is tested against Python versions 2.7, 3.5 and 3.6. Further
+tsnet is tested against Python versions 2.7, 3.5 and 3.6. Further
 using a Python distribution is recommended as they already contain (or easily
 support installation of) many Python packages (e.g. SciPy, NumPy, pandas, pip, 
-matplotlib,etc.) that are used in the WMOC code. 
+matplotlib,etc.) that are used in the tsnet code. 
 
 Two examples of those distributions are:
 
@@ -68,7 +68,7 @@ management  system and environment management system for installing multiple
 versions of software  packages and their dependencies and switching easily
 between them.
 
-In addition, WMOC requires some specific Python packages:
+In addition, tsnet requires some specific Python packages:
 
 1. wntr: Water Network Tool for Resilience 
   install on a python-enabled command line with `pip install wntr`

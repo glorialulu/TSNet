@@ -1,7 +1,7 @@
 """
-The wmoc.network.geometry read in the geometry defined by EPANet
-.inp file, and assign aditional parameters needed in transient
-simution later in wmoc.
+The tsnet.network.geometry read in the geometry defined by EPANet
+.inp file, and assign additional parameters needed in transient
+simulation later in tsnet.
 
 """
 
@@ -14,8 +14,8 @@ import numpy as np
 import logging
 import warnings
 from wntr.network import WaterNetworkModel
-from wmoc.network.discretize import discretization, max_time_step
-from wmoc.network.control import (
+from tsnet.network.discretize import discretization, max_time_step
+from tsnet.network.control import (
     valveclosing,
     valveopening,
     pumpclosing,

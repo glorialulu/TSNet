@@ -1,5 +1,5 @@
 """
-The wmoc.simulation.solver module contains methods to solver MOC
+The tsnet.simulation.solver module contains methods to solver MOC
 for different grid configurations, including:
 1. inner_node
 2. valve_node

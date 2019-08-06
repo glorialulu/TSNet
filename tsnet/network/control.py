@@ -1,5 +1,5 @@
 """
-The wmoc.network.control module includes method to define
+The tsnet.network.control module includes method to define
 network controls of the pump and valve.These control modify
 parameters in the network during transient simulation.
 

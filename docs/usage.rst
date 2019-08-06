@@ -2,9 +2,9 @@
 Get started
 ===========
 
-To use wmoc in a project, open a Python console and import the package::
+To use tsnet in a project, open a Python console and import the package::
 
-    import wmoc
+    import tsnet
 
 
 Simple example
@@ -13,7 +13,7 @@ Simple example
 A simple example, get_startted.py is included in the examples folder.
 Thie example demonstrate how to:
 
-* Import wmoc
+* Import tsnet
 
 * Gnerate a transient model
 
@@ -32,8 +32,8 @@ Thie example demonstrate how to:
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 2-27
 
-Additional examples are included in the wmoc documentation.
+Additional examples are included in the tsnet documentation.
 
-Three EPANET INP files and example files are also included in the wmoc
+Three EPANET INP files and example files are also included in the tsnet
 repository in the examples folder. Example networks range from a simple
 8 node network to a 126 node network.

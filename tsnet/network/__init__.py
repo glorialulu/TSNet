@@ -1,5 +1,5 @@
 """
-The wmoc.network package contains methods to define
+The tsnet.network package contains methods to define
 1. a water network geometry,
 2. network topology,
 3. network control, and

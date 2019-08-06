@@ -1,4 +1,4 @@
-Welcome to wmoc's documentation!
+Welcome to tsnet's documentation!
 ======================================
 
 .. toctree::
@@ -16,7 +16,7 @@ Welcome to wmoc's documentation!
    contributing
    authors
    history
-   API documentation <apidocs/wmoc>
+   API documentation <apidocs/tsnet>
    abbrev
    reference
 

@@ -2,7 +2,7 @@
 Initial Condition
 =================
 
-WMOC employed [WNTRSi]_ for simulating the steady state
+tsnet employed [WNTRSi]_ for simulating the steady state
 in the network to establish the initial flow conditions for
 the upcoming transient simulations.
 
@@ -17,7 +17,7 @@ An initial condition simulation can be run using the following code:
 :math:`t_0` stands for the time when the initial condition will be
 calculated. More information on the initializer can be found in
 the API documentation, under
-:class:`~wmoc.simulation.initialize.Initializer`.
+:class:`~tsnet.simulation.initialize.Initializer`.
 
 
 

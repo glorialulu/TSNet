@@ -1,5 +1,5 @@
 """
-The wmoc.utils package contains helper functions.
+The tsnet.utils package contains helper functions.
 """
 
 from .calc_parabola_vertex import calc_parabola_vertex

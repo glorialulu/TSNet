@@ -1,13 +1,13 @@
 """
-The wmoc.simulation.main module contains function to perform
+The tsnet.simulation.main module contains function to perform
 the workflow of read, discretize, initial, and transient
 simulation for the given .inp file.
 
 """
 from __future__ import print_function
-from wmoc.network import  topology
-from wmoc.simulation.single import inner_pipe, left_boundary, right_boundary
-from wmoc.utils import valve_curve, memo, print_time_delta
+from tsnet.network import  topology
+from tsnet.simulation.single import inner_pipe, left_boundary, right_boundary
+from tsnet.utils import valve_curve, memo, print_time_delta
 import numpy as np
 import warnings
 from datetime import datetime
@@ -19,12 +19,12 @@ def MOCSimulator(tm):
 
     Parameters
     ----------
-    tm : wmoc.network.model.TransientModel
+    tm : tsnet.network.model.TransientModel
         Network
 
     Returns
     ------
-    tm : wmoc.network.model.TransientModel
+    tm : tsnet.network.model.TransientModel
             Simulated network
     """
     # determine network topology

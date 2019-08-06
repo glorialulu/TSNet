@@ -1,5 +1,5 @@
 """
-The wmoc.simulation.single contains methods to perform MOC
+The tsnet.simulation.single contains methods to perform MOC
 transient simulation on a single pipe, including
 1. inner pipe
 2. left boundary pipe (without C- charateristic grid)
@@ -7,8 +7,8 @@ transient simulation on a single pipe, including
 
 """
 import numpy as np
-from wmoc.utils import calc_parabola_vertex
-from wmoc.simulation.solver import (
+from tsnet.utils import calc_parabola_vertex
+from tsnet.simulation.solver import (
     inner_node,
     valve_node,
     pump_node,

@@ -1,5 +1,5 @@
 """
-The wmoc.network.discretize contains methods to perform
+The tsnet.network.discretize contains methods to perform
 spatial and temporal discritization by adjusting wave speed
 and time step to solve compatibility equations in case of
 uneven wave travel time.
@@ -14,14 +14,14 @@ def discretization(tm, dt):
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network
     dt : float
         User defined time step
 
     Returns
     -------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network with updated parameters
     """
 
@@ -47,7 +47,7 @@ def max_time_step(tm):
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network
 
     Returns
@@ -68,7 +68,7 @@ def cal_N(tm,  dt):
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network
     dt : float
         Time step for transient simulation
@@ -85,12 +85,12 @@ def adjust_wavev( tm):
 
     Parameters
     ----------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network
 
     Returns
     -------
-    tm : wmoc.network.geometry.TransientModel
+    tm : tsnet.network.geometry.TransientModel
         Network with adjusted wave speed.
     dt : float
         Adjusted time step

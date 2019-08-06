@@ -1,5 +1,5 @@
 """
-The wmoc.utils.valve_curve contains function to define
+The tsnet.utils.valve_curve contains function to define
 valve characteristics curve, gate valve by default.
 
 """
