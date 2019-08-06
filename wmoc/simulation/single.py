@@ -80,8 +80,9 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             V1 = V10;     H1 = H10       #list
             V2 = V0[i+1]; H2 = H0[i+1]
             if utype[0] == 'Pipe':
+                elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp,
+                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[0])
@@ -96,8 +97,9 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             V1 = V0[i-1];    H1 = H0[i-1]
             V2 = V20;        H2 = H20
             if dtype[0] == 'Pipe':
+                elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2,
+                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2, elev,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
             elif dtype[0] == 'Pump':
                 pumpc = calc_parabola_vertex(pump[1])
@@ -121,7 +123,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
 
 def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
                     H20, V20, utype, dtype) :
-    """MOC solution for an indivial left boundary pipe.
+    """MOC solution for an individual left boundary pipe.
 
     Parameters
     ----------
@@ -134,7 +136,7 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
     V : numpy.ndarray
         Velocity of current pipe at current time step [m/s]
     links2 : list
-        Downstream ajacent pipes
+        Downstream adjacent pipes
     p : list
         pipe list
     pump : list
@@ -193,8 +195,9 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             V1 = V0[i-1]; H1 = H0[i-1]     # upstream node
             V2 = V20;     H2 = H20         # downstream nodes
             if dtype[0] == 'Pipe':
+                elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2,
+                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2, elev,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
             elif dtype[0] == 'Pump':
@@ -219,7 +222,7 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
 
 def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
                  H10, V10, utype, dtype):
-    """MOC solution for an indivial right boundary pipe.
+    """MOC solution for an individual right boundary pipe.
 
     Parameters
     ----------
@@ -232,7 +235,7 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
     V : numpy.ndarray
         Velocity of current pipe at current time step [m/s]
     links1 : list
-        Upstream ajacent pipes
+        Upstream adjacent pipes
     p : list
         pipe list
     pump : list
@@ -278,8 +281,9 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
             V1 = V10; H1 = H10            # upstream node
             V2 = V0[i+1]; H2 = H0[i+1]    # downstream node
             if utype[0] == 'Pipe':
+                elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp,
+                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
 
             elif utype[0] == 'Pump':

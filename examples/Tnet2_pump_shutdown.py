@@ -39,7 +39,7 @@ plt.ylabel("Pressure Head (m)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet2_node.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet2_node.png', format='png',dpi=100)
 
 pipe = 'PIPE-109'
 pipe = tm.get_link(pipe)
@@ -53,4 +53,5 @@ plt.ylabel("Velocity (m/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet2_pipe.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet2_pipe.png', format='png',dpi=100)
+

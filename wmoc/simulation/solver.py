@@ -16,7 +16,7 @@ import numpy as np
 import warnings
 
 def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
-    """Inner boudary MOC using C+ and C- characteristic curve
+    """Inner boundary MOC using C+ and C- characteristic curve
 
     Parameters
     ----------
@@ -37,7 +37,7 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
     dt : float
         Time step
     g : float
-        Gravity aceleration
+        Gravity acceleration
     nn : int
         The index of the calculation node
     s1 : list
@@ -140,7 +140,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     dt : float
         Time step
     g : float
-        Gravity aceleration
+        Gravity acceleration
     nn : int
         The index of the calculation node
     s1 : list
@@ -199,7 +199,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
 #          /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852)+ g/a2[i]*dt*V2[i]*theta2[i]
 #        C2[i,1] = g/a2[i]
 
-    # parameters of the quatratic polinomial
+    # parameters of the quadratic polynomial
     aq = 1
     bq = 2*g*KL_inv* (A2[0]/A1[0]/C1[0,1] + 1/C2[0,1])
     cq = 2*g*KL_inv* (C2[0,0]/C2[0,1] - C1[0,0]/C1[0,1])
@@ -225,7 +225,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
 
     else : # reverse flow
         # reconsruct the quadratic equation
-        # parameters of the quatratic polinomial
+        # parameters of the quadratic polynomial
         aq = 1
         bq = 2*g*KL_inv* (-A1[0]/A2[0]/C2[0,1]-1/C1[0,1])
         cq = 2*g*KL_inv* (-C2[0,0]/C2[0,1]+C1[0,0]/C1[0,1])
@@ -339,7 +339,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     ap = ap * A1[0]**2.
     bp = bp * A1[0]
 
-    # parameters of the quatratic polinomial
+    # parameters of the quadratic polynomial
     aq = 1
     bq = 1/ap * (bp - 1/C1[0,1] - A1[0]/C2[0,1]/A2[0])
     cq = 1/ap * (-C2[0,0]/C2[0,1] + C1[0,0]/C1[0,1] + cp)
@@ -404,9 +404,9 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
 
     # property of right adjacent pipe
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       #m
-    a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
+    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range(len(link2))]
 
@@ -552,7 +552,7 @@ The results might not be accurate.")
             HP = (-bq)/(2*aq)
             HP = HP**2.
             warnings.warn("The quadratic equation has no real solution (dead end).\
-The resuls might not be accurate.")
+The results might not be accurate.")
         VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP
     return HP,VP
 
@@ -588,15 +588,16 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt):
         HP = H
     return HP, VP
 
-def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
-    r"""Leakge Node MOC calculation
+def add_leakage(emitter_coef, link1, link2, elev,
+                 H1, V1, H2, V2, dt, g, nn, s1, s2):
+    r"""Leakage Node MOC calculation
 
     Parameters
     ----------
-    emitter_coef : flot
+    emitter_coef : float
         float, optional
         Required if leak_loc is defined
-        The leakage coefficient of the leakge
+        The leakage coefficient of the leakage
         .. math:: Q_leak = leak_A  [ m^3/s/(m H20)^(1/2)] * \sqrt(H)
     link1 : object
         Pipe object of C+ charateristics curve
@@ -613,7 +614,7 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     dt : float
         Time step
     g : float
-        Gravity aceleration
+        Gravity acceleration
     nn : int
         The index of the calculation node
     s1 : list
@@ -678,10 +679,13 @@ def add_leakage(emitter_coef, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
 
     a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
     b = np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)
-    # parameters of the quatratic polinomial
-    a1 = b**2.
-    b1 = -(2.*a*b +emitter_coef**2)
-    c1 = a**2.
+    # parameters of the quadratic polynomial
+    # a1 = b**2.
+    # b1 = -(2.*a*b +emitter_coef**2)
+    # c1 = a**2.
+    a1 = b**2
+    b1 = -2*a*b - emitter_coef**2.
+    c1 = a**2 + emitter_coef**2.*elev
 
     # solve the quadratic equation
     delta = b1**2 - 4*a1*c1

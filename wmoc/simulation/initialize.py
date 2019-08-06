@@ -60,7 +60,7 @@ def Initializer(tm, t0, engine='PDD'):
     # calculate initial conditions using EPAnet engine
     for _,node in tm.nodes():
         if node.leak_status == True:
-            node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.8),
+            node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.81),
                     discharge_coeff = 1, start_time = t0)
     if engine.lower() == 'dd':
         sim = wntr.sim.WNTRSimulator(tm)
@@ -98,21 +98,22 @@ def Initializer(tm, t0, engine='PDD'):
         pipe.end_node_flowrate[0] = V[-1]*pipe.area
 
         try:
-            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0])
-            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0])
+            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0]-pipe.start_node.elevation)
+            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0]-pipe.start_node.elevation)
         except:
             pass # reservoir does not have emitter_discharge attribute
 
         try:
-            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1])
-            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1])
+            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1]-pipe.end_node.elevation)
+            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1]-pipe.end_node.elevation)
         except:
             pass # reservoir does not have emitter_discharge attribute
 
         # calculate demand coefficient
         Hs = H[0]
         He = H[-1]
-        demand = [0,0] # dmenad at start and end node
+
+        demand = [0,0] # demand at start and end node
 
         try :
             demand[0] = tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
@@ -123,7 +124,16 @@ def Initializer(tm, t0, engine='PDD'):
         except :
             demand[1] = 0.
 
-        pipe = cal_demand_coef(demand, pipe, Hs, He, t0)
+        try :
+            Hsa = H[0]-pipe.start_node.elevation
+        except:
+            Hsa = 1.
+        try :
+            Hea = H[-1] - pipe.end_node.elevation
+        except :
+            Hea=1.
+
+        pipe = cal_demand_coef(demand, pipe, Hsa, Hea, t0)
 
         # calculate roughness coefficient
         Vp = V[0]
@@ -138,7 +148,7 @@ def Initializer(tm, t0, engine='PDD'):
 
 def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
 
-    """Calculate the demand coefficent for the start and end node of the pipe.
+    """Calculate the demand coefficient for the start and end node of the pipe.
 
     Parameters
     ----------

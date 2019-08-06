@@ -42,7 +42,7 @@ plt.ylabel("Leak discharge (m^3/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet3_leak.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet3_leak.png', format='png',dpi=100)
 
 node = 'JUNCTION-20'
 node = tm.get_node(node)
@@ -55,7 +55,7 @@ plt.ylabel("Burst discharge (m^3/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet3_burst.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet3_burst.png', format='png',dpi=100)
 
 
 pipe = 'LINK-40'
@@ -70,7 +70,7 @@ plt.ylabel("Velocity (m/s)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet3_pipe.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet3_pipe.png', format='png',dpi=100)
 
 node1 = tm.get_node('JUNCTION-8')
 node2 = tm.get_node('JUNCTION-16')
@@ -88,4 +88,4 @@ plt.ylabel("Head (m)")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-# fig.savefig('./docs/figures/tnet3_multi.png', format='png',dpi=100)
+fig.savefig('./docs/figures/tnet3_multi.png', format='png',dpi=100)

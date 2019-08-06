@@ -226,7 +226,7 @@ The initial setting has been changed to closed to perform the opening." %name)
             m  : closure constant [unitless]
         """
         pump = self.get_link(name)
-        
+
         if pump.link_type.lower() != 'pump':
             raise RuntimeError('The name of pump to operate is not associated with a pump')
 

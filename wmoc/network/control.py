@@ -196,8 +196,9 @@ def burstsetting(dt,tf,ts,tc,final_burst_coeff):
         s[s<0] = 0
         burst_A = final_burst_coeff * s
     else:
-        s = np.array([(i*dt- ts)/tc    for i in range(tn)])
-        s[s>1] = 1
+        s = np.array([(i*dt- ts)    for i in range(tn)])
+        s[s>0] = 1
         s[s<0] = 0
         burst_A = final_burst_coeff * s
+
     return burst_A
