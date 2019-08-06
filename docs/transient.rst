@@ -18,7 +18,7 @@ The transient flow is govenred by the mass and monmentum conservation
 equation [WYSS93]_:
 
 .. math::
-    \frac{\partial H}{\partial t} + \frac{a^2}{g} \frac{\partial V}{\partial t} - gV\sin(\alpha) = 0
+    \frac{\partial H}{\partial t} + \frac{a^2}{g} \frac{\partial V}{\partial t} - gV\sin \alpha = 0
 
     \frac{\partial V}{\partial t} + g\frac{\partial H}{\partial t} + h_f = 0
 
@@ -163,12 +163,52 @@ Courant's criterion, it will still be adjusted.
 
 Valve Operation (Closure and Opening)
 -------------------------------------
-Simulate valve closure
+
+.. Two types of valve are included in TSNet: end valve, located on the boundary
+    of a network, and inline valve, located in the middle of the network and
+    connected by one pipe on each end.
+
+In TSNet, the default valve shape is gate valve. The valve characteristics
+curve is defined according to [STWV96]_. The valves can be closed or opened.
+The following examples illustrate how to operate valve.
+
+Valve closure can be simulated by defining the valve closure start time
+(:math:`ts`), the closure duration (:math:`t_c`), the valve open percentage
+when the closure is completed, and the closure constant, which characterize
+the shape of the closure curve. This parameters essentially defines the valve
+closure cure. For example, using the code below will yield the blue curve
+shown in :numref:`valve_closure`. If the closure constant (:math:`m`) is
+instead set to be :math:`2`, the valve curve will then correspond to the
+orange curve in :numref:`valve_closure`.
+
+
+.. code:: python
+
+  tc = 1 # valve closure period [s]
+  ts = 0 # valve closure start time [s]
+  se = 0 # end open percentage [s]
+  m = 1 # closure constant [dimensionless]
+  valve_op = [tc,ts,se,m]
+  tm.valve_closure('VALVE',valve_op)
 
 .. _valve_closure:
 .. figure:: figures/valve_closure.png
    :width: 600
    :alt: valve_closure
+
+Similarly, valve opening can be simulated by defining a similar set of
+parameters related to the valve opening curve. The valve opening curves
+with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
+
+.. code:: python
+
+  tc = 1 # valve opening period [s]
+  ts = 0 # valve opening start time [s]
+  se = 1 # end open percentage [s]
+  m = 1 # opening constant [dimensionless]
+  valve_op = [tc,ts,se,m]
+  tm.valve_opening('VALVE',valve_op)
+
 
 .. _valve_opening:
 .. figure:: figures/valve_opening.png
@@ -178,15 +218,36 @@ Simulate valve closure
 
 Pump Operation (Shut-off and Start-up)
 --------------------------------------
-simulate pump controlled shut-off
+The TSNet also includes the capacity to perform controlled pump operations,
+while pump shut-off due to power failure has not been included yet.
 
+The following example shows how to add pump shut-off event to the network:
+
+.. literalinclude:: ../examples/Tnet2_pump_shutdown.py
+    :lines: 13-18
+
+where the parameters are defined in the same manner as in valve closure.
+Correspondingly, the controlled pump opening can be simulated using:
+
+.. code:: python
+
+  tc = 1 # pump opening period [s]
+  ts = 0 # pump opening start time [s]
+  se = 1 # end open percentage [s]
+  m = 1 # opening constant [dimensionless]
+  pump_op = [tc,ts,se,m]
+  tm.pump_opening('PUMP2',pump_op)
+
+It should be noted that a check valve is assumed in each pump, indicating
+that the reverse flow will be stopped by the check valve immediately.
 
 
 Leakage
 --------
 
-In MOC, leaks and burst are assigned to the junctions. The leak is defined by
-specifying the leaking node name and the emitter coefficient (:math:`k`):
+In TSNet, leaks and burst are assigned to the junctions. The leak is
+defined by specifying the leaking node name and the emitter coefficient
+(:math:`k`):
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 15-16
@@ -199,6 +260,8 @@ equation which quantifies the leakage discharge (:math:`Q_l`):
 
 .. math::
     Q_l = k \sqrt{H_l}
+
+where :math:`H_l` is the pressure head at the leakage node.
 
 Burst
 -----

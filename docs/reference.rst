@@ -7,3 +7,5 @@ Reference
 .. [WNTRSi] https://wntr.readthedocs.io/en/latest/index.html
 
 .. [LAJW99] Larock, B. E., Jeppson, R. W., & Watters, G. Z. (1999). Hydraulics of pipeline systems. CRC press.
+
+.. [STWV96] Street, R. L., Watters, G. Z., & Vennard, J. K. (1996). Elementary fluid mechanics. J. Wiley.
