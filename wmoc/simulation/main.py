@@ -350,4 +350,14 @@ def MOCSimulator(tm):
 
     tm.simulation_timestamps = tt[1:]
 
+    # save object to file
+    import pickle
+    filehandler = open('results.obj','wb')
+    pickle.dump(tm, filehandler)
+
+    """TO read:
+    import pickle
+    file = open('results.obj', 'rb')
+    tm = pickle.load(file)
+    """
     return tm
