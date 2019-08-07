@@ -154,7 +154,7 @@ can be compensated by correcting the wave speed (:math:`a_i`).
 
 Least squares approximation is then used to determine :math:`\Delta t`
 such that the sum of squares of the wave speed adjustments
-(:math:`\sum{{\phi_i}^2`}) is minimized. Ultimately, an adjusted
+(:math:`\sum{{\phi_i}^2}`) is minimized. Ultimately, an adjusted
 :math:`\Delta t` can be determined and then used in the transient simulation.
 
 It should be noted that even if the user defined time step satisfied the

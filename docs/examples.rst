@@ -95,7 +95,7 @@ This example illustrates how the package models a controlled pump shutdown
 transient event, indicating that the pump speed is ramped down. This example
 network is shown below in :numref:`tnet2`. It comprises 113 pipes,
 91 junctions, one valve, two pumps, two reservoir, and three tanks.
-A transient simulation of 50 second with :math:`0.0125s`time step, generated
+A transient simulation of 50 second with :math:`0.0125s` time step, generated
 by shut down PUMP2, takes around 8 minutes in this network.There are five
 steps that the application would need to take:
 

@@ -1,5 +1,5 @@
-tsnet
-====
+Introduction to TSNet
+=======================
 
 
 .. image:: https://img.shields.io/pypi/v/tsnet.svg
@@ -15,7 +15,7 @@ tsnet
 
 
 
-tsnet conducts transient simulation using MOC method for water distribution systems.
+TSNet performs transient simulation in water networks using MOC method.
 
 
 * Free software: MIT license
@@ -37,14 +37,15 @@ rendering easiness for interaction, modification, and extension.
 Features
 --------
 
-The tsnet is a Pyton package designed to perform transient simulation in water
+TSNet is a Python package designed to perform transient simulation in water
 distribution networks. The software includes capability to:
 
-* Generate water network models based on .inp files 
-* Operate elements, including pumps and valves, to generate transient events
+* Generate water network models based on .inp files
+* Operate network elements, including pumps and valves,
+  to generate transient events
 * Add disruptive events including pipe bursts and leakages
 * Perform transient simulation using MOC method
-* Visulize results
+* Visualize results
 
 For more information, go to https://tsnet.readthedocs.io.
 
@@ -52,17 +53,24 @@ For more information, go to https://tsnet.readthedocs.io.
 Version
 -------
 
-tsnet is a ongoing research project, the current version is 0.1.0, which is 
-still a pre-release. 
+TSNet is a ongoing research project in the University of Texas at Austin.
+The current version is 0.1.0, which is still a pre-release.
+
+Disclaimer
+----------
+
+No warranty, expressed or implied, is made as to the correctness of the
+results or the suitability of the application.
+**Please use with extreme caution.**
 
 
-Cite tsnet
----------
+Cite TSNet
+-----------
 
-To cite tsnet, use one of the following references:
+To cite TSNet, use one of the following references:
 
 
 License
 -------
 
-tsnet is released under the Revised BSD license. See the LICENSE.txt file.
+TSNet is released under the MIT license. See the LICENSE.txt file.

@@ -11,15 +11,15 @@ Simple example
 ---------------
 
 A simple example, get_startted.py is included in the examples folder.
-Thie example demonstrate how to:
+This example demonstrate how to:
 
 * Import tsnet
 
-* Gnerate a transient model
+* Generate a transient model
 
 * Set wave speed
 
-* Set time step and simulation peroid
+* Set time step and simulation period
 
 * Perform initial condition calculation
 
@@ -36,4 +36,4 @@ Additional examples are included in the tsnet documentation.
 
 Three EPANET INP files and example files are also included in the tsnet
 repository in the examples folder. Example networks range from a simple
-8 node network to a 126 node network.
+8-node network to a 126-node network.

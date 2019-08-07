@@ -50,20 +50,6 @@ To obtain the results on pipe 'LINK-40':
   start_flowrate = pipe.start_node_flowrate
   end_flowrate = pipe.end_node_flowrate
 
-The :class:`tsnet.network.model.TransientModel` object, including
-the information of the network, operation rules, and the simulated results,
-are saved in the file **results.obj**, located in the current folder.
-
-To retrieve the results from a previously completed simulation, one can read
-the :class:`tsnet.network.model.TransientModel` object from the **results.obj**
-file and access results from the objet just like shown above:
-
-.. code:: python
-
-    import pickle
-    file = open('results.obj', 'rb')
-    tm = pickle.load(file)
-
 
 Time Step and Time Stamps
 -------------------------
@@ -90,3 +76,20 @@ The results can then be plotted with respect to the time stamps using
 .. figure:: figures/tnet2_node.png
    :width: 600
    :alt: tnet2_node
+
+Results Retrieval
+------------------
+
+The :class:`tsnet.network.model.TransientModel` object, including
+the information of the network, operation rules, and the simulated results,
+is saved in the file **results.obj**, located in the current folder.
+
+To retrieve the results from a previously completed simulation, one can read
+the :class:`tsnet.network.model.TransientModel` object from the
+**results.obj** file and access results from the objet just like shown above:
+
+.. code:: python
+
+    import pickle
+    file = open('results.obj', 'rb')
+    tm = pickle.load(file)
