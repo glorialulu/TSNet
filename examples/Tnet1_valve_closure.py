@@ -42,6 +42,7 @@ plt.grid(True)
 plt.show()
 # fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
 
+print (type(node.head))
 pipe = 'P2'
 pipe = tm.get_link(pipe)
 fig2 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
