@@ -10,32 +10,49 @@ Simulation results are returned and stored in the
 
 Node results include the following attributes:
 
-    - Piezometric Head [m]
-    - Emitter Discharge (including leakage and burst) [:math:`m^3/s`]
-    - Demand Discharge [:math:`m^3/s`]
+    - Piezometric head [m]
+    - Emitter discharge (including leakage and burst) [:math:`m^3/s`]
+    - Demand discharge [:math:`m^3/s`]
+
+Node results include the following attributes:
+
+    - Head at start node [m]
+    - Flow velocity at start node [:math:`m^3/s`]
+    - Flowrate at start node [:math:`m^3/s`]
+    - Head at end node [m]
+    - Flow velocity at end node [:math:`m^3/s`]
+    - Flowrate at end node [:math:`m^3/s`]
+
 
 The result for each attribute is a Numpy array, the length of
 which equals the total number of simulation time steps (:math:`tn`).
 The array represents the time history of the simulation results at
 each time steps.
 
-For example, the head results at node 'JUNCTION-105' can be accessed by:
+For example, the results of head, emitter discharge and demand discharge
+at node 'JUNCTION-105' can be accessed by:
 
 .. code:: python
 
-  head = tm.nodes['JUNCTION-105'].head
+  node = tm.get_node['JUNCTION-105']
+  head = node.head
+  emitter_discharge = node.emitter_discharge
+  demand_discharge = node.demand_discharge
 
-To obtain the emitter discharge results at node 'JUNCTION-22':
-
-.. code:: python
-
-  emitter_discharge = tm.nodes['JUNCTION-22'].emitter_discharge
-
-To collect the demand discharge results at node 'JUNCTION-16':
+To obtain the results on pipe 'LINK-40':
 
 .. code:: python
 
-  demand_discharge = tm.nodes['JUNCTION-16'].demand_discharge
+  pipe = tm.get_link('LINK-40')
+  start_head = pipe.start_node_head
+  end_head = pipe.end_node_head
+  start_velocity = pipe.start_node_velocity
+  end_velocity = pipe.end_node_velocity
+  start_flowrate = pipe.start_node_flowrate
+  end_flowrate = pipe.end_node_flowrate
+
+Time stamps and plot
+---------------------
 
 Additionally, the time step (in second) and the time stamps (in seconds
 from the start of the simulation) are also stored in the
@@ -47,21 +64,15 @@ by:
     dt = tm.time_step
     tt = tm.simulation_timestamps
 
-The results can then be plotted with respect to the time stamps:
+The results can then be plotted with respect to the time stamps using
+**matplotlib** or any other preferred package, as shown in :numref:`tnet2_node`:
 
 .. code:: python
 
     import matplotlib.pyplot as plt
     plt.plot(tt ,head)
 
-result keys for links:
-
-    - start_node_head
-    - start_node_velocity
-    - start_node_flowrate
-    - end_node_head
-    - end_node_velocity
-    - end_node_flowrate
-
-
-
+.. _tnet2_node:
+.. figure:: figures/tnet2_node.png
+   :width: 600
+   :alt: tnet2_node
