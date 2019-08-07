@@ -14,7 +14,7 @@ Node results include the following attributes:
     - Emitter discharge (including leakage and burst) [:math:`m^3/s`]
     - Demand discharge [:math:`m^3/s`]
 
-Node results include the following attributes:
+Link results include the following attributes:
 
     - Head at start node [m]
     - Flow velocity at start node [:math:`m^3/s`]
@@ -24,10 +24,9 @@ Node results include the following attributes:
     - Flowrate at end node [:math:`m^3/s`]
 
 
-The result for each attribute is a Numpy array, the length of
+The result for each attribute is a Numpy array, representing the time
+history of the simulation results, the length of
 which equals the total number of simulation time steps (:math:`tn`).
-The array represents the time history of the simulation results at
-each time steps.
 
 For example, the results of head, emitter discharge and demand discharge
 at node 'JUNCTION-105' can be accessed by:
@@ -51,8 +50,23 @@ To obtain the results on pipe 'LINK-40':
   start_flowrate = pipe.start_node_flowrate
   end_flowrate = pipe.end_node_flowrate
 
-Time stamps and plot
----------------------
+The :class:`tsnet.network.model.TransientModel` object, including
+the information of the network, operation rules, and the simulated results,
+are saved in the file **results.obj**, located in the current folder.
+
+To retrieve the results from a previously completed simulation, one can read
+the :class:`tsnet.network.model.TransientModel` object from the **results.obj**
+file and access results from the objet just like shown above:
+
+.. code:: python
+
+    import pickle
+    file = open('results.obj', 'rb')
+    tm = pickle.load(file)
+
+
+Time Step and Time Stamps
+-------------------------
 
 Additionally, the time step (in second) and the time stamps (in seconds
 from the start of the simulation) are also stored in the
