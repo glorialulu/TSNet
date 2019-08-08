@@ -1,5 +1,5 @@
 ===========
-Get started
+Get Started
 ===========
 
 To use tsnet in a project, open a Python console and import the package::

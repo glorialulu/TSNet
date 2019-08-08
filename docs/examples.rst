@@ -8,7 +8,7 @@ Example 1 - End-valve Closure
 This example shows how to simulate the closure of
 valve located at the boundary of a network. The first example
 network is shown below in :numref:`tnet1`. It comprises 9 pipes,
-5 junctions, one reservoir, 3 closed loops,and one valve located
+8 junctions, one reservoir, 3 closed loops, and one valve located
 at the downstream end of the system. There are five steps that the
 application would need to take:
 
@@ -17,8 +17,9 @@ application would need to take:
    :scale: 100 %
    :alt: tnet1
 
+   Tnet1 network graphics
 
-1.  Import tsnet package and read the Epanet .inp file.
+1.  Import tsnet package and read the EPANet INP file.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 1-4
@@ -92,19 +93,22 @@ Example 2 - Pump operations
 ---------------------------
 
 This example illustrates how the package models a controlled pump shutdown
-transient event, indicating that the pump speed is ramped down. This example
+transient event, i.e., the pump speed is ramped down. This example
 network is shown below in :numref:`tnet2`. It comprises 113 pipes,
-91 junctions, one valve, two pumps, two reservoir, and three tanks.
+91 junctions, 2 pumps, 2 reservoir, 3 tanks, and one valve located in the
+middle of the network.
 A transient simulation of 50 second with :math:`0.0125s` time step, generated
-by shut down PUMP2, takes around 8 minutes in this network.There are five
-steps that the application would need to take:
+by shut down PUMP2, takes around 8 minutes in this network. There are five
+steps that this application would need to take:
 
 .. _tnet2:
 .. figure:: figures/Tnet2.PNG
    :width: 600
    :alt: tnet2
 
-1.  Import tsnet package and read the Epanet .inp file.
+   Tnet2 network graphics
+
+1.  Import tsnet package and read the EPANet INP file.
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 1-4
@@ -139,7 +143,8 @@ steps that the application would need to take:
 
 
 After the transient simulation, the results at nodes and links
-will be returned and stored in the transient model (tm) instance.
+will be returned to the transient model (tm) instance, which is then
+stored in **Tnet2.obj**.
 The actual demand discharge at JUNCTION-105 throughout the simulation
 can be retrieved by:
 
@@ -177,11 +182,11 @@ yields :numref:`tnet2_pipe`:
 Example 3 - Burst and leak
 ---------------------------
 
-This example reveals how tsnet simulate pipe bursts and leaks.This example
+This example reveals how TSNet simulates pipe bursts and leaks.This example
 network is shown below in :numref:`tnet3`. It comprises 168 pipes,
-126 junctions, 8 valve, two pumps, one reservoir, and two tanks. The runtime
-is around 7 minutes for a transient simulation of :math:`20s` with a time
-step of :math:`0.00625s`.There are five steps that the application
+126 junctions, 8 valve, 2 pumps, one reservoir, and two tanks. The runtime
+is around 4 minutes for a transient simulation of :math:`20s` with a time
+step of :math:`0.01314s`.There are five steps that the application
 would need to take:
 
 .. _tnet3:
@@ -189,8 +194,9 @@ would need to take:
    :width: 600
    :alt: tnet3
 
+    Tnet3 network graphics
 
-1.  Import tsnet package and read the Epanet .inp file.
+1.  Import tsnet package and read the EPANet INP file.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 1-4
@@ -198,20 +204,20 @@ would need to take:
 2.  Assume that the wave speed for the pipes is normally distributed
     with mean equal to :math:`1200 m/s` and standard deviation equal
     to :math: `100m/s`. Then, assign the randomly generated wave speed
-    to each pipe in the network according to the order the pipes are
-    defined in the .inp file. Subsequently, set the simulation period
+    to each pipe in the network according to the order the pipes
+    defined in the INP file. Subsequently, set the simulation period
     as :math:`20s`, and use suggested time step.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 6-12
 
-3.  Define background leak, and specify the emitter coefficient.
+3.  Define background leak location, and specify the emitter coefficient.
     The leak will be included in the initial condition calculation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 14-16
 
-4.  Set up burst event, including burst start time (:math:`ts`),
+4.  Set up burst event, including burst location, burst start time (:math:`ts`),
     time for burst to fully develop (:math:`tc`), and the final emitter
     coefficient (final_burst_coeff).
 
@@ -230,7 +236,8 @@ would need to take:
     :lines: 29-31
 
 After the transient simulation, the results at nodes and links
-will be returned and stored in the transient model (tm) instance.
+will be returned to the transient model (tm) instance,
+which is subsequently stored in **Tnet3.obj**.
 
 
 To understand how much water has been lost through the leakage
@@ -249,7 +256,7 @@ yields :numref:`tnet3_leak`:
 
    Leak discharge at node JUNCTION-22.
 
-Similarly, to understand how much water has been lost through the burst
+Similarly, to reveal how much water has been wasted through the burst event
 at JUNCTION-20, we can plot the burst discharge results at JUNCTION-20:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
@@ -284,9 +291,9 @@ JUNCTION-8, JUNCTION-16, JUNCTION-45, JUNCTION-90, by:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 75-90
 
-The results are shown in :numref:`tnet3_multi`. It can be noticed that
+The results are demonstrated in :numref:`tnet3_multi`. It can be noticed that
 the amplitude of the pressure transient at JUNCTION-8 and JUNCTION-16
-is more significant than that at other two junctions, since they are closer
+is more significant than that at other two junctions since they are closer
 to JUNCTION-20, where the burst occurred.
 
 .. _tnet3_multi:

@@ -2,8 +2,8 @@
 Transient Model
 ====================
 
-The transient model inherit from the
-WNTR water network model [WNTRSi]_, which includes
+The transient model inheritS the WNTR water network model [WNTRSi]_,
+which includes
 junctions, tanks, reservoirs, pipes, pumps, valves,
 patterns,
 curves,
@@ -11,11 +11,11 @@ controls,
 sources,
 simulation options,
 and node coordinates.
-Transient model can be built directly from an EPANet INP file.
+It can be built directly from an EPANet INP file.
 Sections of EPANet INP file that are not compatible with WNTR are
 described in [WNTRSi]_.
 
-Compared with WNTR water network model, transient model adds the features
+Compared with WNTR water network model, TSNet transient model adds the features
 designed specifically for transient simulation, such as
 spatial discretization,
 temporal discretization,

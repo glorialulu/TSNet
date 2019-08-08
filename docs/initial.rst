@@ -3,7 +3,7 @@ Initial Condition
 =================
 
 TSNet employed WNTR [WNTRSi]_ for simulating the steady state
-in the network to establish the initial flow conditions for
+in the network to establish the initial conditions for
 the upcoming transient simulations.
 
 **WNTRSimulators** can be used to run demand-driven (DD) or

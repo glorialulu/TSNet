@@ -16,12 +16,12 @@ Node results include the following attributes:
 
 Link results include the following attributes:
 
-    - Head at start node [m]
+    - Piezometric head at start node [m]
     - Flow velocity at start node [:math:`m^3/s`]
-    - Flowrate at start node [:math:`m^3/s`]
-    - Head at end node [m]
+    - Flow rate at start node [:math:`m^3/s`]
+    - Piezometric head at end node [m]
     - Flow velocity at end node [:math:`m^3/s`]
-    - Flowrate at end node [:math:`m^3/s`]
+    - Flow rate at end node [:math:`m^3/s`]
 
 
 The result for each attribute is a Numpy array, representing the time
@@ -82,11 +82,14 @@ Results Retrieval
 
 The :class:`tsnet.network.model.TransientModel` object, including
 the information of the network, operation rules, and the simulated results,
-is saved in the file **results.obj**, located in the current folder.
+is saved in the file **results_obj.obj**, located in the current folder.
+The name of the results file are defined by the input parameter `result_obj`.
+If `result_obj` not given, the default results file is results.obj.
 
-To retrieve the results from a previously completed simulation, one can read
-the :class:`tsnet.network.model.TransientModel` object from the
-**results.obj** file and access results from the objet just like shown above:
+To retrieve the results from a previously completed simulation,
+one can read the :class:`tsnet.network.model.TransientModel` object
+from the **results_obj.obj** file and access results from the objet
+just like shown above:
 
 .. code:: python
 

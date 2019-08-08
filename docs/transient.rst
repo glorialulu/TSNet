@@ -2,14 +2,16 @@
 Transient Simulation
 ========================
 
-After the steady state calculation is completed, the Method of Characteristics
-(MOC) is used for solving governing transient flow equations. A transient
-simulation can be run using the following code:
+After the steady state calculation is completed, TSNet adopts
+the Method of Characteristics (MOC)
+for solving governing transient flow equations.
+A transient simulation can be run using the following code:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 27-27
+    :lines: 27-28
 
-The results will then be returned to the transient model (tm) instance.
+The results will be returned to the transient model (tm) object,
+and then stored in the 'Tnet1.obj' file for the easiness of retrieval.
 
 
 Mass and Momentum Conservation
@@ -52,41 +54,49 @@ equations along the characteristics lines [LAJW99]_.
 Headloss in Pipes
 ---------------------
 
-tsnet adopts Darcy-Weisbach equation to compute head loss, regardless of the
+TSNet adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANet .inp file. This package computes
 Darcy-Weisbach coefficients (:math:`f`) based on the head loss
-(:math:`{h_l}_0`) and flow velocity (:math:`V_0`) in initial condition,
+(:math:`{h_f}_0`) and flow velocity (:math:`V_0`) in initial condition,
 using the following equation:
 
 .. math::
-    f = \frac{{h_l}_0}{(L/D)(V_0^2/2g)}
+    f = \frac{{h_f}_0}{(L/D)(V_0^2/2g)}
 
 where
 :math:`L` is the pipe length,
 :math:`D` is the pipe diameter,
 and :math:`g` is gravity acceleration.
 
+Subsequently, in transient simulation the headloss (:math:`h_f`) is calculated
+based on the following equation:
+
+.. math::
+    h_f = f\frac{L}{D}\frac{V^2}{2g}
+
 Pressure-driven Demand
 ----------------------
 
-During the transient simulation in tsnet, the demands are treated as pressure-
+During the transient simulation in TSNet, the demands are treated as pressure-
 dependent discharge, thus indicating that the actual demands are not
-equivalent to the demands defined in the .inp file.
+equivalent to the demands defined in the INP file.
 
 The actual demands (:math:`D_{actual}`) are modeled based on the
-instantaneous pressure, and the demand discharge coefficients,
+instantaneous pressure head, and the demand discharge coefficients,
 using the following equation:
 
 .. math::
-    D_{actual} = k \sqrt{H}
+    D_{actual} = k \sqrt{H_p}
 
-where :math:`H` is the head and :math:`k` is the demand discharge coefficient,
+where :math:`H_p` is the pressure head
+(not the piezometric head (:math:`H`, :math:`H=H_p+elevation`)
+and :math:`k` is the demand discharge coefficient,
 which is calculated from the initial demand (:math:`D_0`) and head (:math:`H_0`):
 
 .. math::
-    k = \frac{D_0}{\sqrt{H_0}}
+    k = \frac{D_0}{\sqrt{{H_p}_0}}
 
-It should be noted that if the head is negative, the demand flow will be
+It should be noted that if the pressure head is negative, the demand flow will be
 treated zero, assuming that a backflow preventer exists on each node.
 
 
@@ -104,7 +114,7 @@ constraints that have to be satisfied simultaneously:
     \Delta t \leqslant \min{(\frac{L_i}{N_i a_i})} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
-2.  The time step has to be the same for any pipe in the network, thus
+2.  The time step has to be the same for any pipe in the network, therefore
     restricting the wave travel time :math:`\frac{L_i}{N_ia_i}` to be the same
     for any computational unit in the network. However, this is not the
     realistic situation in a real network, because different pipe lengths
@@ -168,16 +178,21 @@ Valve Operation (Closure and Opening)
     of a network, and inline valve, located in the middle of the network and
     connected by one pipe on each end.
 
-In TSNet, the default valve shape is gate valve. The valve characteristics
-curve is defined according to [STWV96]_. The valves can be closed or opened.
+Valve operations, including closure and opening, are supported in TSNet.
+The default valve shape is gate valve, the valve characteristics curve
+of which is defined according to [STWV96]_.
 The following examples illustrate how to operate valve.
 
-Valve closure can be simulated by defining the valve closure start time
-(:math:`ts`), the closure duration (:math:`t_c`), the valve open percentage
-when the closure is completed, and the closure constant, which characterize
-the shape of the closure curve. This parameters essentially defines the valve
-closure cure. For example, using the code below will yield the blue curve
-shown in :numref:`valve_closure`. If the closure constant (:math:`m`) is
+Valve closure can be simulated by defining
+the valve closure start time (:math:`ts`),
+the closure duration (:math:`t_c`),
+the valve open percentage when the closure is completed b (:math:`se`),
+and the closure constant (:math:`m`), which characterize
+the shape of the closure curve.
+These parameters essentially defines the valve closure cure.
+For example, using the code below will yield the blue curve
+shown in :numref:`valve_closure`.
+If the closure constant (:math:`m`) is
 instead set to be :math:`2`, the valve curve will then correspond to the
 orange curve in :numref:`valve_closure`.
 
@@ -196,7 +211,7 @@ orange curve in :numref:`valve_closure`.
    :width: 600
    :alt: valve_closure
 
-Similarly, valve opening can be simulated by defining a similar set of
+Furthermore, valve opening can be simulated by defining a similar set of
 parameters related to the valve opening curve. The valve opening curves
 with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
 
@@ -218,8 +233,9 @@ with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
 
 Pump Operation (Shut-off and Start-up)
 --------------------------------------
-The TSNet also includes the capacity to perform controlled pump operations,
-while pump shut-off due to power failure has not been included yet.
+The TSNet also includes the capacity to perform controlled pump operations
+by specifying the relation between pump rotation speed and time.
+However, pump shut-off due to power failure has not been included yet.
 
 The following example shows how to add pump shut-off event to the network:
 
@@ -236,7 +252,7 @@ Correspondingly, the controlled pump opening can be simulated using:
   se = 1 # end open percentage [s]
   m = 1 # opening constant [dimensionless]
   pump_op = [tc,ts,se,m]
-  tm.pump_opening('PUMP2',pump_op)
+  tm.pump_start_up('PUMP2',pump_op)
 
 It should be noted that a check valve is assumed in each pump, indicating
 that the reverse flow will be stopped by the check valve immediately.
@@ -252,23 +268,29 @@ defined by specifying the leaking node name and the emitter coefficient
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 15-16
 
-The leakage is then included in the initial condition solver; thus, it is
-important to define the leakage before performing the initial condition
+The leakage needs to be included in the initial condition solver; thus, it is
+necessary to define the leakage before performing the initial condition
 calculation. During the transient simulation, the leaking node is modeled
 using the two compatibility equations, a continuity equation, and an orifice
 equation which quantifies the leakage discharge (:math:`Q_l`):
 
 .. math::
-    Q_l = k \sqrt{H_l}
+    Q_l = k \sqrt{{H_p}_l}
 
-where :math:`H_l` is the pressure head at the leakage node.
+where :math:`{H_p}_l` is the pressure head at the leakage node.
+It should be noted that :math:`{H_p}_l` is the pressure head
+not the piezometric head (:math:`H = H_p +elevation`).
+Moreover, if the pressure head is negative, the leakage discharge
+will be set to zero, assuming a backflow preventer is installed
+on the leakage node.
+
 
 Burst
 -----
 The simulation of burst and leakage is very similar. They shared the
-same set of governing equations. The only difference is that the burst event
+same set of governing equations. The only difference is that the burst opening
 is simulated only during the transient calculation and not included in the
-initial condition calculation. In tsnet, the burst is assumed to be developed
+initial condition calculation. In TSNet, the burst is assumed to be developed
 linearly, indicating that the burst area increases linearly from zero to the
 a specific size during a certain time period.
 Thus, a burst event can be added by defined the start and end time of the
@@ -277,5 +299,6 @@ is fully developed:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 19-22
+
 
 
