@@ -14,13 +14,15 @@ from datetime import datetime
 import pickle
 
 @memo
-def MOCSimulator(tm):
+def MOCSimulator(tm, results_obj='results'):
     """ MOC Main Function
 
     Parameters
     ----------
     tm : tsnet.network.model.TransientModel
         Network
+    results_obj: string, optional
+        the name of the reuslts file, by default 'results'
 
     Returns
     ------
@@ -352,7 +354,7 @@ def MOCSimulator(tm):
 
     # save object to file
     import pickle
-    filehandler = open('results.obj','wb')
+    filehandler = open(results_obj +'.obj','wb')
     pickle.dump(tm, filehandler)
 
     """TO read:

@@ -24,11 +24,11 @@ engine = 'DD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-tm = tsnet.simulation.MOCSimulator(tm)
+results_obj = 'Tnet1'
+tm = tsnet.simulation.MOCSimulator(tm, results_obj)
 
 # report results
 import matplotlib.pyplot as plt
-
 node = 'N3'
 node = tm.get_node(node)
 fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
@@ -40,9 +40,8 @@ plt.ylabel("Pressure Head [m]")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
+# fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
 
-print (type(node.head))
 pipe = 'P2'
 pipe = tm.get_link(pipe)
 fig2 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
@@ -57,4 +56,4 @@ plt.ylabel("Flow rate [m^3/s]")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-fig2.savefig('./docs/figures/tnet1_pipe.png', format='png',dpi=100)
+# fig2.savefig('./docs/figures/tnet1_pipe.png', format='png',dpi=100)

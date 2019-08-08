@@ -23,11 +23,11 @@ engine = 'DD' # or PPD
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-tm = tsnet.simulation.MOCSimulator(tm)
+results_obj = 'Tnet2'
+tm = tsnet.simulation.MOCSimulator(tm,results_obj)
 
 # report results
 import matplotlib.pyplot as plt
-
 node = 'JUNCTION-105'
 node = tm.get_node(node)
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
@@ -39,7 +39,7 @@ plt.ylabel("Pressure Head [m]")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-fig.savefig('./docs/figures/tnet2_node.png', format='png',dpi=100)
+# fig.savefig('./docs/figures/tnet2_node.png', format='png',dpi=100)
 
 pipe = 'PIPE-109'
 pipe = tm.get_link(pipe)
@@ -53,5 +53,5 @@ plt.ylabel("Velocity [m/s]")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-fig.savefig('./docs/figures/tnet2_pipe.png', format='png',dpi=100)
+# fig.savefig('./docs/figures/tnet2_pipe.png', format='png',dpi=100)
 

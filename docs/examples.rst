@@ -46,10 +46,10 @@ application would need to take:
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 21-24
 
-5. Run transient simulation.
+5. Run transient simulation and specify the name of the results file.
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 26-27
+    :lines: 26-28
 
 After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
@@ -61,7 +61,7 @@ throughout the simulation can be retrieved by:
 To plot the head results at N3:
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 32-42
+    :lines: 31-42
 
 yields :numref:`tnet1_node`:
 
@@ -132,10 +132,10 @@ steps that the application would need to take:
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 20-23
 
-5. Run transient simulation.
+5. Run transient simulation and specify the name of the results file.
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
-    :lines: 25-26
+    :lines: 25-27
 
 
 After the transient simulation, the results at nodes and links
@@ -148,7 +148,7 @@ can be retrieved by:
 To plot the head results at JUNCTION-105:
 
 .. literalinclude:: ../examples/Tnet2_pump_shutdown.py
-    :lines: 31-41
+    :lines: 30-41
 
 yields :numref:`tnet2_node`:
 
@@ -224,10 +224,10 @@ would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 24-27
 
-5. Run transient simulation.
+5. Run transient simulation and specify the name of the results file.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 29-30
+    :lines: 29-31
 
 After the transient simulation, the results at nodes and links
 will be returned and stored in the transient model (tm) instance.
@@ -237,7 +237,7 @@ To understand how much water has been lost through the leakage
 at JUNCTION-22, we can plot the leak discharge results at JUNCTION-22:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 33-44
+    :lines: 34-45
 
 yields :numref:`tnet3_leak`:
 
@@ -253,7 +253,7 @@ Similarly, to understand how much water has been lost through the burst
 at JUNCTION-20, we can plot the burst discharge results at JUNCTION-20:
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 47-57
+    :lines: 48-58
 
 yields :numref:`tnet3_burst`:
 
