@@ -11,7 +11,7 @@ import wntr
 import numpy as np
 import warnings
 
-def Initializer(tm, t0, engine='PDD'):
+def Initializer(tm, t0, engine='DD'):
     """Initial Condition Calculation.
 
     Initialize the list containing numpy arrays for velocity and head.

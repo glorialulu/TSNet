@@ -2,7 +2,7 @@
 Initial Condition
 =================
 
-tsnet employed [WNTRSi]_ for simulating the steady state
+TSNet employed WNTR [WNTRSi]_ for simulating the steady state
 in the network to establish the initial flow conditions for
 the upcoming transient simulations.
 

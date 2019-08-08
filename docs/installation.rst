@@ -4,17 +4,39 @@
 Installation
 ============
 
+Setup Python environment
+------------------------------
 
-Stable release
---------------
+TSNet is tested against Python versions 2.7, 3.5 and 3.6.
+It can be installed on Windows, Linux, and Mac OS X operating systems.
+Python distributions, such as Anaconda, are recommended to manage the Python
+environment as they already contain (or easily support installation of) many
+Python packages (e.g. SciPy, NumPy, pandas, pip, matplotlib, etc.) that are
+used in the TSNet package.  For more information on Python package
+dependencies, see :ref:`Dependencies`.
 
-To install tsnet, run this command in your terminal:
+Two examples of those distributions are:
+
+  1. http://conda.pydata.org/miniconda.html Conda is an open source package
+  management system and environment management system for installing multiple
+  versions of software  packages and their dependencies and switching easily
+  between them.
+
+  2. https://winpython.github.io/ WinPython comes along with a lot of Python
+  packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
+
+
+Stable release (for users)
+--------------------------
+
+To install TENet, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install tsnet
 
-This is the preferred method to install tsnet, as it will always install the most recent stable release.
+This is the preferred method to install tsnet, as it will always install the
+most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -23,10 +45,10 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
-From sources
-------------
+From sources (for developers)
+-----------------------------
 
-The sources for tsnet can be downloaded from the `Github repo`_.
+The sources for TSNet can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
@@ -51,29 +73,16 @@ Once you have a copy of the source, you can install it with:
 .. _tarball: https://github.com/glorialulu/tsnet/tarball/master
 
 
-Dependencies 
+Dependencies
 ------------
 
-tsnet is tested against Python versions 2.7, 3.5 and 3.6. Further
-using a Python distribution is recommended as they already contain (or easily
-support installation of) many Python packages (e.g. SciPy, NumPy, pandas, pip, 
-matplotlib,etc.) that are used in the tsnet code. 
+In addition to the packages included in Anaconda and WinPython,
+TSNet requires several other Python packages:
 
-Two examples of those distributions are:
-
-1. https://winpython.github.io/ WinPython comes along with a lot of Python
-packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
-2. http://conda.pydata.org/miniconda.html Conda is an open source package
-management  system and environment management system for installing multiple
-versions of software  packages and their dependencies and switching easily
-between them.
-
-In addition, tsnet requires some specific Python packages:
-
-1. wntr: Water Network Tool for Resilience 
+1. wntr: Water Network Tool for Resilience
   install on a python-enabled command line with `pip install wntr`
 
-2. networkx: Network creation and manupulation engine
+2. networkx: Network creation and manipulation engine
   install on a python-enabled command line with `pip install networkx`
 
 3. pytest: Unit Tests engine

@@ -38,7 +38,7 @@ Features
 --------
 
 TSNet is a Python package designed to perform transient simulation in water
-distribution networks. The software includes capability to:
+distribution networks. It canThe software includes capability to:
 
 * Generate water network models based on .inp files
 * Operate network elements, including pumps and valves,
@@ -55,6 +55,12 @@ Version
 
 TSNet is a ongoing research project in the University of Texas at Austin.
 The current version is 0.1.0, which is still a pre-release.
+
+Contact
+-------
+
+* Lu Xing, the University of Texas at Austin, xinglu@utexas.edu
+* Lina Sela, the University of Texas at Austin, linasela@utexas.edu
 
 Disclaimer
 ----------

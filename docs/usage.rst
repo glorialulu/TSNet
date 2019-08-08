@@ -10,7 +10,7 @@ To use tsnet in a project, open a Python console and import the package::
 Simple example
 ---------------
 
-A simple example, get_startted.py is included in the examples folder.
+A simple example, Tnet1_valve_closure.py is included in the examples folder.
 This example demonstrate how to:
 
 * Import tsnet
@@ -25,15 +25,15 @@ This example demonstrate how to:
 
 * Define valve closure rule
 
-* Run transient simulation
+* Run transient simulation and save results to .obj file
 
 * Plot simulation results
 
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 2-27
+    :lines: 2-42
 
-Additional examples are included in the tsnet documentation.
+Additional examples are included in the tsnet examples repository.
 
-Three EPANET INP files and example files are also included in the tsnet
-repository in the examples folder. Example networks range from a simple
-8-node network to a 126-node network.
+Three EPANet INP files and example files are also included in the tsnet
+examples repository in the examples folder. Example networks range
+from a simple 8-node network to a 126-node network.

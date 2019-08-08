@@ -9,6 +9,7 @@ Welcome to tsnet's documentation!
    installation
    limitations
    usage
+   model
    initial
    transient
    results
