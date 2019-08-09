@@ -2,7 +2,7 @@
 Example Applications
 ====================
 
-Example 1 - End-valve Closure
+Example 1 - End-valve closure
 -----------------------------
 
 This example shows how to simulate the closure of

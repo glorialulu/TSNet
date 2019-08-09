@@ -4,7 +4,7 @@
 Installation
 ============
 
-Setup Python environment
+Setup Python Environment
 ------------------------------
 
 TSNet is tested against Python versions 2.7, 3.5 and 3.6.
@@ -26,10 +26,10 @@ Two examples of those distributions are:
   packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
 
 
-Stable release (for users)
+Stable Release (for users)
 --------------------------
 
-To install TENet, run this command in your terminal:
+To install TSNet, run this command in your terminal:
 
 .. code-block:: console
 
@@ -45,7 +45,7 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
-From sources (for developers)
+From Sources (for developers)
 -----------------------------
 
 The sources for TSNet can be downloaded from the `Github repo`_.
