@@ -27,27 +27,35 @@ various other transient-based applications, such as network calibration,
 leak detection, sensor placement, and condition assessment,
 has also enhanced the popularity and necessity of transient simulation
 
-Acknowledgedly, a number of commercial software for transient simulation in water
-distribution systems are available in the market; however, the use of
-these software for research purposes is limited. The major restriction is
-due to the fact that the programs are packed as black boxes, and the source
-code is not visible, thus prohibiting any changes, including modification of
+Acknowledgedly, a number of commercial software for transient simulation
+in water distribution systems are available in the market;
+however, the use of these software for research purposes is limited.
+The major restriction is due to the fact that the programs are packed
+as black boxes, and the source code is not visible,
+thus prohibiting any changes, including modification of
 existing and implementation of new elements, in the source code.
-Additionally, the commercial software was designed to perform only single transient simulations and
-do not have the capabilities to automate or run multiple transient simulations.
-Users are required to modify the boundary conditions using the GUI, perform the simulation,
-and manually record the responses to changes in the various conditions,
+Additionally, the commercial software was designed to perform only
+single transient simulations and do not have the capabilities to automate or
+run multiple transient simulations.
+Users are required to modify the boundary conditions using the GUI,
+perform the simulation, and manually record the responses to changes
+in the various conditions,
 which significantly complicated the research process.
 
-There is a clear gap that currently available simulation software are not suitable for
-many research applications beyond the conventional design purposes.
+There is a clear gap that currently available simulation software
+are not suitable for many research applications beyond the
+conventional design purposes.
 Hence, the motivation of this work is two-fold:
 
-1.  provide users with open source and freely available python code and package
-for simulating transients in water distribution systems that can be integrated with other case specific applications,
+1.  provide users with open source and freely available python code
+and package for simulating transients in water distribution systems
+that can be integrated with other case specific applications,
 e.g. sensor placement and event detection; and
 
-2.  encourage users and developers to further develop and extend the transient model.
+2.  encourage users and developers to further develop and
+extend the transient model.
+
+
 Features
 --------
 

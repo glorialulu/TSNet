@@ -2,7 +2,7 @@ Welcome to TSNet's documentation!
 ======================================
 
 .. figure:: figures/highlight.png
-   :scale: 100 %
+   :width: 600
    :alt: highlight
 
 .. toctree::
