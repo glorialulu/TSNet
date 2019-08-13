@@ -22,7 +22,7 @@ def MOCSimulator(tm, results_obj='results'):
     tm : tsnet.network.model.TransientModel
         Network
     results_obj: string, optional
-        the name of the reuslts file, by default 'results'
+        the name of the results file, by default 'results'
 
     Returns
     ------

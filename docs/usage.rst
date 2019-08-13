@@ -29,6 +29,15 @@ This example demonstrate how to:
 
 * Plot simulation results
 
+The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
+
+.. _flowchart:
+.. figure:: figures/fig_chart.pdf
+   :width: 600
+   :alt: flowchart
+
+   Flowchart of transient simulation in TSNet
+
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 2-42
 

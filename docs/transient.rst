@@ -16,13 +16,13 @@ and then stored in the 'Tnet1.obj' file for the easiness of retrieval.
 
 Mass and Momentum Conservation
 -------------------------------
-The transient flow is govenred by the mass and monmentum conservation
+The transient flow is governed by the mass and momentum conservation
 equation [WYSS93]_:
 
 .. math::
-    \frac{\partial H}{\partial t} + \frac{a^2}{g} \frac{\partial V}{\partial t} - gV\sin \alpha = 0
+    \frac{\partial H}{\partial t} + \frac{a^2}{g} \frac{\partial V}{\partial x} - gV\sin \alpha = 0
 
-    \frac{\partial V}{\partial t} + g\frac{\partial H}{\partial t} + h_f = 0
+    \frac{\partial V}{\partial t} + g\frac{\partial H}{\partial x} + h_f = 0
 
 where
 :math:`H` is the piezometric head,
@@ -38,14 +38,14 @@ Method of Characteristics (MOC)
 The Method of Characteristics (MOC) method is used to solve the system of
 governing equations above. The essence of MOC is to transform the set of
 partial differential equations to an equivalent set of ordinary differential
-equations that apply along specific lines, i.e., characteristics lines,
-as shown below [LAJW99]_:
+equations that apply along specific lines, i.e., characteristics lines
+(C+ and C-), as shown below [LAJW99]_:
 
 .. math::
-    \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = a
 
-    \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = -a
 
 The explicit MOC technique is then adopted to solve the above systems of
@@ -263,7 +263,7 @@ Leakage
 
 In TSNet, leaks and burst are assigned to the junctions. The leak is
 defined by specifying the leaking node name and the emitter coefficient
-(:math:`k`):
+(:math:`k_l`):
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 15-16
@@ -275,7 +275,7 @@ using the two compatibility equations, a continuity equation, and an orifice
 equation which quantifies the leakage discharge (:math:`Q_l`):
 
 .. math::
-    Q_l = k \sqrt{{H_p}_l}
+    Q_l = k_l \sqrt{{H_p}_l}
 
 where :math:`{H_p}_l` is the pressure head at the leakage node.
 It should be noted that :math:`{H_p}_l` is the pressure head
