@@ -161,7 +161,7 @@ latex_elements = {
 latex_documents = [
     (master_doc, 'TSNet.tex',
      u'TSNet Documentation',
-     [author], 'manual'),
+     u'Lu Xing, Lina Sela', 'manual'),
 ]
 
 

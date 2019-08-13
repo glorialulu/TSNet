@@ -1,4 +1,4 @@
-Introduction to TSNet
+TSNet
 =======================
 
 
@@ -24,23 +24,11 @@ TSNet performs transient simulation in water networks using Method of Characteri
 
 Overview
 ---------
-.. Hydraulic transients in water distribution networks (WDNs),
-        typically induced by pipe bursts, valve operations, and pump operations,
-        can disturb the steady-state flow conditions by introducing extreme pressure variability and
-        imposing abrupt internal pressure force onto the pipeline systems \citep{wood2005numerical}.
-        These disturbances have been identified as one of the major contributing factors
-        in the many pipe deterioration and catastrophic failure in WDNs \citep{rezaei2015pipe},
-        thereby wasting a significant amount of treated water and creating unexpected
-        possibilities of contamination intrusion \citep{asce2019}.
-        Consequently, transient simulation, as a prominent approach to understand and predict
-        the behavior of hydraulic transients,
-        has become an essential requirement for ensuring the distribution safety and
-        improving the efficiency in the process of design and operation of WDNs.
 
-A number of commercial softwares for transient simulation in water
+A number of commercial software for transient simulation in water
 distribution systems are available in the market; however, the use of
-these softwares for research purposes is limited. The major restriction is
-due to the fact that the softwares are packed as black boxes, and the source
+these software for research purposes is limited. The major restriction is
+due to the fact that the programs are packed as black boxes, and the source
 code is not visible, thus prohibiting any changes, including modification of
 existing and implementation of new elements, in the source code.
 Therefore, the authors find it imperative to develop an open source package
@@ -50,7 +38,7 @@ Features
 --------
 
 TSNet is a Python package designed to perform transient simulation in water
-distribution networks. The software includes capability to:
+distribution networks. The software includes capabilities to:
 
 * Create water network models based on .inp files
 * Generate transient events by operating valves and pumps
@@ -85,6 +73,9 @@ Cite TSNet
 
 To cite TSNet, use one of the following references:
 
+Lu Xing, Lina Sela.(2019) A Python Package for Transient Simulation in
+Water Distribution Networks
+(submitted to Environmental Modelling and Software)
 
 License
 -------

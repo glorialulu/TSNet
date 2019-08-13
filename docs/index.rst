@@ -1,5 +1,9 @@
-Welcome to tsnet's documentation!
+Welcome to TSNet's documentation!
 ======================================
+
+.. figure:: figures/highlight.png
+   :scale: 100 %
+   :alt: highlight
 
 .. toctree::
    :maxdepth: 2
