@@ -15,17 +15,6 @@ Python packages (e.g. SciPy, NumPy, pandas, pip, matplotlib, etc.) that are
 used in the TSNet package.  For more information on Python package
 dependencies, see :ref:`Dependencies`.
 
-Two examples of those distributions are:
-
-  1. http://conda.pydata.org/miniconda.html Conda is an open source package
-  management system and environment management system for installing multiple
-  versions of software  packages and their dependencies and switching easily
-  between them.
-
-  2. https://winpython.github.io/ WinPython comes along with a lot of Python
-  packages (e.g. SciPy, NumPy, pip, matplotlib, etc.)..
-
-
 Stable Release (for users)
 --------------------------
 
@@ -76,14 +65,27 @@ Once you have a copy of the source, you can install it with:
 Dependencies
 ------------
 
-In addition to the packages included in Anaconda and WinPython,
-TSNet requires several other Python packages:
+Requirements for TSNet include Python (2.7, 3.5, or 3.6) along with
+several Python packages.
+The following Python packages are required:
 
-1. wntr: Water Network Tool for Resilience
-  install on a python-enabled command line with `pip install wntr`
+1. Numpy [VaCV11]_: the fundamental package needed for scientific
+   computing with Python
+   included in Anaconda distribution
+   http://www.numpy.org/
 
-2. networkx: Network creation and manipulation engine
-  install on a python-enabled command line with `pip install networkx`
+2. Matplotlib [Hunt07]_: Python 2D plotting library
+   included in Anaconda distribution
+   http://matplotlib.org/
 
-3. pytest: Unit Tests engine
-  install on a python-enabled command line with `pip install -U pytest`
+3. NetworkX [HaSS08]_: Network creation and manipulation engine,
+   https://networkx.github.io/
+
+4. WNTR [WNTRSi]_: Water Network Tool for Resilience
+   install on a python-enabled command line with `pip install wntr`
+   http://wntr.readthedocs.io
+
+5. pytest: Unit Tests engine
+   install on a python-enabled command line with `pip install -U pytest`
+   https://docs.pytest.org/en/latest/
+

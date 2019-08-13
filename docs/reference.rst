@@ -15,3 +15,9 @@ Reference
 .. [RERS15] Rezaei, H., Ryan, B., & Stoianov, I. (2015). Pipe failure analysis and impact of dynamic hydraulic conditions in water supply networks. Procedia Engineering, 119, 253-262.
 
 .. [ASCE17] ASCE. (2017). 2017 infrastructure report card. Reston, VA: ASCE.
+
+.. [VaCV11] van der Walt, S., Colbert, S.C., and Varoquaux, G. (2011). The NumPy array: A structure for efficient numerical computation. Computing in Science and Engineering, 13, 22-30.
+
+.. [HaSS08] Hagberg, A.A., Schult, D.A., and Swart P.J. (2008). Exploring network structure, dynamics, and function using NetworkX. In Proceedings of the 7th Python in Science Conference (SciPy2008), August 19-24, Pasadena, CA, USA.
+
+.. [Hunt07] Hunter, J.D. (2007). Matplotlib: A 2D graphics environment. Computing in Science and Engineering, 9(3), 90-95.

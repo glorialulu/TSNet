@@ -1,16 +1,16 @@
 import tsnet
-# open an example network and create a transient model
+# Open an example network and create a transient model
 inp_file = 'examples/networks/Tnet1.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
-# set wavespeed
+# Set wavespeed
 tm.set_wavespeed(1200.) # m/s
-#set time options
+# Set time options
 dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 
-# set valve closing
+# Set valve closure
 tc = 0.6 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
@@ -18,13 +18,13 @@ m = 1 # closure constant [dimensionless]
 valve_op = [tc,ts,se,m]
 tm.valve_closure('VALVE',valve_op)
 
-# Initialize
+# Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0 [s]
 engine = 'DD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-results_obj = 'Tnet1'
+results_obj = 'Tnet1' # name of the object for saving simulation results
 tm = tsnet.simulation.MOCSimulator(tm, results_obj)
 
 # report results

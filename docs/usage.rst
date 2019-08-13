@@ -11,7 +11,7 @@ Simple example
 ---------------
 
 A simple example, Tnet1_valve_closure.py is included in the examples folder.
-This example demonstrate how to:
+This example demonstrates how to:
 
 * Import tsnet
 
@@ -32,7 +32,7 @@ This example demonstrate how to:
 The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
 
 .. _flowchart:
-.. figure:: figures/fig_chart.pdf
+.. figure:: figures/flowchart.png
    :width: 600
    :alt: flowchart
 
@@ -41,8 +41,7 @@ The framework of performing transient simulation using TSNet is shown in :numref
 .. literalinclude:: ../examples/Tnet1_valve_closure.py
     :lines: 2-42
 
-Additional examples are included in the tsnet examples repository.
 
-Three EPANet INP files and example files are also included in the tsnet
-examples repository in the examples folder. Example networks range
-from a simple 8-node network to a 126-node network.
+Three additional EPANET INP files and example files are also included
+in the TSNet examples repository in the examples folder.
+Example networks range from a simple 8-node network to a 126-node network.
