@@ -159,9 +159,9 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'tsnet.tex',
-     u'tsnet Documentation',
-     u'Lu Xing', 'manual'),
+    (master_doc, 'TSNet.tex',
+     u'TSNet Documentation',
+     [author], 'manual'),
 ]
 
 
@@ -170,8 +170,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'tsnet',
-     u'tsnet Documentation',
+    (master_doc, 'TSNet',
+     u'TSNet Documentation',
      [author], 1)
 ]
 
