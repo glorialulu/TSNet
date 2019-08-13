@@ -3,13 +3,13 @@ import tsnet
 inp_file = 'examples/networks/Tnet2.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
-# set wavespeed
+# Set wavespeed
 tm.set_wavespeed(1200.)
-#set time step
+# Set time step
 tf = 50 # simulation period [s]
 tm.set_time(tf)
 
-# set pump shut off
+# Set pump shut off
 tc = 1 # pump closure period
 ts = 0 # pump closure start time
 se = 0 # end open percentage
@@ -17,13 +17,13 @@ m = 1 # closure constant
 pump_op = [tc,ts,se,m]
 tm.pump_shut_off('PUMP2', pump_op)
 
-# Initialize
+# Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0s
 engine = 'DD' # or PPD
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-results_obj = 'Tnet2'
+results_obj = 'Tnet2' # name of the object for saving simulation results
 tm = tsnet.simulation.MOCSimulator(tm,results_obj)
 
 # report results

@@ -3,31 +3,31 @@ import tsnet
 inp_file = 'examples/networks/Tnet3.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
-# set wavespeed
+# Set wavespeed
 import numpy as np
 wavespeed = np.random.normal(1200., 100., size=tm.num_pipes)
 tm.set_wavespeed(wavespeed)
-#set time step
+# Set time step
 tf = 20 # simulation period [s]
 tm.set_time(tf)
 
-# add leak
+# Add leak
 emitter_coeff = 0.01 # [ m^3/s/(m H20)^(1/2)]
 tm.add_leak('JUNCTION-22', emitter_coeff)
 
-# add burst
+# Add burst
 ts = 1 # burst start time
 tc = 1 # time for burst to fully develop
 final_burst_coeff = 0.01 # final burst coeff [ m^3/s/(m H20)^(1/2)]
 tm.add_burst('JUNCTION-20', ts, tc, final_burst_coeff)
 
-# Initialize
+# Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0s
 engine = 'DD' # or Epanet
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-result_obj = 'Tnet3'
+result_obj = 'Tnet3' # name of the object for saving simulation results
 tm = tsnet.simulation.MOCSimulator(tm,result_obj)
 
 # report results

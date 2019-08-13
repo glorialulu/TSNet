@@ -32,7 +32,7 @@ This example demonstrates how to:
 The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
 
 .. _flowchart:
-.. figure:: figures/flowchart.png
+.. figure:: figures/flowchart.PNG
    :width: 600
    :alt: flowchart
 
