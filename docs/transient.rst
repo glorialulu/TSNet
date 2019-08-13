@@ -42,10 +42,10 @@ equations that apply along specific lines, i.e., characteristics lines
 (C+ and C-), as shown below [LAJW99]_:
 
 .. math::
-    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dx} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = a
 
-    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
+    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dx} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = -a
 
 The explicit MOC technique is then adopted to solve the above systems of
