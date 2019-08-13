@@ -75,7 +75,7 @@ autosummary_generate = glob.glob("apidocs/*.rst")
 source_suffix = '.rst'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'content'
 
 # General information about the project.
 project = u'TSNet'
@@ -115,7 +115,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'classic'
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
@@ -161,9 +161,10 @@ latex_elements = {
 latex_documents = [
     (master_doc, 'TSNet.tex',
      u'TSNet Documentation',
-     u'Lu Xing, \\ Lina Sela', 'manual'),
+     author, 'manual'),
 ]
 
+latex_logo = 'figures/highlight.png'
 
 # -- Options for manual page output ------------------------------------
 
@@ -182,10 +183,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'tsnet',
-     u'tsnet Documentation',
+    (master_doc, 'TSNet',
+     u'TSNet Documentation',
      author,
-     'tsnet',
+     'TSNet',
      'One line description of project.',
      'Miscellaneous'),
 ]
