@@ -176,7 +176,7 @@ using the following equation:
 where :math:`H_p` is the pressure head
 and :math:`k` is the demand discharge coefficient,
 which is calculated from the initial demand (:math:`D_0`)
-and pressure head (:math:`{H_p}_0}`):
+and pressure head (:math:`{H_p}_0`):
 
 .. math::
     k = \frac{D_0}{\sqrt{{H_p}_0}}
