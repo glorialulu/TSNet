@@ -24,3 +24,6 @@ Reference
 
 .. [MISI08] Misiūnas, D. (2008). Failure monitoring and asset condition assessment in water supply systems. Vilnius Gediminas Technical University.
 
+.. [STWY67] Streeter, V. L., & Wylie, E. B. (1967). Hydraulic transients (No. BOOK). mcgraw-hill.
+
+.. [OSBH08] Ostfeld, A., Uber, J. G., Salomons, E., Berry, J. W., Hart, W. E., Phillips, C. A., ... & di Pierro, F. (2008). The battle of the water sensor networks (BWSN): A design challenge for engineers and algorithms. Journal of Water Resources Planning and Management, 134(6), 556-568.

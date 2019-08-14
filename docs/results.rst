@@ -78,6 +78,8 @@ The results can then be plotted with respect to the time stamps using
    :width: 600
    :alt: tnet2_node
 
+   Head results at JUNCTION-105
+
 Results Retrieval
 ------------------
 
@@ -102,14 +104,16 @@ Runtime and Progress
 ---------------------
 
 At the beginning of transient simulation,
-TSNet will report the approximation running time
+TSNet will report the approximation simulation time
 based on the calculation time of first few time
 steps and the total number of time steps.
 Additionally, the computation progress will also printed on the screen
-as the simulation proceeds.
+as the simulation proceeds, as shown in :numref:`time`.
 
 .. _time:
 .. figure:: figures/time.PNG
    :width: 400
    :alt: time
+
+   Runtime output about calculation time and process.
 

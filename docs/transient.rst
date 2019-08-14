@@ -43,10 +43,6 @@ storage of time history results.
 For more information on the water network model, see
 :class:`~tsnet.network.model.TransientModel` in the API documentation.
 
-
-Build a model from an INP file
-""""""""""""""""""""""""""""""
-
 A transient model can be created directly from an EPANET INP file.
 The following example build a transient model.
 
@@ -82,7 +78,7 @@ the API documentation, under
 Transient Simulation
 ---------------------------------
 
-After the steady state calculation is completed, TSNet adopts
+After the initial conditions are obtained, TSNet adopts
 the Method of Characteristics (MOC)
 for solving governing transient flow equations.
 A transient simulation can be run using the following code:
@@ -93,8 +89,8 @@ A transient simulation can be run using the following code:
 The results will be returned to the transient model (tm) object,
 and then stored in the 'Tnet1.obj' file for the easiness of retrieval.
 
-In this section, an overview of modeling boundary conditions
-and the solution approaches is presented,
+In the following sections, an overview of the solution approaches
+and boundary conditions is presented,
 based on the following literature [LAJW99]_ , [MISI08]_, [WYSS93]_.
 
 Governing Equations and Numerical Schemes
@@ -118,8 +114,8 @@ where
 :math:`a` is the wave speed,
 :math:`g` is the gravity acceleration,
 :math:`\alpha` is the angle from horizontal,
-and :math:`h_f` represents the head loss,
-only model quasi-steady friction head loss per unit length is modelled in current package.
+and :math:`h_f` represents the head loss
+(only quasi-steady friction head loss per unit length is modelled in current package).
 
 Method of Characteristics (MOC)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -131,10 +127,10 @@ equations that apply along specific lines, i.e., characteristics lines
 (C+ and C-), as shown below [LAJW99]_:
 
 .. math::
-    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dx} + h_f - gV\sin(\alpha) = 0
+    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = a
 
-    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dx} + h_f - gV\sin(\alpha) = 0
+    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
     \text{  only when  } \frac{dx}{dt} = -a
 
 The explicit MOC technique is then adopted to solve the above systems of
@@ -168,7 +164,7 @@ Pressure-driven Demand
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 During the transient simulation in TSNet, the demands are treated as
-pressure-dependent discharge; thus the actual demands will vary from
+pressure-dependent discharge; thus, the actual demands will vary from
 the demands defined in the INP file.
 The actual demands (:math:`d_{actual}`) are modeled based on the
 instantaneous pressure head at the node and the demand discharge coefficients,
@@ -179,7 +175,8 @@ using the following equation:
 
 where :math:`H_p` is the pressure head
 and :math:`k` is the demand discharge coefficient,
-which is calculated from the initial demand (:math:`D_0`) and head (:math:`H_0`):
+which is calculated from the initial demand (:math:`D_0`)
+and pressure head (:math:`{H_p}_0}`):
 
 .. math::
     k = \frac{D_0}{\sqrt{{H_p}_0}}
@@ -189,7 +186,7 @@ treated zero, assuming that a backflow preventer exists on each node.
 
 
 Choice of Time Step
-^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""
 
 The determination of time step in MOC is not a trivial task. There are two
 constraints that have to be satisfied simultaneously:
@@ -199,12 +196,12 @@ constraints that have to be satisfied simultaneously:
     will be:
 
 .. math::
-    \Delta t \leqslant \min{(\frac{L_i}{N_i a_i})} \text{,       }
+    \Delta t \leqslant \min{\left(\frac{L_i}{N_i a_i}\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 2.  The time step has to be the same for all the pipes in the network, therefore
     restricting the wave travel time :math:`\frac{L_i}{N_ia_i}` to be the same
-    for any computational unit in the network. However, this is not
+    for any computational unit in the network. Nevertheless, this is not
     realistic in a real network, because different pipe lengths
     and wave speeds usually cause different wave travel times. Moreover,
     the number of sections in the :math:`i^{th}` pipe (:math:`N_i`) has to
@@ -219,7 +216,7 @@ To begin with, the maximum allowed time step (:math:`{\Delta t}_{max}`) is
 calculated, assuming there are two computation segments on the shortest pipe:
 
 .. math::
-    \Delta t_{max} = \min{\frac{L_i}{2a_i}} \text{,       }
+    \Delta t_{max} = \min{\left(\frac{L_i}{2a_i}\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 If the user defined time step is greater than :math:`{\Delta t}_{max}`, a
@@ -242,14 +239,14 @@ the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
 speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
 
 .. math::
-    N_i = 2\text{int}\frac{L_i}{a_i \Delta t} \text{,       }
+    N_i = 2\text{int}\left(\frac{L_i}{a_i \Delta t\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
 can be compensated by correcting the wave speed (:math:`a_i`).
 
 .. math::
-    \Delta t = \min{\frac{L_i}{a_i(1 \pm \phi_i)N_i}} \text{,       }
+    \Delta t = \min{\left(\frac{L_i}{a_i(1 \pm \phi_i)N_i}\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 Least squares approximation is then used to determine :math:`\Delta t`
@@ -280,15 +277,15 @@ The following examples illustrate how to perform valve operations.
 
 Valve closure can be simulated by defining
 the valve closure start time (:math:`ts`),
-the closure duration (:math:`t_c`),
-the valve open percentage when the closure is completed b (:math:`se`),
-and the closure constant (:math:`m`), which characterize
+the operating duration (:math:`t_c`),
+the valve open percentage when the closure is completed (:math:`se`),
+and the closure constant (:math:`m`), which characterizes
 the shape of the closure curve.
-These parameters essentially defines the valve closure cure.
-For example, using the code below will yield the blue curve
+These parameters essentially define the valve closure curve.
+For example, the code below will yield the blue curve
 shown in :numref:`valve_closure`.
 If the closure constant (:math:`m`) is
-instead set to be :math:`2`, the valve curve will then correspond to the
+instead set to :math:`2`, the valve curve will then correspond to the
 orange curve in :numref:`valve_closure`.
 
 
@@ -303,8 +300,10 @@ orange curve in :numref:`valve_closure`.
 
 .. _valve_closure:
 .. figure:: figures/valve_closure.png
-   :width: 600
+   :width: 500
    :alt: valve_closure
+
+   Valve closure operating rule
 
 Furthermore, valve opening can be simulated by defining a similar set of
 parameters related to the valve opening curve. The valve opening curves
@@ -322,19 +321,25 @@ with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
 
 .. _valve_opening:
 .. figure:: figures/valve_opening.png
-   :width: 600
+   :width: 500
    :alt: valve_opening
+
+   Valve opening operating rule
 
 
 Pump Operations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 
 The TSNet also includes the capability to perform controlled pump operations
-by specifying the relation between pump rotation speed and time.
-Explicitly, during pump start-up the the rotational speed of the pump is increased
-following pump characteristic curve and using affinity laws [LAJW99]_, resulting in
+by specifying the relation between pump rotation speed and simulation time.
+Explicitly, during pump start-up, the rotational speed of the pump
+is increased based on the user defined operating rule.
+The pump is then modeled using the two compatibility equations,
+a continuity equation, the pump characteristic curve at given rotation speed,
+and the affinity laws [LAJW99]_, thus resulting in
 the rise of pump flowrate and the addition of mechanical energy.
-Similarly, during pump shut-off, as the rotational speed of the pump decreased,
+Conversely, during pump shut-off, as the rotational speed of the pump
+decreased according to the user defined operating rule,
 the pump flowrate and the addition of mechanical energy decline.
 However, pump shut-off due to power failure,
 when the reduction of pump rotation speed
@@ -372,11 +377,11 @@ emitter coefficient (:math:`k_l`):
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 15-16
 
-Existing leak should be included in the initial condition solver
+Existing leaks should be included in the initial condition solver
 (WNTR simulator);
-thus, it is necessary to define the leakage before performing
-the initial condition calculation.
-For more information about the inclusion of leaks in initial condition
+thus, it is necessary to define the leakage before calculating
+the initial conditions.
+For more information about the inclusion of leaks in steady state
 calculation, please refer to WNTR documentation [WNTRSi]_.
 During the transient simulation, the leaking node is modeled
 using the two compatibility equations, a continuity equation, and an orifice

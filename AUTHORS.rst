@@ -11,4 +11,5 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Gerardo Andres Riano Briceno <griano@utexas.edu>
+* Ahmed A. Abokifa <ahmed.abokifa@utexas.edu>
