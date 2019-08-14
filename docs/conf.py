@@ -60,6 +60,11 @@ napoleon_use_rtype = True
 viewcode_import = True
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
+numpydoc_show_class_members = True
+numpydoc_show_inherited_class_members = True
+numpydoc_class_members_toctree = True
+numfig=True
+numfig_format = {'figure':  'Figure %s', 'table': 'Table %s', 'code-block': 'Listing %s'}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

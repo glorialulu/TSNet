@@ -11,7 +11,7 @@ The framework of performing transient simulation using TSNet is shown in :numref
    Flowchart of transient simulation in TSNet
 
 The main steps of transient modelling and simulation in TSNet
- are described in subsequent sections.
+are described in subsequent sections.
 
 
 Transient Model
@@ -362,7 +362,7 @@ It should be noted that a check valve is assumed in each pump, indicating
 that the reverse flow will be prevented immediately.
 
 
-Leakage
+Leaks
 ^^^^^^^
 
 In TSNet, leaks and bursts are assigned to the network nodes.
@@ -391,8 +391,8 @@ will be set to zero, assuming a backflow preventer is installed
 on the leakage node.
 
 
-Burst
-^^^^^
+Bursts
+^^^^^^
 
 The simulation of burst and leakage is very similar. They share similar
 set of governing equations. The only difference is that the burst opening

@@ -98,10 +98,10 @@ from the **results_obj.obj** file and access results from the objet by:
     tm = pickle.load(file)
 
 
-Runtime and progress
+Runtime and Progress
 ---------------------
 
-At the begining of transient simulation,
+At the beginning of transient simulation,
 TSNet will report the approximation running time
 based on the calculation time of first few time
 steps and the total number of time steps.
