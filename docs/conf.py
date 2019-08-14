@@ -41,8 +41,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
-    'sphinx.ext.intersphinx',
-    'numpydoc'
+    'sphinx.ext.intersphinx'
     ]
 
 # Napoleon settings
@@ -61,9 +60,6 @@ napoleon_use_rtype = True
 viewcode_import = True
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
-numpydoc_show_class_members = True
-numpydoc_show_inherited_class_members = True
-numpydoc_class_members_toctree = True
 numfig=True
 numfig_format = {'figure':  'Figure %s', 'table': 'Table %s', 'code-block': 'Listing %s'}
 
