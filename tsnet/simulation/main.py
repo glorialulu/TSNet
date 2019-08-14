@@ -35,7 +35,7 @@ def MOCSimulator(tm, results_obj='results'):
     tt = ['x']
     tt.append(0)
     dt = tm.time_step
-    tn = int(tm.simulation_peroid/tm.time_step)  # Total time steps
+    tn = int(tm.simulation_period/tm.time_step)  # Total time steps
 
 
     # determine which node of the adjacent pipe should be call:

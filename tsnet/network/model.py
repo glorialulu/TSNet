@@ -38,7 +38,7 @@ class TransientModel (WaterNetworkModel):
         super().__init__(inp_file)
         self.simulation_timestamps = []
         self.time_step = 0.
-        self.simulation_peroid = 0.
+        self.simulation_period = 0.
         self.initial_velocity = []
         self.initial_head = []
         # assign ID to each links, start from 1.
@@ -113,7 +113,7 @@ class TransientModel (WaterNetworkModel):
         """
         if dt == None:
             dt = max_time_step(self)
-        self.simulation_peroid = tf
+        self.simulation_period = tf
         self = discretization(self, dt)
         print('Simulation time step %.5f s' % self.time_step)
 
@@ -149,7 +149,7 @@ class TransientModel (WaterNetworkModel):
         """
 
         burst_node = self.get_node(name)
-        burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_peroid,
+        burst_node.burst_coeff = burstsetting(self.time_step, self.simulation_period,
                                                 ts, tc, final_burst_coeff)
         burst_node.burst_status = True
 
@@ -180,7 +180,7 @@ The initial setting has been changed to open to perform the closure." %name)
             valve.status = LinkStatus.Open
 
         valve.operating = True
-        valve.operation_rule = valveclosing(self.time_step, self.simulation_peroid, rule)
+        valve.operation_rule = valveclosing(self.time_step, self.simulation_period, rule)
 
     def valve_opening(self, name, rule):
         """Set valve opening rule
@@ -208,7 +208,7 @@ The initial setting has been changed to closed to perform the opening." %name)
             valve.status = LinkStatus.Closed
 
         valve.operating = True
-        valve.operation_rule = valveopening(self.time_step, self.simulation_peroid, rule)
+        valve.operation_rule = valveopening(self.time_step, self.simulation_period, rule)
 
     def pump_shut_off(self, name, rule):
         """Set pump shut off rule
@@ -218,7 +218,7 @@ The initial setting has been changed to closed to perform the opening." %name)
         name : str
             The name of the pump to shut off
         rule : list
-            Contains paramtes to defie valve operation rule
+            Contains paramaters to define valve operation rule
             rule = [tc,ts,se,m]
             tc : the duration takes to close the pump [s]
             ts : closure start time [s]
@@ -235,7 +235,7 @@ The initial setting has been changed to closed to perform the opening." %name)
 The initial setting has been changed to open to perform the closure." %name)
             pump.status= LinkStatus.Open
         pump.operating = True
-        pump.operation_rule = pumpclosing(self.time_step, self.simulation_peroid, rule)
+        pump.operation_rule = pumpclosing(self.time_step, self.simulation_period, rule)
 
     def pump_start_up(self, name, rule):
         """Set pump start up rule
@@ -245,7 +245,7 @@ The initial setting has been changed to open to perform the closure." %name)
         name : str
             The name of the pump to shut off
         rule : list
-            Contains paramtes to defie valve operation rule
+            Contains paramaters to define valve operation rule
             rule = [tc,ts,se,m]
             tc : the duration takes to close the valve [s]
             ts : closure start time [s]
@@ -256,7 +256,7 @@ The initial setting has been changed to open to perform the closure." %name)
         if pump.link_type.lower() != 'pump':
             raise RuntimeError('The name of pump to operate is not associated with a pump')
 
-        # Turn the pump on and run initial calculation 
+        # Turn the pump on and run initial calculation
         # to get the nominal flow and head
         pump.status = LinkStatus.Open
         sim = wntr.sim.EpanetSimulator(self)
@@ -270,7 +270,7 @@ The initial setting has been changed to open to perform the closure." %name)
         # Turn the pump back to closed
         pump.status = LinkStatus.Closed
         pump.operating = True
-        pump.operation_rule = pumpopening(self.time_step, self.simulation_peroid, rule)
+        pump.operation_rule = pumpopening(self.time_step, self.simulation_period, rule)
 
 
 

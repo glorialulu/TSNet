@@ -62,10 +62,10 @@ Features
 TSNet is a Python package designed to perform transient simulation in water
 distribution networks. The software includes capability to:
 
-* Create water network models based on .inp files
-* Generate transient events by operating valves and pumps
+* Create transient models based on EPANET INP files
+* Operating valves and pumps
 * Add disruptive events including pipe bursts and leakages
-* Perform transient simulation using MOC method
+* Perform transient simulation using Method of characteristics (MOC) techniques
 * Visualize results
 
 For more information, go to https://tsnet.readthedocs.io.

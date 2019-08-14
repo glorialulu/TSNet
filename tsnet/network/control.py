@@ -111,7 +111,7 @@ def pumpclosing(dt, tf, pump_op):
         valve operation curve
     """
     [tc,ts,se,m] = pump_op
-    # do not allow the pump to be fully cloased due to numerical issues
+    # do not allow the pump to be fully closed due to numerical issues
     if se == 0.:
         se = 0.0001
 

@@ -1,13 +1,13 @@
-tsnet.postprocessing package
+TSNet.postprocessing package
 ============================
 
 Submodules
 ----------
 
-tsnet.postprocessing.time\_history module
+TSNet.postprocessing.time\_history module
 -----------------------------------------
 
-.. automodule:: tsnet.postprocessing.time_history
+.. automodule:: TSNet.postprocessing.time_history
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ tsnet.postprocessing.time\_history module
 Module contents
 ---------------
 
-.. automodule:: tsnet.postprocessing
+.. automodule:: TSNet.postprocessing
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,6 +1,6 @@
 """
 The tsnet.network.discretize contains methods to perform
-spatial and temporal discritization by adjusting wave speed
+spatial and temporal discretization by adjusting wave speed
 and time step to solve compatibility equations in case of
 uneven wave travel time.
 
@@ -10,7 +10,7 @@ from __future__ import print_function
 import numpy as np
 
 def discretization(tm, dt):
-    """Discritize in temporal and spatial space using wave speed adjustement scheme.
+    """Discretize in temporal and spatial space using wave speed adjustment scheme.
 
     Parameters
     ----------
@@ -60,11 +60,11 @@ def max_time_step(tm):
     for _, pipe in tm.pipes():
         dt = pipe.length / (2. * pipe.wavev)
         if max_dt > dt :
-            max_dt = dt - 0.001  # avaoid numerical issue which cause N = 0
+            max_dt = dt - 0.001  # avoid numerical issue which cause N = 0
     return max_dt
 
 def cal_N(tm,  dt):
-    """Determine the number of computation uites ($N_i$) for each pipes.
+    """Determine the number of computation unites ($N_i$) for each pipes.
 
     Parameters
     ----------

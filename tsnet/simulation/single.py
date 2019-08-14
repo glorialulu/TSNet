@@ -3,7 +3,7 @@ The tsnet.simulation.single contains methods to perform MOC
 transient simulation on a single pipe, including
 1. inner pipe
 2. left boundary pipe (without C- charateristic grid)
-3. right boundary pipr (without C+ characteristic grid)
+3. right boundary pipe (without C+ characteristic grid)
 
 """
 import numpy as np
@@ -174,7 +174,7 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
     D = linkp.diameter               # m
     g = 9.8                          # m/s^2
     a = linkp.wavev    # m/s
-    n = linkp.number_of_segments   # spatial discritization
+    n = linkp.number_of_segments   # spatial discretization
 
     for i in range(n+1):
         # Pipe start (outer boundayr conditions)
@@ -273,7 +273,7 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
     D = linkp.diameter               # m
     g = 9.8                          # m/s^2
     a = linkp.wavev                  # m/s
-    n = linkp.number_of_segments   # spatial discritization
+    n = linkp.number_of_segments   # spatial discretization
 
     for i in range(n+1):
         # Pipe start (inner boundary conditions)

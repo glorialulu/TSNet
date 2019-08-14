@@ -1,37 +1,37 @@
-tsnet.network package
+TSNet.network package
 =====================
 
 Submodules
 ----------
 
-tsnet.network.control module
+TSNet.network.control module
 ----------------------------
 
-.. automodule:: tsnet.network.control
+.. automodule:: TSNet.network.control
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.network.discretize module
+TSNet.network.discretize module
 -------------------------------
 
-.. automodule:: tsnet.network.discretize
+.. automodule:: TSNet.network.discretize
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.network.model module
+TSNet.network.model module
 --------------------------
 
-.. automodule:: tsnet.network.model
+.. automodule:: TSNet.network.model
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.network.topology module
+TSNet.network.topology module
 -----------------------------
 
-.. automodule:: tsnet.network.topology
+.. automodule:: TSNet.network.topology
     :members:
     :undoc-members:
     :show-inheritance:
@@ -40,7 +40,7 @@ tsnet.network.topology module
 Module contents
 ---------------
 
-.. automodule:: tsnet.network
+.. automodule:: TSNet.network
     :members:
     :undoc-members:
     :show-inheritance:

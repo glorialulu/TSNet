@@ -1,37 +1,37 @@
-tsnet.simulation package
+TSNet.simulation package
 ========================
 
 Submodules
 ----------
 
-tsnet.simulation.initialize module
+TSNet.simulation.initialize module
 ----------------------------------
 
-.. automodule:: tsnet.simulation.initialize
+.. automodule:: TSNet.simulation.initialize
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.simulation.main module
+TSNet.simulation.main module
 ----------------------------
 
-.. automodule:: tsnet.simulation.main
+.. automodule:: TSNet.simulation.main
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.simulation.single module
+TSNet.simulation.single module
 ------------------------------
 
-.. automodule:: tsnet.simulation.single
+.. automodule:: TSNet.simulation.single
     :members:
     :undoc-members:
     :show-inheritance:
 
-tsnet.simulation.solver module
+TSNet.simulation.solver module
 ------------------------------
 
-.. automodule:: tsnet.simulation.solver
+.. automodule:: TSNet.simulation.solver
     :members:
     :undoc-members:
     :show-inheritance:
@@ -40,7 +40,7 @@ tsnet.simulation.solver module
 Module contents
 ---------------
 
-.. automodule:: tsnet.simulation
+.. automodule:: TSNet.simulation
     :members:
     :undoc-members:
     :show-inheritance:

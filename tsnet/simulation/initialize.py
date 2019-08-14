@@ -39,7 +39,7 @@ def Initializer(tm, t0, engine='DD'):
     """
     # adjust the time step and discretize each pipe
 
-    tn = int(tm.simulation_peroid/tm.time_step) # Total time steps
+    tn = int(tm.simulation_period/tm.time_step) # Total time steps
     print ('Total Time Step in this simulation %s'  %tn)
 
     # create new attributes for each pipe to store head and velocity results
