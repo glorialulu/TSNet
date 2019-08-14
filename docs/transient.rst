@@ -239,7 +239,7 @@ the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
 speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
 
 .. math::
-    N_i = 2\text{int}\left(\frac{L_i}{a_i \Delta t\right)} \text{,       }
+    N_i = 2\text{int \left(\frac{L_i}{a_i \Delta t\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
 Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
