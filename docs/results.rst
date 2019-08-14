@@ -101,12 +101,15 @@ from the **results_obj.obj** file and access results from the objet by:
 Runtime and progress
 ---------------------
 
-During the transient simulation, TSNet will report the approximation running time
-based on the calculation time of first few time steps and the total number of time steps.
-Additionally, the computation progress is printed on the screen. 
+At the begining of transient simulation,
+TSNet will report the approximation running time
+based on the calculation time of first few time
+steps and the total number of time steps.
+Additionally, the computation progress will also printed on the screen
+as the simulation proceeds.
 
 .. _time:
 .. figure:: figures/time.PNG
-   :width: 600
+   :width: 400
    :alt: time
 

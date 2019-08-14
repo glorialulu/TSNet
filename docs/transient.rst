@@ -1,11 +1,9 @@
 ==================================
-Transient Modeling and Simulation
+Modeling Framework
 ==================================
 
-
-
-Create Transient Model
-----------------------
+Transient Model
+---------------
 
 The transient model inherits the
 WNTR water network model [WNTRSi]_,
@@ -69,8 +67,8 @@ the API documentation, under
 
 
 
-Mathematical Model
--------------------
+Transient Modeling and Simulation
+---------------------------------
 
 After the steady state calculation is completed, TSNet adopts
 the Method of Characteristics (MOC)
