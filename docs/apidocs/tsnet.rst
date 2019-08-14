@@ -1,4 +1,4 @@
-TSNet package
+tsnet package
 =============
 
 Subpackages
@@ -6,15 +6,15 @@ Subpackages
 
 .. toctree::
 
-    TSNet.network
-    TSNet.postprocessing
-    TSNet.simulation
-    TSNet.utils
+    tsnet.network
+    tsnet.postprocessing
+    tsnet.simulation
+    tsnet.utils
 
 Module contents
 ---------------
 
-.. automodule:: TSNet
+.. automodule:: tsnet
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,37 +1,37 @@
-TSNet.utils package
+tsnet.utils package
 ===================
 
 Submodules
 ----------
 
-TSNet.utils.calc\_parabola\_vertex module
+tsnet.utils.calc\_parabola\_vertex module
 -----------------------------------------
 
-.. automodule:: TSNet.utils.calc_parabola_vertex
+.. automodule:: tsnet.utils.calc_parabola_vertex
     :members:
     :undoc-members:
     :show-inheritance:
 
-TSNet.utils.memo module
+tsnet.utils.memo module
 -----------------------
 
-.. automodule:: TSNet.utils.memo
+.. automodule:: tsnet.utils.memo
     :members:
     :undoc-members:
     :show-inheritance:
 
-TSNet.utils.print\_time\_delta module
+tsnet.utils.print\_time\_delta module
 -------------------------------------
 
-.. automodule:: TSNet.utils.print_time_delta
+.. automodule:: tsnet.utils.print_time_delta
     :members:
     :undoc-members:
     :show-inheritance:
 
-TSNet.utils.valve\_curve module
+tsnet.utils.valve\_curve module
 -------------------------------
 
-.. automodule:: TSNet.utils.valve_curve
+.. automodule:: tsnet.utils.valve_curve
     :members:
     :undoc-members:
     :show-inheritance:
@@ -40,7 +40,7 @@ TSNet.utils.valve\_curve module
 Module contents
 ---------------
 
-.. automodule:: TSNet.utils
+.. automodule:: tsnet.utils
     :members:
     :undoc-members:
     :show-inheritance:
