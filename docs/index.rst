@@ -13,8 +13,6 @@ Welcome to TSNet's documentation!
    installation
    limitations
    usage
-   model
-   initial
    transient
    results
    examples

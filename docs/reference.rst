@@ -22,4 +22,5 @@ Reference
 
 .. [Hunt07] Hunter, J.D. (2007). Matplotlib: A 2D graphics environment. Computing in Science and Engineering, 9(3), 90-95.
 
-.. [MISI08] Misiūnas, D. (2008). Failure monitoring and asset condition assessment in water supply systems. Vilniaus Gedimino technikos universitetas.
+.. [MISI08] Misiūnas, D. (2008). Failure monitoring and asset condition assessment in water supply systems. Vilnius Gediminas Technical University.
+

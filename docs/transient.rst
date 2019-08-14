@@ -256,7 +256,7 @@ Boundary Conditions
 """""""""""""""""""
 
 
-Valve Operation
+Valve Operations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. Two types of valve are included in TSNet: end valve, located on the boundary
@@ -316,7 +316,7 @@ with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
    :alt: valve_opening
 
 
-Pump Operation
+Pump Operations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The TSNet also includes the capability to perform controlled pump operations
