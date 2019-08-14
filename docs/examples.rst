@@ -218,9 +218,10 @@ There are five steps that the user would need to take:
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 6-12
 
-3.  Define background leak location, JUNCTION-22, and specify the emitter coefficient.
+3.  Define background leak location, JUNCTION-22,
+    and specify the emitter coefficient.
     The leak will be included in the initial condition calculation.
-    See WNTR documentation [WNTRSi_] for more info about leak simulation.
+    See WNTR documentation [WNTRSi]_ for more info about leak simulation.
 
 .. literalinclude:: ../examples/Tnet3_burst_leak.py
     :lines: 14-16

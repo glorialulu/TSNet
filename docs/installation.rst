@@ -67,7 +67,7 @@ Dependencies
 
 Requirements for TSNet include Python (2.7, 3.5, or 3.6) along with
 several Python packages.
-The following Python packages are required:
+The following Python packages are required::
 
 1. Numpy [VaCV11]_: the fundamental package needed for scientific
     computing with Python

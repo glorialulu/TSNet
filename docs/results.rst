@@ -112,7 +112,7 @@ as the simulation proceeds, as shown in :numref:`time`.
 
 .. _time:
 .. figure:: figures/time.PNG
-   :width: 400
+   :width: 200
    :alt: time
 
    Runtime output about calculation time and process.
