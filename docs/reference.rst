@@ -21,3 +21,5 @@ Reference
 .. [HaSS08] Hagberg, A.A., Schult, D.A., and Swart P.J. (2008). Exploring network structure, dynamics, and function using NetworkX. In Proceedings of the 7th Python in Science Conference (SciPy2008), August 19-24, Pasadena, CA, USA.
 
 .. [Hunt07] Hunter, J.D. (2007). Matplotlib: A 2D graphics environment. Computing in Science and Engineering, 9(3), 90-95.
+
+.. [MISI08] Misiūnas, D. (2008). Failure monitoring and asset condition assessment in water supply systems. Vilniaus Gedimino technikos universitetas.

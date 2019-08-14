@@ -1,24 +1,22 @@
-===========
-Get Started
-===========
+===============
+Getting Started
+===============
 
 To use tsnet in a project, open a Python console and import the package::
 
     import tsnet
 
-
-Simple example
----------------
-
 The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
 
 .. _flowchart:
 .. figure:: figures/flowchart.PNG
-   :width: 600
+   :width: 400
    :alt: flowchart
 
    Flowchart of transient simulation in TSNet
 
+Simple example
+---------------
 
 A simple example, Tnet1_valve_closure.py is included in the examples folder.
 This example demonstrates how to:
