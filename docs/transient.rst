@@ -1,6 +1,18 @@
 ==================================
-Modeling Framework
+Transient Modeling Framework
 ==================================
+The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
+
+.. _flowchart:
+.. figure:: figures/flowchart.PNG
+   :width: 400
+   :alt: flowchart
+
+   Flowchart of transient simulation in TSNet
+
+The main steps of transient modelling and simulation in TSNet
+ are described in subsequent sections.
+
 
 Transient Model
 ---------------
@@ -67,7 +79,7 @@ the API documentation, under
 
 
 
-Transient Modeling and Simulation
+Transient Simulation
 ---------------------------------
 
 After the steady state calculation is completed, TSNet adopts

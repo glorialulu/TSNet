@@ -6,15 +6,6 @@ To use tsnet in a project, open a Python console and import the package::
 
     import tsnet
 
-The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
-
-.. _flowchart:
-.. figure:: figures/flowchart.PNG
-   :width: 400
-   :alt: flowchart
-
-   Flowchart of transient simulation in TSNet
-
 Simple example
 ---------------
 
