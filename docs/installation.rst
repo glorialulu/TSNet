@@ -69,24 +69,23 @@ Requirements for TSNet include Python (2.7, 3.5, or 3.6) along with
 several Python packages.
 The following Python packages are required::
 
-1. Numpy [VaCV11]_: the fundamental package needed for scientific
-    computing with Python
+1.  Numpy [VaCV11]_: the fundamental package needed for scientific computing with Python
     included in Anaconda distribution
     http://www.numpy.org/
 
-2. Matplotlib [Hunt07]_: Python 2D plotting library
+2.  Matplotlib [Hunt07]_: Python 2D plotting library
     included in Anaconda distribution
     http://matplotlib.org/
 
-3. NetworkX [HaSS08]_: Network creation and manipulation engine,
+3.  NetworkX [HaSS08]_: Network creation and manipulation engine,
     install on a python-enabled command line with `pip install wntr`
     https://networkx.github.io/
 
-4. WNTR [WNTRSi]_: Water Network Tool for Resilience
+4.  WNTR [WNTRSi]_: Water Network Tool for Resilience
     install on a python-enabled command line with `pip install wntr`
     http://wntr.readthedocs.io
 
-5. pytest: Unit Tests engine
+5.  pytest: Unit Tests engine
     install on a python-enabled command line with `pip install -U pytest`
     https://docs.pytest.org/en/latest/
 

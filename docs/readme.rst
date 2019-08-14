@@ -47,12 +47,12 @@ are not suitable for many research applications beyond the
 conventional design purposes.
 Hence, the motivation of this work is two-fold:
 
-1.  provide users with open source and freely available python code
+1.  Provide users with open source and freely available python code
 and package for simulating transients in water distribution systems
 that can be integrated with other case specific applications,
 e.g. sensor placement and event detection; and
 
-2.  encourage users and developers to further develop and
+2.  Encourage users and developers to further develop and
 extend the transient model.
 
 
