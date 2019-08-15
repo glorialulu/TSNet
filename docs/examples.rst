@@ -169,7 +169,7 @@ yields :numref:`tnet2_node`:
 
 Similarly, to plot the velocity results in PIPE-109:
 
-.. literalinclude:: ../examples/tnet2_node.py
+.. literalinclude:: ../examples/Tnet2_pump_shutdown.py
     :lines: 44-55
 
 yields :numref:`tnet2_pipe`:
@@ -259,7 +259,7 @@ at JUNCTION-22, we can plot the leak discharge results at JUNCTION-22:
 yields :numref:`tnet3_leak`:
 
 
-.. _tnet3_node:
+.. _tnet3_leak:
 .. figure:: figures/tnet3_leak.png
    :width: 600
    :alt: tnet3_leak

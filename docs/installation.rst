@@ -61,6 +61,7 @@ Once you have a copy of the source, you can install it with:
 .. _Github repo: https://github.com/glorialulu/tsnet
 .. _tarball: https://github.com/glorialulu/tsnet/tarball/master
 
+.. _Dependencies:
 
 Dependencies
 ------------
