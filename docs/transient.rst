@@ -108,7 +108,7 @@ equation [WYSS93]_:
     \frac{\partial V}{\partial t} + g\frac{\partial H}{\partial x} + h_f = 0
 
 where
-:math:`H` is the piezometric head,
+:math:`H` is the head,
 :math:`V` is the flow velocity in the pipe,
 :math:`t` is time,
 :math:`a` is the wave speed,
@@ -175,14 +175,15 @@ using the following equation:
 
 where :math:`H_p` is the pressure head
 and :math:`k` is the demand discharge coefficient,
-which is calculated from the initial demand (:math:`D_0`)
+which is calculated from the initial demand (:math:`d_0`)
 and pressure head (:math:`{H_p}_0`):
 
 .. math::
-    k = \frac{D_0}{\sqrt{{H_p}_0}}
+    k = \frac{d_0}{\sqrt{{H_p}_0}}
 
-It should be noted that if the pressure head is negative, the demand flow will be
-treated zero, assuming that a backflow preventer exists on each node.
+It should be noted that if the pressure head is negative,
+the demand flow will be treated zero,
+assuming that a backflow preventer is installed on each node.
 
 
 Choice of Time Step
@@ -213,7 +214,7 @@ This package adopted the wave speed adjustment scheme  [WYSS93]_ to make
 sure the two criterion stated above are satisfied.
 
 To begin with, the maximum allowed time step (:math:`{\Delta t}_{max}`) is
-calculated, assuming there are two computation segments on the shortest pipe:
+calculated, assuming there are two computational segments on the shortest pipe:
 
 .. math::
     \Delta t_{max} = \min{\left(\frac{L_i}{2a_i}\right)} \text{,       }
@@ -331,7 +332,7 @@ Pump Operations
 ^^^^^^^^^^^^^^^^
 
 The TSNet also includes the capability to perform controlled pump operations
-by specifying the relation between pump rotation speed and simulation time.
+by specifying how the pump rotation speed changes over time.
 Explicitly, during pump start-up, the rotational speed of the pump
 is increased based on the user defined operating rule.
 The pump is then modeled using the two compatibility equations,
@@ -343,7 +344,7 @@ decreased according to the user defined operating rule,
 the pump flowrate and the addition of mechanical energy decline.
 However, pump shut-off due to power failure,
 when the reduction of pump rotation speed
-depends on the characteristics of the pump (such as inertia),
+depends on the characteristics of the pump (such as the rotate moment of inertia),
 has not been included yet.
 
 The following example shows how to add pump shut-off event to the network,
@@ -379,27 +380,27 @@ emitter coefficient (:math:`k_l`):
 
 Existing leaks should be included in the initial condition solver
 (WNTR simulator);
-thus, it is necessary to define the leakage before calculating
+thus, it is necessary to define the leaks before calculating
 the initial conditions.
 For more information about the inclusion of leaks in steady state
 calculation, please refer to WNTR documentation [WNTRSi]_.
 During the transient simulation, the leaking node is modeled
 using the two compatibility equations, a continuity equation, and an orifice
-equation which quantifies the leakage discharge (:math:`Q_l`):
+equation which quantifies the leak discharge (:math:`Q_l`):
 
 .. math::
     Q_l = k_l \sqrt{{H_p}_l}
 
-where :math:`{H_p}_l` is the pressure head at the leakage node.
-Moreover, if the pressure head is negative, the leakage discharge
+where :math:`{H_p}_l` is the pressure head at the leaking node.
+Moreover, if the pressure head is negative, the leak discharge
 will be set to zero, assuming a backflow preventer is installed
-on the leakage node.
+on the leaking node.
 
 
 Bursts
 ^^^^^^
 
-The simulation of burst and leakage is very similar. They share similar
+The simulation of burst and leaks is very similar. They share similar
 set of governing equations. The only difference is that the burst opening
 is simulated only during the transient calculation and not included in the
 initial condition calculation.

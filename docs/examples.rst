@@ -95,7 +95,7 @@ Example 2 - Pump operations
 ---------------------------
 
 This example illustrates how the package models
-a transient event resulting from a controlled pump shutdown
+a transient event resulting from a controlled pump shut-off
 , i.e., the pump speed is ramped down. This example
 network, Tnet2, is shown below in :numref:`tnet2`. Tnet2 comprises 113 pipes,
 91 junctions, 2 pumps, 2 reservoir, 3 tanks, and one valve located in the
@@ -303,8 +303,8 @@ JUNCTION-8, JUNCTION-16, JUNCTION-45, JUNCTION-90, by:
 
 The results are demonstrated in :numref:`tnet3_multi`. It can be noticed that
 the amplitude of the pressure transient at JUNCTION-8 and JUNCTION-16
-is greater than that at other two junctions that are closer
-to JUNCTION-20, where the burst occurred.
+is greater than that at other two junctions which are further away from
+JUNCTION-20, where the burst occurred.
 
 .. _tnet3_multi:
 .. figure:: figures/tnet3_multi.png

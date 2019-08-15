@@ -28,17 +28,17 @@ leak detection, sensor placement, and condition assessment,
 has also enhanced the popularity and necessity of transient simulation
 
 Acknowledgedly, a number of commercial software for transient simulation
-in water distribution systems are available in the market;
+in water distribution systems is available in the market;
 however, the use of these software for research purposes is limited.
 The major restriction is due to the fact that the programs are packed
-as black boxes, and the source code is not visible,
+as black boxes, and the source codes are not visible,
 thus prohibiting any changes, including modification of
-existing and implementation of new elements, in the source code.
-Additionally, the commercial software was designed to perform only
+existing and implementation of new elements, in the source codes.
+Additionally, the commercial software is designed to perform only
 single transient simulations and do not have the capabilities to automate or
 run multiple transient simulations.
 Users are required to modify the boundary conditions using the GUI,
-perform the simulation, and manually record the responses to changes
+perform the simulation, and manually record the hydraulic responses
 in the various conditions,
 which significantly complicated the research process.
 
