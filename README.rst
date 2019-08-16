@@ -16,6 +16,12 @@ TSNet
         :target: https://pepy.tech/project/tsnet
         :alt: PyPI - Downloads
 
+.. image:: https://img.shields.io/github/license/glorialulu/tsnet
+        :alt: GitHub
+
+.. image:: https://img.shields.io/github/release-date-pre/glorialulu/TSNet
+        :alt: GitHub (Pre-)Release Date
+
 TSNet performs transient simulation in water networks using Method of Characteristics (MOC).
 
 
