@@ -12,8 +12,8 @@ TSNet
         :target: https://tsnet.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://img.shields.io/pypi/dd/tsnet
-        :target: https://pypi.python.org/pypi/tsnet/
+.. image:: https://pepy.tech/badge/tsnet
+        :target: https://pepy.tech/project/tsnet
         :alt: PyPI - Downloads
 
 TSNet performs transient simulation in water networks using Method of Characteristics (MOC).
