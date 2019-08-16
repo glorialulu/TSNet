@@ -12,7 +12,7 @@ TSNet
         :target: https://tsnet.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://img.shields.io/pypi/dt/tsnet?style=plastic
+.. image:: https://img.shields.io/pypi/dd/tsnet
         :target: https://pypi.python.org/pypi/tsnet/
         :alt: PyPI - Downloads
 
