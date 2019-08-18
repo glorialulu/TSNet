@@ -3,15 +3,10 @@
 language: python
 python:
   - 3.7
-    env: CONDA_ENV=py37
   - 3.6
-    env: CONDA_ENV=py36
   - 3.5
-    env: CONDA_ENV=py35
   - 3.4
-    env: CONDA_ENV=py34
   - 2.7
-    env: CONDA_ENV=py27
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
