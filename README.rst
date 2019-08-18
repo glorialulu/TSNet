@@ -17,7 +17,6 @@ TSNet
         :alt: PyPI - Downloads
 .. image:: https://img.shields.io/github/license/glorialulu/tsnet
         :alt: GitHub license
-
 .. image:: https://img.shields.io/github/release-date-pre/glorialulu/TSNet
         :alt: GitHub (Pre-)Release Date
 
