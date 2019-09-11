@@ -23,6 +23,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../'))
 import tsnet
 import shlex
+import sphinx_rtd_theme
 
 # -- General configuration ---------------------------------------------
 
@@ -41,6 +42,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
+    "sphinx_rtd_theme",
     'sphinx.ext.intersphinx'
     ]
 
@@ -118,12 +120,6 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
-import sphinx_rtd_theme
-
-extensions = [
-    ...
-    "sphinx_rtd_theme",
-]
 
 html_theme = "sphinx_rtd_theme"
 # Theme options are theme-specific and customize the look and feel of a
