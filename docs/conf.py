@@ -119,9 +119,10 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 # html_theme = 'pyramid'
-html_theme = 'zerovm'
+
 import zerovm_sphinx_theme
 html_theme_path = [zerovm_sphinx_theme.theme_path]
+html_theme = 'zerovm'
 
 # html_theme = "sphinx_rtd_theme"
 
