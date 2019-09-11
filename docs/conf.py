@@ -118,11 +118,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = 'pyramid'
-
-import zerovm_sphinx_theme
-html_theme_path = [zerovm_sphinx_theme.theme_path]
-html_theme = 'zerovm'
+html_theme = 'classic'
 
 # html_theme = "sphinx_rtd_theme"
 
