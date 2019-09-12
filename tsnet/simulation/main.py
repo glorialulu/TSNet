@@ -69,7 +69,7 @@ def MOCSimulator(tm, results_obj='results'):
             for _,pipe in tm.pipes():
                 diff = pipe.start_node_head[1] - pipe.start_node_head[0]
                 if diff> 1e-1:
-                    print('Initial condition discrepency (%.4f) on the start node of %s'%(diff,pipe))
+                    print('Initial condition discrepancy (%.4f) on the start node of %s'%(diff,pipe))
 
         if ts == 3:
             timeperstep = (datetime.now() - starttime) /2.

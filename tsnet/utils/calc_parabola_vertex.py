@@ -10,7 +10,7 @@ def calc_parabola_vertex(points):
     Parameters
     ----------
     points : list
-        Three points on the pump characterisc curve.
+        Three points on the pump characteristics curve.
     """
 
     [(x1,y1),(x2,y2),(x3,y3)] = points
