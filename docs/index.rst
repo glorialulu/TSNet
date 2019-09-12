@@ -1,7 +1,7 @@
 Transient Simulation in water Networks (TSNet)
 ==============================================
 
-.. image:: figures/highlight.pdf
+.. figure:: figures/highlight.pdf
    :width: 600
    :alt: highlight
 
