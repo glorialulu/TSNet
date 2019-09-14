@@ -78,9 +78,9 @@ Cite TSNet
 
 To cite TSNet, use one of the following references:
 
-Lu Xing, Lina Sela.(2019) A Python Package for Transient Simulation in
-Water Distribution Networks
-(submitted to Environmental Modelling and Software)
+Lu Xing and Lina Sela. " TSNet: a Python package
+for transient simulations in water distribution networks".
+Submitted to Environmental Modeling & Software
 
 License
 -------
