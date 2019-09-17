@@ -201,7 +201,6 @@ The initial setting has been changed to open to perform the closure." %name)
         if valve.link_type.lower() != 'valve':
             raise RuntimeError('The name of valve to operate is not associated with a vale')
 
-
         if valve.initial_status.name == 'Open' or valve.initial_status.name == 'Active':
             warnings.warn("Valve %s is already open in its initial setting. \
 The initial setting has been changed to closed to perform the opening." %name)

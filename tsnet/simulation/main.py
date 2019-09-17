@@ -8,6 +8,7 @@ from __future__ import print_function
 from tsnet.network import  topology
 from tsnet.simulation.single import inner_pipe, left_boundary, right_boundary
 from tsnet.utils import valve_curve, memo, print_time_delta
+from tsnet.utils import calc_parabola_vertex
 import numpy as np
 import warnings
 from datetime import datetime
@@ -108,12 +109,14 @@ def MOCSimulator(tm, results_obj='results'):
                 # upstream
                 if utype[pn][0] == 'Pump':
                     # three points for pump charatersitics curve
-                    pump[0] = tm.links[utype[pn][1]].get_pump_curve().points
+                    pump[0] = tm.links[utype[pn][1]].curve_coef
                     # calculate the coordinate of the three points
                     # based on the pump speed
                     if tm.links[utype[pn][1]].operating == True:
+                        points = tm.links[utype[pn][1]].get_pump_curve().points
                         po = tm.links[utype[pn][1]].operation_rule[ts]
-                        pump[0]=[(i*po,j*po**2) for (i,j) in pump[0]]
+                        points=[(i*po,j*po**2) for (i,j) in points]
+                        pump[0] = calc_parabola_vertex(points)
 
                 elif utype[pn][0] == 'Valve':
                     # determine valve friction coefficients based on
@@ -124,10 +127,12 @@ def MOCSimulator(tm, results_obj='results'):
                          valve[0] = valve_curve(100)
                 # downstream
                 if dtype[pn][0] == 'Pump':
-                    pump[1] = tm.links[dtype[pn][1]].get_pump_curve().points
+                    pump[1] = tm.links[dtype[pn][1]].curve_coef
                     if tm.links[dtype[pn][1]].operating == True:
+                        points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
-                        pump[1]=[(i*po,j*po**2) for (i,j) in pump[1]]
+                        points=[(i*po,j*po**2) for (i,j) in points]
+                        pump[1] = calc_parabola_vertex(points)
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
@@ -197,19 +202,23 @@ def MOCSimulator(tm, results_obj='results'):
                     # pump[0][0]: elevation of the reservoir/tank
                     # pump[0][1]: three points for pump characteristic curve
                     pump[0] = [[tm.links[utype[pn][1]].start_node.head][0],
-                         tm.links[utype[pn][1]].get_pump_curve().points]
+                         tm.links[utype[pn][1]].curve_coef]
                     if tm.links[utype[pn][1]].operating == True:
+                        points = tm.links[utype[pn][1]].get_pump_curve().points
                         po = tm.links[utype[pn][1]].operation_rule[ts]
-                        pump[0][1]= [(i*po,j*po**2) for (i,j) in pump[0][1]]
+                        points= [(i*po,j*po**2) for (i,j) in points]
+                        pump[0][1] = calc_parabola_vertex(points)
                 else:
                      warnings.warn ('Pipe %s miss %s upstream.' %(pipe, utype[pn][0]))
 
                 # RIGHT BOUNDARY
                 if dtype[pn][0] == 'Pump':
-                    pump[1] = tm.links[dtype[pn][1]].get_pump_curve().points
+                    pump[1] = tm.links[dtype[pn][1]].curve_coef
                     if tm.links[dtype[pn][1]].operating == True:
+                        points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
-                        pump[1]=[(i*po,j*po**2) for (i,j) in pump[1]]
+                        points=[(i*po,j*po**2) for (i,j) in points]
+                        pump[1] = calc_parabola_vertex(points)
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
@@ -272,25 +281,28 @@ def MOCSimulator(tm, results_obj='results'):
                         tm.links[dtype[pn][1]].operation_rule[ts]
                     else :
                         VN[pn][-1] = pipe.initial_velocity[-1]
-                                # source pump
+                # source pump
                 elif dtype[pn][0] == 'Pump':
                     # pump[1][0]: elevation of the reservoir/tank
                     # pump[1][1]: three points for pump characteristic curve
                     pump[1] = [[tm.links[utype[pn][1]].end_node.head][0],
-                         tm.links[dtype[pn][1]].get_pump_curve().points]
-
+                         tm.links[dtype[pn][1]].curve_coef]
                     if tm.links[dtype[pn][1]].operating == True:
+                        points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
-                        pump[1][1]=[(i*po,j*po**2) for (i,j) in pump[1][1]]
+                        points=[(i*po,j*po**2) for (i,j) in points]
+                        pump[1][1] = calc_parabola_vertex(points)
 
                 else :
                      warnings.warn('Pipe %s miss %s downstream.' %(pipe, dtype[pn][0]))
                 # LEFT boundary
                 if utype[pn][0] == 'Pump':
-                    pump[0] = tm.links[utype[pn][1]].get_pump_curve().points
+                    pump[0] = tm.links[utype[pn][1]].curve_coef
                     if tm.links[utype[pn][1]].operating == True:
+                        points = tm.links[utype[pn][1]].get_pump_curve().points
                         po = tm.links[utype[pn][1]].operation_rule[ts]
-                        pump[0]=[(i*po,j*po**2) for (i,j) in pump[0]]
+                        points=[(i*po,j*po**2) for (i,j) in points]
+                        pump[0] = calc_parabola_vertex(points)
 
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:

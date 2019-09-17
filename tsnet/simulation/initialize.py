@@ -10,6 +10,7 @@ The tsnet.simulation.initialize contains functions to
 import wntr
 import numpy as np
 import warnings
+from tsnet.utils import calc_parabola_vertex
 
 def Initializer(tm, t0, engine='DD'):
     """Initial Condition Calculation.
@@ -71,6 +72,8 @@ def Initializer(tm, t0, engine='DD'):
     else:
         raise Exception("Unknown initial calculation engine. \
             The engine can only be 'WNTR' or 'EPANET'.")
+
+
 
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays
@@ -143,6 +146,9 @@ def Initializer(tm, t0, engine='DD'):
     # set initial conditions as a new attribute to TransientModel
     tm.initial_head = H
     tm.initial_velocity = V
+
+    # add pump operation points
+    tm = pump_operation_points(tm)
 
     return tm
 
@@ -218,3 +224,25 @@ def cal_roughness_coef(pipe, V, hl):
         pipe.roughness = 0.03
 
     return pipe
+
+def pump_operation_points(tm):
+    #add operation points to the pump
+    for _, pump in tm.pumps():
+        print('test',pump, pump.end_node)
+        opt_point = (pump.flow, abs(pump.end_node.head-pump.start_node.head))
+        def_points = pump.get_pump_curve().points
+        dist = []
+        print('operation points', opt_point)
+        print('defination points', def_points)
+
+        for n, (i,j) in enumerate(def_points):
+            dist.append(np.sqrt((i - opt_point[0])**2 + (j - opt_point[1])**2))
+
+        pump.get_pump_curve().points.remove(def_points[dist.index(min(dist))])
+        pump.get_pump_curve().points.append(opt_point)
+        print('updated list',pump.get_pump_curve().points )
+
+        pump.curve_coef = calc_parabola_vertex(pump.get_pump_curve().points)
+        print (pump.curve_coef)
+
+    return tm

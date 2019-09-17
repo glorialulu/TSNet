@@ -7,7 +7,6 @@ transient simulation on a single pipe, including
 
 """
 import numpy as np
-from tsnet.utils import calc_parabola_vertex
 from tsnet.simulation.solver import (
     inner_node,
     valve_node,
@@ -85,7 +84,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
-                pumpc = calc_parabola_vertex(pump[0])
+                pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Valve':
@@ -102,7 +101,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H[i], V[i] = add_leakage(emitter_coeff, linkp, link2, elev,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
             elif dtype[0] == 'Pump':
-                pumpc = calc_parabola_vertex(pump[1])
+                pumpc = pump[1]
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
@@ -187,7 +186,6 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             elif utype[0] == 'Junction':
                 H[i], V[i] = dead_end (linkp , H2, V2, i, a, g, f, D, dt)
             elif utype[0] == 'Pump':  #source pump
-                pump[0][1] = calc_parabola_vertex(pump[0][1])
                 H[i], V[i] = source_pump(pump[0], linkp, H2, V2, dt, g, [-1])
 
         # Pipe end  (inner boundary conditions)
@@ -201,7 +199,7 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
             elif dtype[0] == 'Pump':
-                pumpc = calc_parabola_vertex(pump[1])
+                pumpc = pump[1]
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
@@ -287,7 +285,7 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
 
             elif utype[0] == 'Pump':
-                pumpc = calc_parabola_vertex(pump[0])
+                pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Valve':

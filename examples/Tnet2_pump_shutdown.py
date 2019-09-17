@@ -1,12 +1,12 @@
 import tsnet
 # open an example network and create a transient model
-inp_file = 'examples/networks/Tnet2.inp'
+inp_file = './networks/Tnet2.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
 tm.set_wavespeed(1200.)
 # Set time step
-tf = 50 # simulation period [s]
+tf = 10 # simulation period [s]
 tm.set_time(tf)
 
 # Set pump shut off
@@ -23,7 +23,7 @@ engine = 'DD' # or PPD
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-results_obj = 'Tnet2' # name of the object for saving simulation results
+results_obj = 'Tnet2' # name of the object for saving simulation results.head
 tm = tsnet.simulation.MOCSimulator(tm,results_obj)
 
 # report results
