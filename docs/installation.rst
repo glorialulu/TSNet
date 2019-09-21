@@ -7,7 +7,7 @@ Installation
 Setup Python Environment
 ------------------------------
 
-TSNet is tested against Python versions 2.7, 3.5 and 3.6.
+TSNet is tested against Python versions 3.5, 3.6, and 3.7.
 It can be installed on Windows, Linux, and Mac OS X operating systems.
 Python distributions, such as Anaconda, are recommended to manage the Python
 environment as they already contain (or easily support installation of) many
@@ -66,7 +66,7 @@ Once you have a copy of the source, you can install it with:
 Dependencies
 ------------
 
-Requirements for TSNet include Python (2.7, 3.5, or 3.6) along with
+Requirements for TSNet include Python (3.5, 3.6, or 3.7) along with
 several Python packages.
 The following Python packages are required::
 
