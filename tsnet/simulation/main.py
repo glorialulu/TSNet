@@ -109,14 +109,16 @@ def MOCSimulator(tm, results_obj='results'):
                 # upstream
                 if utype[pn][0] == 'Pump':
                     # three points for pump charatersitics curve
-                    pump[0] = tm.links[utype[pn][1]].curve_coef
+                    pump[0] = [tm.links[utype[pn][1]].curve_coef, "d"]
+                    if pipe.start_node.name == tm.links[utype[pn][1]].start_node.name:
+                        pump[0][1] = "s" # suction side
                     # calculate the coordinate of the three points
                     # based on the pump speed
                     if tm.links[utype[pn][1]].operating == True:
                         points = tm.links[utype[pn][1]].get_pump_curve().points
                         po = tm.links[utype[pn][1]].operation_rule[ts]
                         points=[(i*po,j*po**2) for (i,j) in points]
-                        pump[0] = calc_parabola_vertex(points)
+                        pump[0][0] = calc_parabola_vertex(points)
 
                 elif utype[pn][0] == 'Valve':
                     # determine valve friction coefficients based on
@@ -127,12 +129,14 @@ def MOCSimulator(tm, results_obj='results'):
                          valve[0] = valve_curve(100)
                 # downstream
                 if dtype[pn][0] == 'Pump':
-                    pump[1] = tm.links[dtype[pn][1]].curve_coef
+                    pump[1] = [tm.links[dtype[pn][1]].curve_coef,"d"]
+                    if pipe.end_node.name == tm.links[dtype[pn][1]].start_node.name:
+                        pump[1][1] = "s" # suction side
                     if tm.links[dtype[pn][1]].operating == True:
                         points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
                         points=[(i*po,j*po**2) for (i,j) in points]
-                        pump[1] = calc_parabola_vertex(points)
+                        pump[1][0] = calc_parabola_vertex(points)
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
@@ -213,12 +217,14 @@ def MOCSimulator(tm, results_obj='results'):
 
                 # RIGHT BOUNDARY
                 if dtype[pn][0] == 'Pump':
-                    pump[1] = tm.links[dtype[pn][1]].curve_coef
+                    pump[1] = [tm.links[dtype[pn][1]].curve_coef,"d"]
+                    if pipe.end_node.name == tm.links[dtype[pn][1]].start_node.name:
+                        pump[1][1] = "s" # suction side
                     if tm.links[dtype[pn][1]].operating == True:
                         points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
                         points=[(i*po,j*po**2) for (i,j) in points]
-                        pump[1] = calc_parabola_vertex(points)
+                        pump[1][0] = calc_parabola_vertex(points)
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
@@ -297,12 +303,14 @@ def MOCSimulator(tm, results_obj='results'):
                      warnings.warn('Pipe %s miss %s downstream.' %(pipe, dtype[pn][0]))
                 # LEFT boundary
                 if utype[pn][0] == 'Pump':
-                    pump[0] = tm.links[utype[pn][1]].curve_coef
+                    pump[0] = [tm.links[utype[pn][1]].curve_coef,"d"]
+                    if pipe.start_node.name == tm.links[utype[pn][1]].start_node.name:
+                        pump[0][1] = "s" # suction side
                     if tm.links[utype[pn][1]].operating == True:
                         points = tm.links[utype[pn][1]].get_pump_curve().points
                         po = tm.links[utype[pn][1]].operation_rule[ts]
                         points=[(i*po,j*po**2) for (i,j) in points]
-                        pump[0] = calc_parabola_vertex(points)
+                        pump[0][0] = calc_parabola_vertex(points)
 
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:

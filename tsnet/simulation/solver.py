@@ -224,7 +224,7 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
             HP = (C1[0,0] - VP) / C1[0,1]
 
     else : # reverse flow
-        # reconsruct the quadratic equation
+        # reconstruct the quadratic equation
         # parameters of the quadratic polynomial
         aq = 1
         bq = 2*g*KL_inv* (-A1[0]/A2[0]/C2[0,1]-1/C1[0,1])
@@ -296,7 +296,6 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
-
     # property of left adjacent pipe
     f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
     D1 = [link1[i].diameter  for i in range(len(link1))]        # m
@@ -335,7 +334,7 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
 #        C2[i,1] = g/a2[i]
 
     # pump power function
-    ap, bp, cp = pumpc
+    ap, bp, cp = pumpc[0]
     ap = ap * A1[0]**2.
     bp = bp * A1[0]
 
@@ -354,20 +353,46 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
         VP = (-bq)/(2*aq)
         warnings.warn('Error: The quadratic equation has no real solution (pump)')
 
-    if VP > 0 : # positive flow
+    hp = ap*VP**2. + bp*VP + cp # head gain
+
+    if VP > 0 and hp >=0 : # positive flow & positive head gain
         if nn == 0:  # pipe start
             VP = VP*A1[0]/A2[0]
             HP = (C2[0,0] + VP ) / C2[0,1]
         else:        # pipe end
             VP = VP
             HP = (C1[0,0] - VP) / C1[0,1]
-    else :
+    elif VP<0 :
         warnings.warn( "Reverse flow stopped by check valve!")
         VP = 0
-        if nn == 0:  # pipe start
-            HP = (C2[0,0] + VP ) / C2[0,1]
-        else :
-            HP = (C1[0,0] - VP) / C1[0,1]
+        hp = cp
+        # suction or discharge side?
+        if pumpc[1] == "s": # suction side
+            if nn == 0:  # pipe start
+                HP = (C2[0,0] + VP ) / C2[0,1]
+            else :
+                HP = (C1[0,0] - VP) / C1[0,1]
+        else: #discharge
+            if nn == 0:  # pipe start
+                HP = (C1[0,0] - VP) / C1[0,1] + hp
+            else :
+                HP = (C2[0,0] + VP ) / C2[0,1] + hp
+    else: # positive flow and negative head gain
+        warnings.warn( "Negative head gain activates by-pass!")
+        hp = 0
+        # suction or discharge side?
+        if pumpc[1] == "s": # suction side
+            if nn == 0:  # pipe start
+                HP = (C2[0,0] + VP ) / C2[0,1]
+            else :
+                HP = (C1[0,0] - VP) / C1[0,1]
+        else:
+            if nn == 0:  # pipe start
+                HP = (C1[0,0] - VP) / C1[0,1] + hp
+            else :
+                HP = (C2[0,0] + VP ) / C2[0,1] +hp
+
+
     return HP, VP
 
 def source_pump(pump, link2, H2, V2, dt, g, s2):

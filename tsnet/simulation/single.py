@@ -84,6 +84,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
+
                 pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
