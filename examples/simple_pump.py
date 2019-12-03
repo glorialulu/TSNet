@@ -1,6 +1,6 @@
 import tsnet
 # Open an example network and create a transient model
-inp_file = 'examples/networks/simple_pump.inp'
+inp_file = 'networks/simple_pump.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed

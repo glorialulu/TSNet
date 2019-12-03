@@ -88,9 +88,9 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
 
     # property of right adjacent pipe
     f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       #m
-    a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
+    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
+    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
     C2 = np.zeros((len(link2),2),dtype=np.float64)
     theta2 = [link2[i].theta for i in range((len(link2)))]
 
@@ -518,7 +518,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
 
     Parameters
     ----------
-    link1 : object
+    linkp : object
         Current pipe
     H1 : float
         Head of the C+ charateristics curve
@@ -539,12 +539,11 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
     """
 
     A = np.pi/4. * linkp.diameter**2.
-
-    if nn == 0:
+    if nn == 0: # dead end is the start node of a pipe
         k = linkp.start_node.demand_coeff
         aq = 1
         bq = -a/g*k/A
-        cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1
+        cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
 
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
@@ -557,14 +556,14 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         else:
             HP = (-bq)/(2*aq)
             HP = HP**2.
-            warnings.warn("The quadratic equation has no real solution (dead end).\
-The results might not be accurate.")
-        VP = V1 - g/a *H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP
-    else :
+            warnings.warn("""The quadratic equation has no real solution (dead end).
+                            The results might not be accurate.""")
+        VP = V1 - g/a*H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP - g/a*dt*V1*linkp.theta
+    else : # dead end is the end node of a pipe
         k = linkp.end_node.demand_coeff
         aq = 1
         bq = a/g*k/A
-        cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1
+        cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
         if delta >= 0:
@@ -578,7 +577,7 @@ The results might not be accurate.")
             HP = HP**2.
             warnings.warn("The quadratic equation has no real solution (dead end).\
 The results might not be accurate.")
-        VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP
+        VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP + g/a*dt*V1*linkp.theta
     return HP,VP
 
 def rev_end( H2, V2, H, nn, a, g, f, D, dt):
@@ -710,7 +709,7 @@ def add_leakage(emitter_coef, link1, link2, elev,
     # c1 = a**2.
     a1 = b**2
     b1 = -2*a*b - emitter_coef**2.
-    c1 = a**2 + emitter_coef**2.*elev
+    c1 = a**2 #+ emitter_coef**2.*elev
 
     # solve the quadratic equation
     delta = b1**2 - 4*a1*c1

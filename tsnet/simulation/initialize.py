@@ -85,7 +85,7 @@ def Initializer(tm, t0, engine='DD'):
         H = [results.node['head'].loc[t0, pipe.start_node_name] +\
                       i* ((results.node['head'].loc[t0, pipe.end_node_name]-
                        results.node['head'].loc[t0, pipe.start_node_name])/
-                       pipe.number_of_segments)
+                       (pipe.number_of_segments))
                     for i in range(pipe.number_of_segments+1)]
 
         H = np.array(H)
@@ -100,24 +100,10 @@ def Initializer(tm, t0, engine='DD'):
         pipe.start_node_flowrate[0] = V[0]*pipe.area
         pipe.end_node_flowrate[0] = V[-1]*pipe.area
 
-        try:
-            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0]-pipe.start_node.elevation)
-            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0]-pipe.start_node.elevation)
-        except:
-            pass # reservoir does not have emitter_discharge attribute
-
-        try:
-            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1]-pipe.end_node.elevation)
-            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1]-pipe.end_node.elevation)
-        except:
-            pass # reservoir does not have emitter_discharge attribute
-
         # calculate demand coefficient
         Hs = H[0]
         He = H[-1]
-
         demand = [0,0] # demand at start and end node
-
         try :
             demand[0] = tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
         except:
@@ -126,17 +112,23 @@ def Initializer(tm, t0, engine='DD'):
             demand[1] = tm.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
         except :
             demand[1] = 0.
-
         try :
-            Hsa = H[0]-pipe.start_node.elevation
+            Hsa = H[0]#-pipe.start_node.elevation
         except:
             Hsa = 1.
         try :
-            Hea = H[-1] - pipe.end_node.elevation
+            Hea = H[-1]#- pipe.end_node.elevation
         except :
             Hea=1.
-
         pipe = cal_demand_coef(demand, pipe, Hsa, Hea, t0)
+
+        # calculate demnad discharge and emitter discharge
+        if pipe.start_node.node_type == 'Junction':
+            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0]) #-pipe.start_node.elevation
+            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0])
+        if pipe.end_node.node_type == 'Junction':
+            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1])
+            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1])
 
         # calculate roughness coefficient
         Vp = V[0]
@@ -186,8 +178,6 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
         end_demand_coeff = 0.
     pipe.start_node.demand_coeff = start_demand_coeff # [m^3/s/(m H20)^(1/2)]
     pipe.end_node.demand_coeff = end_demand_coeff   # [m^3/s/(m H20)^(1/2)]
-
-
     return pipe
 
 def cal_roughness_coef(pipe, V, hl):

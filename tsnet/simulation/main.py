@@ -68,10 +68,12 @@ def MOCSimulator(tm, results_obj='results'):
         # first step in the transient simulation.
         if ts == 2:
             for _,pipe in tm.pipes():
-                diff = pipe.start_node_head[1] - pipe.start_node_head[0]
-                if diff> 1e-1:
-                    print('Initial condition discrepancy (%.4f) on the start node of %s'%(diff,pipe))
-
+                diff1 = pipe.start_node_head[1] - pipe.start_node_head[0]
+                diff2 = pipe.end_node_head[1] - pipe.end_node_head[0]
+                if abs(diff1)> 1e-1:
+                    print('Initial condition discrepancy of pressure (%.4f m) on the %s node' %(diff1,pipe.start_node.name))
+                if abs(diff2)> 1e-1:
+                    print('Initial condition discrepancy of pressure (%.4f m) on the %s node'%(diff2,pipe.end_node.name))
         if ts == 3:
             timeperstep = (datetime.now() - starttime) /2.
             est = timeperstep *tn
@@ -365,7 +367,7 @@ def MOCSimulator(tm, results_obj='results'):
             V[pn] = VN[pn]
 
     for _,pipe in tm.pipes():
-        if not isinstance(pipe.start_node.head, np.ndarray ):
+        if not isinstance(pipe.start_node.head, np.ndarray):
             pipe.start_node.head = np.copy(pipe.start_node_head)
         if not isinstance(pipe.end_node.head, np.ndarray):
             pipe.end_node.head = np.copy(pipe.end_node_head)

@@ -6,5 +6,6 @@
     ],
     "cSpell.ignoreWords": [
         "d"
-    ]
+    ],
+    "python.pythonPath": "E:\\software\\Anaconda\\python.exe"
 }
