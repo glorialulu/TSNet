@@ -540,7 +540,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
 
     A = np.pi/4. * linkp.diameter**2.
     if nn == 0: # dead end is the start node of a pipe
-        k = linkp.start_node.demand_coeff
+        k = linkp.start_node.demand_coeff + linkp.start_node.emitter_coeff
         aq = 1
         bq = -a/g*k/A
         cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
@@ -560,7 +560,7 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
                             The results might not be accurate.""")
         VP = V1 - g/a*H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP - g/a*dt*V1*linkp.theta
     else : # dead end is the end node of a pipe
-        k = linkp.end_node.demand_coeff
+        k = linkp.end_node.demand_coeff + linkp.end_node.emitter_coeff
         aq = 1
         bq = a/g*k/A
         cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
