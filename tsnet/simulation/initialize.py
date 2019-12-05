@@ -113,22 +113,22 @@ def Initializer(tm, t0, engine='DD'):
         except :
             demand[1] = 0.
         try :
-            Hsa = H[0]#-pipe.start_node.elevation
+            Hsa = H[0] -pipe.start_node.elevation
         except:
             Hsa = 1.
         try :
-            Hea = H[-1]#- pipe.end_node.elevation
+            Hea = H[-1]- pipe.end_node.elevation
         except :
             Hea=1.
         pipe = cal_demand_coef(demand, pipe, Hsa, Hea, t0)
 
         # calculate demnad discharge and emitter discharge
         if pipe.start_node.node_type == 'Junction':
-            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(H[0]) #-pipe.start_node.elevation
-            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(H[0])
+            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(Hsa)
+            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(Hsa)
         if pipe.end_node.node_type == 'Junction':
-            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(H[-1])
-            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(H[-1])
+            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(Hea)
+            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(Hea)
 
         # calculate roughness coefficient
         Vp = V[0]

@@ -162,9 +162,9 @@ def MOCSimulator(tm, results_obj='results'):
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
-                try:
-                    if HN[pn][0]- pipe.start_node.elevation >0:
-                        h = HN[pn][0]- pipe.start_node.elevation
+                if pipe.start_node.node_type == 'Junction':
+                    if HN[pn][0] - pipe.start_node.elevation >0:
+                        h = HN[pn][0] - pipe.start_node.elevation
                         pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(h)
                         pipe.start_node.emitter_discharge[ts] = pipe.start_node.emitter_coeff * np.sqrt(h)
                     else: # assume reverse flow preventer installed
@@ -172,12 +172,10 @@ def MOCSimulator(tm, results_obj='results'):
                         pipe.start_node.demand_discharge[ts] = 0.
                         warnings.warn("Negative pressure on node %s.\
                         Backflow stopped by reverse flow preventer." %pipe.start_node.name)
-                except:
-                    pass
 
-                try:
-                    if HN[pn][-1]-pipe.end_node.elevation >0:
-                        h = HN[pn][-1]-pipe.end_node.elevation
+                if pipe.end_node.node_type == 'Junction':
+                    if HN[pn][-1]  -pipe.end_node.elevation >0:
+                        h = HN[pn][-1] -pipe.end_node.elevation
                         pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(h)
                         pipe.end_node.demand_discharge[ts] = pipe.end_node.demand_coeff * np.sqrt(h)
                     else: # assume reverse flow preventer installed
@@ -185,8 +183,7 @@ def MOCSimulator(tm, results_obj='results'):
                         pipe.end_node.demand_discharge[ts] = 0.
                         warnings.warn("Negative pressure on node %s.\
                             Backflow stopped by reverse flow preventer." %pipe.start_node.name)
-                except:
-                    pass
+
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:
                 pump = [[],[]]; valve = [0,0]

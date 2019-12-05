@@ -513,7 +513,7 @@ def valve_end(H1, V1, V, nn, a, g, f, D, dt):
         VP = V
     return HP,VP
 
-def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
+def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt):
     """Dead end boundary MOC calculation with pressure dependant demand
 
     Parameters
@@ -524,6 +524,8 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         Head of the C+ charateristics curve
     V1 : float
         Velocity of the C+ charateristics curve
+    elev : float
+        Elevation at the dead end node
     nn : int
         The index of the calculation node
     a : float
@@ -543,19 +545,19 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         k = linkp.start_node.demand_coeff + linkp.start_node.emitter_coeff
         aq = 1
         bq = -a/g*k/A
-        cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
+        cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
 
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
         if delta >= 0:
             HP = (-bq - np.sqrt(delta))/(2*aq)
-            HP = HP**2.
+            HP = HP**2. + elev
         elif delta > -1.0e-7 and delta <0 :
             HP = (-bq)/(2*aq)
-            HP = HP**2.
+            HP = HP**2. +elev
         else:
             HP = (-bq)/(2*aq)
-            HP = HP**2.
+            HP = HP**2. +elev
             warnings.warn("""The quadratic equation has no real solution (dead end).
                             The results might not be accurate.""")
         VP = V1 - g/a*H1 - f*dt/(2.*D)*V1*abs(V1) + g/a*HP - g/a*dt*V1*linkp.theta
@@ -563,18 +565,18 @@ def dead_end(linkp, H1, V1, nn, a, g, f, D, dt):
         k = linkp.end_node.demand_coeff + linkp.end_node.emitter_coeff
         aq = 1
         bq = a/g*k/A
-        cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta
+        cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
         if delta >= 0:
             HP = (-bq + np.sqrt(delta))/(2*aq)
-            HP = HP**2.
+            HP = HP**2. + elev
         elif delta > -1.0e-7 and delta <0 :
             HP = (-bq)/(2*aq)
-            HP = HP**2.
+            HP = HP**2. + elev
         else:
             HP = (-bq)/(2*aq)
-            HP = HP**2.
+            HP = HP**2. + elev
             warnings.warn("The quadratic equation has no real solution (dead end).\
 The results might not be accurate.")
         VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP + g/a*dt*V1*linkp.theta
@@ -709,7 +711,7 @@ def add_leakage(emitter_coef, link1, link2, elev,
     # c1 = a**2.
     a1 = b**2
     b1 = -2*a*b - emitter_coef**2.
-    c1 = a**2 #+ emitter_coef**2.*elev
+    c1 = a**2 + emitter_coef**2.*elev
 
     # solve the quadratic equation
     delta = b1**2 - 4*a1*c1

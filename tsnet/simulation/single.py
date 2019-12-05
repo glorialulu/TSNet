@@ -185,7 +185,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             elif utype[0] == 'Valve':
                 H[i], V[i] = valve_end (H2, V2, V[i], i, a, g, f, D, dt)
             elif utype[0] == 'Junction':
-                H[i], V[i] = dead_end (linkp , H2, V2, i, a, g, f, D, dt)
+                elev = linkp.start_node.elevation
+                H[i], V[i] = dead_end (linkp , H2, V2, elev, i, a, g, f, D, dt)
             elif utype[0] == 'Pump':  #source pump
                 H[i], V[i] = source_pump(pump[0], linkp, H2, V2, dt, g, [-1])
 
@@ -302,7 +303,8 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
             if  dtype[0] == 'Valve':
                 H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt)
             if dtype[0] == 'Junction':
-                H[i], V[i] = dead_end (linkp ,H1, V1, i, a, g, f, D, dt)
+                elev = linkp.end_node.elevation
+                H[i], V[i] = dead_end (linkp ,H1, V1, elev, i, a, g, f, D, dt)
 
         # Interior points
         if (i > 0) and (i < n):
