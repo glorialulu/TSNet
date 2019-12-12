@@ -278,7 +278,7 @@ The initial setting has been changed to open to perform the closure." %name)
         Parameters
         ----------
         name : str
-            The name of the pump to shut off
+            The name of the node
         threshold : positive number, optional (default = 1)
             amplitude threshold for the change in the data.
         drift : positive number, optional (default = 0)
@@ -289,12 +289,44 @@ The initial setting has been changed to open to perform the closure." %name)
         """
         time = self.simulation_timestamps
         x = self.get_node(name).head
-        ta, tf, amp = detect_cusum(time, x, threshold=1, drift=0,
-                 show=False, ax=None)
+        ta, tf, amp = detect_cusum(time, x, threshold, drift,
+                 show=True, ax=None)
         ta = [time[i] for i in ta]
         tf = [time[i] for i in tf]
+        print ('%s changes detected in pressure results on node %s' %(len(ta), name))
 
-        return ta, tf, amp
+        return ta, tf, list(amp)
+
+    def plot_node_head(self, name, ax=None):
+        """Detect pressure change in simulation results
+
+        Parameters
+        ----------
+        name : str or list
+            The name of node
+        ax : a matplotlib.axes.Axes instance, optional (default = None).
+        """
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            print('matplotlib is not available.')
+        else:
+            if ax is None:
+                fig, ax = plt.subplots(1, 1, figsize=(8,4),dpi=100, facecolor='w', edgecolor='k')
+        if not type(name) is list:
+            name = [name]
+        nodes = [self.get_node(i) for i in name]
+        time = self.simulation_timestamps
+
+        for i,node in enumerate(nodes):
+            ax.plot(time,node.head,label=name[i])
+        plt.xlim([self.simulation_timestamps[0],self.simulation_timestamps[-1]])
+        plt.title('Pressure Head at Node(s) ')
+        plt.xlabel("Time [s]")
+        plt.ylabel("Pressure Head [m]")
+        plt.legend(loc='best')
+        plt.grid(True)
+        plt.show()
 
 
 

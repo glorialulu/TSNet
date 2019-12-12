@@ -7,8 +7,8 @@ Cumulative sum algorithm (CUSUM) to detect abrupt changes in data.
 import numpy as np
 import matplotlib.dates as mdates
 
-def detect_cusum(time, x, threshold=1, drift=0,
-                 ending=True, show=False, ax=None):
+def detect_cusum(time, x, threshold, drift,
+                 ending=True, show=True, ax=None):
 
     """
     Parameters
@@ -72,6 +72,7 @@ def detect_cusum(time, x, threshold=1, drift=0,
     """
 
     x = np.atleast_1d(x).astype('float64')
+    time = np.atleast_1d(time).astype('float64')
     gp, gn = np.zeros(x.size), np.zeros(x.size)
     gp_real, gn_real = np.zeros(x.size), np.zeros(x.size)
     ta, tai, taf = np.array([[], [], []], dtype=int)
@@ -137,7 +138,6 @@ def detect_cusum(time, x, threshold=1, drift=0,
             taf = taf[~np.append(ind, False)]
         # Amplitude of changes
         amp = x[taf] - x[tai]
-
     if show:
         _plot(time, x, threshold, drift, ending, ax, ta, tai, taf,
               gp_real, gn_real)
@@ -149,54 +149,41 @@ def _plot(time, x, threshold, drift, ending, ax, ta, tai, taf, gp, gn):
     """Plot results of the detect_cusum function, see its help."""
 
     try:
-
         import matplotlib.pyplot as plt
     except ImportError:
         print('matplotlib is not available.')
     else:
-
         if ax is None:
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
+            fig, ax = plt.subplots(1, 1, figsize=(8,4), dpi=100, facecolor='w', edgecolor='k')
 
-        #hfmt = mdates.DateFormatter('%H:%M:%S')
-        ax1.plot_date(time , x, 'k-', lw=2, tz="US/Central")
-#        ax1.plot_date(raw_time, raw_signal, 'b-', alpha =0.3, lw=2,tz="US/Central")
+        ax.plot(time , x, 'k-', lw=2)
         if len(ta):
-            ax1.plot_date(time[tai], x[tai], '>', mfc='g', mec='g', ms=10,
+            ax.plot(time[tai], x[tai], '>', mfc='g', mec='g', ms=10,
                      label='Start')
 
             if ending:
-                ax1.plot_date(time[taf], x[taf], '<', mfc='g', mec='g', ms=10,
-                         label='End',tz="US/Central")
-#            ax1.plot_date(time[ta], x[ta], 'o', mfc='r', mec='r', mew=1, ms=5,
-#                     label='Alarm',tz="US/Central")
-            ax1.legend(loc='best', framealpha=.5, numpoints=1)
-        ax1.set_xlim([time[0], time[-1]])
-        ax1.set_xlabel('Time [h:min:s]', fontsize=14)
-        ax1.set_ylabel('Pressure [psi]', fontsize=14)
+                ax.plot(time[taf], x[taf], '<', mfc='g', mec='g', ms=10,
+                         label='End')
+            ax.legend(loc='best', framealpha=.5, numpoints=1)
+        ax.set_xlim([time[0], time[-1]])
+        ax.set_xlabel('Time [s]', fontsize=14)
+        ax.set_ylabel('Pressure [m]', fontsize=14)
         ymin, ymax = x[np.isfinite(x)].min(), x[np.isfinite(x)].max()
         yrange = ymax - ymin if ymax > ymin else 1
-        ax1.set_ylim(ymin - 0.1*yrange, ymax + 0.1*yrange)
-        ax1.set_title('(a)', fontsize=14)
-#        ax1.set_xticks([time[0], time[-1]])
-#        ax1.xaxis.set_major_locator(mdates.HourLocator())
-        #ax1.xaxis.set_major_formatter(hfmt)
-#        ax1.set_title('Time series and detected pressure transients ' +
-#                      '(threshold= %.3g, drift= %.3g): N changes = %d'
-#                      % (threshold, drift, len(tai)))
-        ax2.plot_date(time, gp, 'y-', label='+',tz="US/Central")
-        ax2.plot_date(time, gn, 'm-', label='-',tz="US/Central")
-        ax2.set_xlim([time[0], time[-1]])
-        ax2.set_xlabel('Time', fontsize=14)
-        ax2.set_ylim(-0.01*threshold, 1.1*threshold)
-        ax2.axhline(threshold, color='r')
-        ax2.set_ylabel('Cumulative Sum (c)', fontsize=14)
-#        ax2.set_title('Time series of the cumulative sums of ' +
-#                      'positive and negative changes')
-        ax2.set_title('(b)', fontsize=14)
-        ax2.legend(loc='best', framealpha=.5, numpoints=1)
-        #ax2.xaxis.set_major_formatter(hfmt)
-        plt.tight_layout()
+        ax.set_ylim(ymin - 0.1*yrange, ymax + 0.1*yrange)
+
+#         ax2.plot(time, gp, 'y-', label='+')
+#         ax2.plot(time, gn, 'm-', label='-')
+#         ax2.set_xlim([time[0], time[-1]])
+#         ax2.set_xlabel('Time', fontsize=14)
+#         ax2.set_ylim(-0.01*threshold, 1.1*threshold)
+#         ax2.axhline(threshold, color='r')
+#         ax2.set_ylabel('Cumulative Sum (c)', fontsize=14)
+# #        ax2.set_title('Time series of the cumulative sums of ' +
+# #                      'positive and negative changes')
+#         ax2.set_title('(b)', fontsize=14)
+#         ax2.legend(loc='best', framealpha=.5, numpoints=1)
+#         plt.tight_layout()
         plt.show()
 
 
