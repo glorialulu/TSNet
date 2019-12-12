@@ -22,6 +22,7 @@ from tsnet.network.control import (
     pumpopening,
     burstsetting
 )
+from tsnet.postprocessing import detect_cusum
 
 logger = logging.getLogger(__name__)
 
@@ -270,6 +271,30 @@ The initial setting has been changed to open to perform the closure." %name)
         pump.status = LinkStatus.Closed
         pump.operating = True
         pump.operation_rule = pumpopening(self.time_step, self.simulation_period, rule)
+
+    def detect_pressure_change(self, name, threshold, drift, show=False, ax=None):
+        """Detect pressure change in simulation results
+
+        Parameters
+        ----------
+        name : str
+            The name of the pump to shut off
+        threshold : positive number, optional (default = 1)
+            amplitude threshold for the change in the data.
+        drift : positive number, optional (default = 0)
+            drift term that prevents any change in the absence of change.
+        show : bool, optional (default = True)
+            True (1) plots data in matplotlib figure, False (0) don't plot.
+        ax : a matplotlib.axes.Axes instance, optional (default = None).
+        """
+        time = self.simulation_timestamps
+        x = self.get_node(name).head
+        ta, tf, amp = detect_cusum(time, x, threshold=1, drift=0,
+                 show=False, ax=None)
+        ta = [time[i] for i in ta]
+        tf = [time[i] for i in tf]
+
+        return ta, tf, amp
 
 
 
