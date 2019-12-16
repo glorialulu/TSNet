@@ -167,7 +167,7 @@ def _plot(time, x, threshold, drift, ending, ax, ta, tai, taf, gp, gn):
             ax.legend(loc='best', framealpha=.5, numpoints=1)
         ax.set_xlim([time[0], time[-1]])
         ax.set_xlabel('Time [s]', fontsize=14)
-        ax.set_ylabel('Pressure [m]', fontsize=14)
+        ax.set_ylabel('Pressure Head [m]', fontsize=14)
         ymin, ymax = x[np.isfinite(x)].min(), x[np.isfinite(x)].max()
         yrange = ymax - ymin if ymax > ymin else 1
         ax.set_ylim(ymin - 0.1*yrange, ymax + 0.1*yrange)

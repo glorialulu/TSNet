@@ -306,7 +306,7 @@ The initial setting has been changed to open to perform the closure." %name)
         time = self.simulation_timestamps
         x = self.get_node(name).head
         ta, tf, amp = detect_cusum(time, x, threshold, drift,
-                 show=False, ax=None)
+                 show, ax=None)
         ta = [time[i] for i in ta]
         tf = [time[i] for i in tf]
         print ('%s changes detected in pressure results on node %s' %(len(ta), name))
@@ -335,13 +335,13 @@ The initial setting has been changed to open to perform the closure." %name)
         time = self.simulation_timestamps
 
         for i,node in enumerate(nodes):
-            ax.plot(time,node.head,label=name[i])
+            ax.plot(time,node.head,lw=2,label=name[i])
         plt.xlim([self.simulation_timestamps[0],self.simulation_timestamps[-1]])
-        plt.title('Pressure Head at Node(s) ')
-        plt.xlabel("Time [s]")
-        plt.ylabel("Pressure Head [m]")
-        plt.legend(loc='best')
-        # plt.grid(True)
+        # plt.title('Pressure Head at Node(s) ')
+        plt.xlabel("Time [s]", fontsize=14)
+        plt.ylabel("Pressure Head [m]", fontsize=14)
+        plt.legend(loc='best', framealpha=.5, numpoints=1)
+        plt.grid(False)
         plt.show()
 
 
