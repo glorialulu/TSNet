@@ -60,7 +60,55 @@ def max_time_step(tm):
     for _, pipe in tm.pipes():
         dt = pipe.length / (2. * pipe.wavev)
         if max_dt > dt :
-            max_dt = dt - 0.001  # avoid numerical issue which cause N = 0
+            max_dt = dt #- 0.001  # avoid numerical issue which cause N = 0
+    return max_dt
+
+def discretization_N(tm, dt):
+    """Discretize in temporal and spatial space using wave speed adjustment scheme.
+
+    Parameters
+    ----------
+    tm : tsnet.network.geometry.TransientModel
+        Network
+    dt : float
+        User defined time step
+
+    Returns
+    -------
+    tm : tsnet.network.geometry.TransientModel
+        Network with updated parameters
+    """
+
+    Ndis = cal_N(tm, dt)
+
+    # add number of segments as a new attribute to each pipe
+    i = 0
+    for _, pipe in tm.pipes():
+        pipe.number_of_segments = int(Ndis[i])
+        i+=1
+    # adjust wave speed and calculate time step
+    tm = adjust_wavev(tm)
+    return  tm
+
+
+def max_time_step_N(tm, N):
+    """Determine the maximum time step based on Courant's criteria.
+
+    Parameters
+    ----------
+    tm : tsnet.network.geometry.TransientModel
+        Network
+
+    Returns
+    -------
+    max_dt : float
+        Maximum time step allowed for this network
+    """
+    max_dt = np.inf
+    for _, pipe in tm.pipes():
+        dt = pipe.length / (N * pipe.wavev)
+        if max_dt > dt :
+            max_dt = dt #- 1e-5  # avoid numerical issue which cause N = 0
     return max_dt
 
 def cal_N(tm,  dt):
@@ -81,7 +129,7 @@ def cal_N(tm,  dt):
     return N
 
 
-def adjust_wavev( tm):
+def adjust_wavev(tm):
     """Adjust wave speed and time step to solve compatibility equations.
 
     Parameters
@@ -101,6 +149,7 @@ def adjust_wavev( tm):
     phi = [np.longdouble(pipe.length / pipe.wavev / pipe.number_of_segments)
                             for _, pipe in tm.pipes()]
     phi = np.array(phi).reshape((len(phi), 1))
+    tm.wavespeed_adj = np.sum(phi**2)
     theta = np.longdouble(1/ np.matmul(trans(phi), phi) * \
         np.matmul(trans(phi), np.ones((len(phi), 1))))
 

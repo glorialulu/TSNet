@@ -158,11 +158,11 @@ def _plot(time, x, threshold, drift, ending, ax, ta, tai, taf, gp, gn):
 
         ax.plot(time , x, 'k-', lw=2)
         if len(ta):
-            ax.plot(time[tai], x[tai], '>', mfc='g', mec='g', ms=10,
+            ax.plot(time[tai], x[tai], '>', mfc='r', mec='r', ms=10,
                      label='Start')
 
             if ending:
-                ax.plot(time[taf], x[taf], '<', mfc='g', mec='g', ms=10,
+                ax.plot(time[taf], x[taf], '<', mfc='r', mec='r', ms=10,
                          label='End')
             ax.legend(loc='best', framealpha=.5, numpoints=1)
         ax.set_xlim([time[0], time[-1]])

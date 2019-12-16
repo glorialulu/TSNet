@@ -14,7 +14,9 @@ import numpy as np
 import logging
 import warnings
 from wntr.network import WaterNetworkModel
-from tsnet.network.discretize import discretization, max_time_step
+from tsnet.network.discretize import (
+    discretization, max_time_step,
+    discretization_N, max_time_step_N)
 from tsnet.network.control import (
     valveclosing,
     valveopening,
@@ -118,6 +120,20 @@ class TransientModel (WaterNetworkModel):
         self = discretization(self, dt)
         print('Simulation time step %.5f s' % self.time_step)
 
+    def set_time_N(self, tf, N=2):
+        """Set time step and duration for the simulation.
+
+        Parameters
+        ----------
+        tf : float
+            Simulation period
+        N : integer
+            Number of segments in the critical pipe
+        """
+        dt = max_time_step_N(self,N)
+        self.simulation_period = tf
+        self = discretization_N(self, dt)
+        print('Simulation time step %.5f s' % self.time_step)
 
     def add_leak(self, name, coeff):
         """Add leak to the transient model
@@ -290,7 +306,7 @@ The initial setting has been changed to open to perform the closure." %name)
         time = self.simulation_timestamps
         x = self.get_node(name).head
         ta, tf, amp = detect_cusum(time, x, threshold, drift,
-                 show=True, ax=None)
+                 show=False, ax=None)
         ta = [time[i] for i in ta]
         tf = [time[i] for i in tf]
         print ('%s changes detected in pressure results on node %s' %(len(ta), name))
@@ -325,7 +341,7 @@ The initial setting has been changed to open to perform the closure." %name)
         plt.xlabel("Time [s]")
         plt.ylabel("Pressure Head [m]")
         plt.legend(loc='best')
-        plt.grid(True)
+        # plt.grid(True)
         plt.show()
 
 
