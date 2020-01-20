@@ -200,8 +200,8 @@ def MOCSimulator(tm, results_obj='results'):
                             tm.links[utype[pn][1]].operation_rule[ts]
                     else :
                         VN[pn][0] = pipe.initial_velocity[0]
-                # source pump
                 elif utype[pn][0] == 'Pump':
+                    # source pump
                     # pump[0][0]: elevation of the reservoir/tank
                     # pump[0][1]: three points for pump characteristic curve
                     pump[0] = [[tm.links[utype[pn][1]].start_node.head][0],
@@ -230,6 +230,12 @@ def MOCSimulator(tm, results_obj='results'):
                         valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule*100)
                     else :
                          valve[1] = valve_curve(100)
+                    # if also the right valve end
+                    if links2[pn] == ['End']:
+                        links2[pn] = []
+
+                elif dtype[pn][0] == 'Junction':
+                    VN[pn][-1] = pipe.initial_velocity[-1]
 
                 HN[pn], VN[pn] = left_boundary(pipe, pn,
                       HN[pn], VN[pn], H[pn], V[pn],
