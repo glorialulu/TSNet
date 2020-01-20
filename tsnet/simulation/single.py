@@ -81,10 +81,10 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             if utype[0] == 'Pipe':
                 elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
+                block_per = linkp.start_node.block_per
+                H[i], V[i] = add_leakage(emitter_coeff, block_per, link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
             elif utype[0] == 'Pump':
-
                 pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
                      H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
@@ -99,7 +99,8 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             if dtype[0] == 'Pipe':
                 elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2, elev,
+                block_per =  linkp.end_node.block_per
+                H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
             elif dtype[0] == 'Pump':
                 pumpc = pump[1]
@@ -197,7 +198,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             if dtype[0] == 'Pipe':
                 elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, linkp, link2, elev,
+                block_per =  linkp.end_node.block_per
+                H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
 
             elif dtype[0] == 'Pump':
@@ -283,7 +285,8 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
             if utype[0] == 'Pipe':
                 elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                H[i], V[i] = add_leakage(emitter_coeff, link1, linkp, elev,
+                block_per =  linkp.start_node.block_per
+                H[i], V[i] = add_leakage(emitter_coeff, block_per,link1, linkp, elev,
                      H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
 
             elif utype[0] == 'Pump':

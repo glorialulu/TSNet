@@ -64,14 +64,14 @@ def Initializer(tm, t0, engine='DD'):
             node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.81),
                     discharge_coeff = 1, start_time = t0)
     if engine.lower() == 'dd':
-        sim = wntr.sim.WNTRSimulator(tm)
+        sim = wntr.sim.EpanetSimulator(tm)
         results = sim.run_sim()
     elif engine.lower() == 'pdd':
         sim = wntr.sim.WNTRSimulator(tm,mode='PDD')
         results = sim.run_sim()
     else:
         raise Exception("Unknown initial calculation engine. \
-            The engine can only be 'WNTR' or 'EPANET'.")
+            The engine can only be 'DD' or 'PDD'.")
 
 
 

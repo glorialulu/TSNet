@@ -614,7 +614,7 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt):
         HP = H
     return HP, VP
 
-def add_leakage(emitter_coef, link1, link2, elev,
+def add_leakage(emitter_coef, block_per, link1, link2, elev,
                  H1, V1, H2, V2, dt, g, nn, s1, s2):
     r"""Leakage Node MOC calculation
 
@@ -704,7 +704,7 @@ def add_leakage(emitter_coef, link1, link2, elev,
 #        C2[i,1] = g/a2[i]
 
     a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
-    b = np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)
+    b = np.dot(C1[:,1], A1) + (1-block_per)*np.dot(C2[:,1],A2)
     # parameters of the quadratic polynomial
     # a1 = b**2.
     # b1 = -(2.*a*b +emitter_coef**2)

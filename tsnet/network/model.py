@@ -56,7 +56,9 @@ class TransientModel (WaterNetworkModel):
             node.id = i
             node.leak_status = False
             node.burst_status = False
+            node.blockage_status = False
             node.emitter_coeff = 0.
+            node.block_per = 0.
             i+=1     ## Graph the network
 
         # calculate the slope and area for each pipe
@@ -170,6 +172,19 @@ class TransientModel (WaterNetworkModel):
                                                 ts, tc, final_burst_coeff)
         burst_node.burst_status = True
 
+    def add_blockage(self, name, percentage):
+        """Add blockage to the transient model
+
+        Parameters
+        ----------
+        name : str
+            The name of the blockage nodes, by default None
+        percentage : list or float
+            The percentage of the blockage flow discharge
+        """
+        blockage_node = self.get_node(name)
+        blockage_node.block_per = percentage
+        blockage_node.block_status = True
 
     def valve_closure(self, name, rule):
         """Set valve closure rule
