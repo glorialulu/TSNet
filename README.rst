@@ -58,7 +58,7 @@ Version
 -------
 
 TSNet is a ongoing research project in the University of Texas at Austin.
-The current version is 0.1.0, which is still a pre-release.
+The current version is 0.1.2, which is still a pre-release.
 
 Contact
 -------
@@ -80,7 +80,7 @@ To cite TSNet, use one of the following references:
 
 Lu Xing and Lina Sela. " TSNet: a Python package
 for transient simulations in water distribution networks".
-Submitted to Environmental Modeling & Software
+Submitted to Advances in Engineering Software.
 
 License
 -------
