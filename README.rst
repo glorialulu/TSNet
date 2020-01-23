@@ -24,7 +24,7 @@ TSNet performs transient simulation in water networks using Method of Characteri
 
 
 * Free software: MIT license
-* Github: https://github.com/glorialulu/TSNet.git
+* GitHub: https://github.com/glorialulu/TSNet.git
 * Documentation: https://tsnet.readthedocs.io.
 
 Overview

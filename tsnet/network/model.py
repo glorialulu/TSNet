@@ -86,9 +86,9 @@ class TransientModel (WaterNetworkModel):
             value to each pipe, by default 1200.
         """
 
-        if isinstance(wavespeed,float):
+        if isinstance(wavespeed,(float,int)):
             # if wavespeed is a float, assign it to all pipes
-            wavev = wavespeed * np.ones((self.num_pipes, 1))
+            wavev = wavespeed * np.ones(self.num_pipes)
         elif isinstance(wavespeed, (list,tuple,np.ndarray)):
             # if wavespeed is a list, assign each elements
             # to the respective pipes.
@@ -104,6 +104,46 @@ class TransientModel (WaterNetworkModel):
         i= 0
         for _, pipe in self.pipes():
             pipe.wavev = wavev[i]
+            i+=1
+
+    def set_roughness(self,roughness, pipes=None):
+        """Set roughness coefficient for pipes in the network
+
+        Parameters
+        ----------
+        roughness : float or int or list
+            If given as float or int, set the value as roughness
+            for all pipe; If given as list set the corresponding
+            value to each pipe. Make sure to define it using the
+            same method (H-W or D-W) as defined in .inp file.
+        pipes : str or list, optional
+            The list of pipe to define roughness coefficient,
+            by default all pipe in the network.
+        """
+
+        if pipes == None :
+            pipes = self.pipes()
+            num_pipes = self.num_pipes
+        else:
+            pipes = [pipes]
+            num_pipes = len(pipes)
+
+        if isinstance(roughness,(float,int)):
+            # if roughness is a float, assign it to all mentioned pipes
+            roughness = roughness * np.ones(num_pipes)
+        elif isinstance(roughness, (list,tuple,np.ndarray)):
+            # if roughness is a list, assign each elements
+            # to the respective pipes.
+            if not len(roughness) == num_pipes:
+                raise ValueError('The length of the roughness \
+                input does not equal number of input pipes. ')
+        else:
+            raise ValueError('Roughness should be a float or a list')
+
+        # assign roughness to each input pipes
+        i= 0
+        for _, pipe in pipes:
+            pipe.roughness = roughness[i]
             i+=1
 
     def set_time(self, tf, dt=None):
