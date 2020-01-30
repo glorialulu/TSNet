@@ -75,7 +75,7 @@ class TransientModel (WaterNetworkModel):
         for _, link in self.links():
             link.operating = False
 
-    def set_wavespeed(self, wavespeed=1200.):
+    def set_wavespeed(self, wavespeed=1200, pipes=None):
         """Set wave speed for pipes in the network
 
         Parameters
@@ -84,17 +84,26 @@ class TransientModel (WaterNetworkModel):
             If given as float or int, set the value as wavespeed
             for all pipe; If given as list set the corresponding
             value to each pipe, by default 1200.
+        pipes : str or list, optional
+            The list of pipe to define wavespeed,
+            by default all pipe in the network.
         """
+        generator = 0
+        if pipes == None :
+            generator = 1
+            pipes = self.pipes()
+            num_pipes = self.num_pipes
+        else:
+            pipes = [self.get_link(pipe) for pipe in list(pipes)]
+            num_pipes = len(pipes)
 
         if isinstance(wavespeed,(float,int)):
             # if wavespeed is a float, assign it to all pipes
-            wavev = wavespeed * np.ones(self.num_pipes)
+            wavespeed = wavespeed * np.ones(num_pipes)
         elif isinstance(wavespeed, (list,tuple,np.ndarray)):
             # if wavespeed is a list, assign each elements
             # to the respective pipes.
-            if len(wavespeed) == self.num_pipes:
-                wavev = wavespeed
-            else:
+            if not len(wavespeed) == num_pipes:
                 raise ValueError('The length of the wavespeed \
                 input does not equal number of pipes. ')
         else:
@@ -102,9 +111,14 @@ class TransientModel (WaterNetworkModel):
 
         # assign wave speed to each pipes
         i= 0
-        for _, pipe in self.pipes():
-            pipe.wavev = wavev[i]
-            i+=1
+        if generator == 1:
+            for _, pipe in pipes:
+                pipe.wavev = wavespeed[i]
+                i+=1
+        else:
+            for pipe in pipes:
+                pipe.wavev = wavespeed[i]
+                i+=1
 
     def set_roughness(self,roughness, pipes=None):
         """Set roughness coefficient for pipes in the network
@@ -120,12 +134,13 @@ class TransientModel (WaterNetworkModel):
             The list of pipe to define roughness coefficient,
             by default all pipe in the network.
         """
-
+        generator = 0
         if pipes == None :
+            generator = 1
             pipes = self.pipes()
             num_pipes = self.num_pipes
         else:
-            pipes = [pipes]
+            pipes = [self.get_link(pipe) for pipe in list(pipes)]
             num_pipes = len(pipes)
 
         if isinstance(roughness,(float,int)):
@@ -142,9 +157,14 @@ class TransientModel (WaterNetworkModel):
 
         # assign roughness to each input pipes
         i= 0
-        for _, pipe in pipes:
-            pipe.roughness = roughness[i]
-            i+=1
+        if generator == 1:
+            for _, pipe in pipes:
+                pipe.roughness = roughness[i]
+                i+=1
+        else:
+            for pipe in pipes:
+                pipe.roughness = roughness[i]
+                i+=1
 
     def set_time(self, tf, dt=None):
         """Set time step and duration for the simulation.

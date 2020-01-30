@@ -6,12 +6,12 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.01
+dt = 0.005
 tf = 25   # simulation period [s]
 tm.set_time(tf,dt)
 
 # Set valve closure
-tc = 0 # valve closure period [s]
+tc = 2 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
@@ -41,20 +41,20 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.01
+dt = 0.005
 tf = 25   # simulation period [s]
 tm.set_time(tf,dt)
 
-## Add leak
-#emitter_coeff = 0.001 # [ m^3/s/(m H20)^(1/2)]
-#tm.add_leak('2', emitter_coeff)
-
 # Add leak
-block_per = 0.01 # [ m^3/s/(m H20)^(1/2)]
-tm.add_blockage('2', block_per )
+emitter_coeff = 0.001 # [ m^3/s/(m H20)^(1/2)]
+tm.add_leak('2', emitter_coeff)
+
+## Add blockage
+#block_per = 0.01 # [ m^3/s/(m H20)^(1/2)]
+#tm.add_blockage('2', block_per )
 
 # Set valve closure
-tc = 0 # valve closure period [s]
+tc = 2 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
