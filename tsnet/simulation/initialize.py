@@ -76,6 +76,8 @@ def Initializer(tm, t0, engine='DD'):
     for _,node in tm.nodes():
         node.head = results.node['head'].loc[t0, node.name]
 
+    for _,link in tm.links():
+        link.initial_flow = results.link['flowrate'].loc[t0, link.name]
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays
 
@@ -219,11 +221,9 @@ def cal_roughness_coef(pipe, V, hl):
 def pump_operation_points(tm):
     #add operation points to the pump
     for _, pump in tm.pumps():
-        opt_point = (pump.flow, abs(pump.end_node.head-pump.start_node.head))
+        opt_point = (pump.initial_flow, abs(pump.end_node.head-pump.start_node.head))
         def_points = pump.get_pump_curve().points
-        print (opt_point)
         dist = []
-
         for n,(i,j) in enumerate(def_points):
             dist.append(np.sqrt((i - opt_point[0])**2 + (j - opt_point[1])**2))
 

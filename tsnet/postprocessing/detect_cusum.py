@@ -7,8 +7,8 @@ Cumulative sum algorithm (CUSUM) to detect abrupt changes in data.
 import numpy as np
 import matplotlib.dates as mdates
 
-def detect_cusum(time, x, threshold, drift,
-                 ending=True, show=True, ax=None):
+def detect_cusum(time, x, threshold, drift, show,
+                 ending=True,  ax=None):
 
     """
     Parameters
