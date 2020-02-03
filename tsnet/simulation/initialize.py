@@ -73,7 +73,8 @@ def Initializer(tm, t0, engine='DD'):
         raise Exception("Unknown initial calculation engine. \
             The engine can only be 'DD' or 'PDD'.")
 
-
+    for _,node in tm.nodes():
+        node.head = results.node['head'].loc[t0, node.name]
 
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays
@@ -220,9 +221,10 @@ def pump_operation_points(tm):
     for _, pump in tm.pumps():
         opt_point = (pump.flow, abs(pump.end_node.head-pump.start_node.head))
         def_points = pump.get_pump_curve().points
+        print (opt_point)
         dist = []
 
-        for n, (i,j) in enumerate(def_points):
+        for n,(i,j) in enumerate(def_points):
             dist.append(np.sqrt((i - opt_point[0])**2 + (j - opt_point[1])**2))
 
         pump.get_pump_curve().points.remove(def_points[dist.index(min(dist))])
