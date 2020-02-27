@@ -22,7 +22,8 @@ from tsnet.network.control import (
     valveopening,
     pumpclosing,
     pumpopening,
-    burstsetting
+    burstsetting,
+    demandpulse
 )
 from tsnet.postprocessing import detect_cusum
 
@@ -362,6 +363,28 @@ The initial setting has been changed to open to perform the closure." %name)
         pump.status = LinkStatus.Closed
         pump.operating = True
         pump.operation_rule = pumpopening(self.time_step, self.simulation_period, rule)
+
+    def add_demand_pulse(self, name, rule):
+        """ Add demand pulse to junction
+
+        Parameters
+        ----------
+        name : str or list
+            The name of junctions to add demand pulse
+                rule : list
+            Contains paramters to define valve operation rule
+        rule = [tc,ts,stay,dp,m]
+            tc : total duration of the pulse [s]                                                                                                                                        [s]
+            ts : start time of demand [s]
+            stay: duration of the demand to stay at peak level [s]
+            dp : demand pulse multiplier [uniteless]
+        """
+        [tc, ts, stay, dp] = rule
+        demand_node = self.get_node(name)
+        demand_node.pulse_coeff = demandpulse(self.time_step, self.simulation_period,
+                                                tc, ts, stay, dp)
+        demand_node.pulse_status = True
+
 
     def detect_pressure_change(self, name, threshold, drift, show=False, ax=None):
         """Detect pressure change in simulation results

@@ -202,3 +202,44 @@ def burstsetting(dt,tf,ts,tc,final_burst_coeff):
         burst_A = final_burst_coeff * s
 
     return burst_A
+
+
+    def demandpulse(dt, tf, tc, ts, stay, dp, m):
+        """Calculate demand pulse multiplier
+
+        Parameters
+        dt : float
+            Time step
+        tf : float
+            Simulation Time
+        tc : float
+            Total pulse duration
+        ts : float
+            Pulse start time
+        stay : float
+            Pulse stay time
+        dp : float
+            Pulse multiplier
+        """
+        tn = int(tf/dt)
+        x = np.linspace(0,tf,tn)
+        t_change = (tc-stay)/2.
+        if t_change !=0 :
+            s = np.piecewise(x, [x<=ts, x>ts and x< ts+ t_change,
+                            x>ts+t_change and x<ts+t_change+stay,
+                            x>ts+t_change+stay and x< ts+tc,
+                            x>ts+tc],
+                            [0, lambda x: (x-ts)/t_change,
+                            1, lambda x: 1- (x-ts-t_change-stay)/t_change,
+                            0])
+
+            pulse_mul = dp * s
+
+        else:
+            s = np.piecewise(x, [x<=ts, x>ts and x< ts,
+                            x>ts and x<ts+stay,
+                            x>ts+tc],
+                            [0, 1, 0])
+            pulse_mul = dp * s
+
+        return pulse_mul

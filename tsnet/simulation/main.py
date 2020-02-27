@@ -88,6 +88,8 @@ def MOCSimulator(tm, results_obj='results'):
         for _,node in tm.nodes():
             if node.burst_status == True:
                 node.emitter_coeff = node.burst_coeff[ts]
+            if node.pulse_status == True:
+                node.demand_coeff = node.pulse_coeff[ts]
 
         # initialize the results at this time step
         for _, pipe in tm.pipes():
