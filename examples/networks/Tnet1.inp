@@ -4,7 +4,7 @@
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
  N3              	0           	0           	                	;
- N2              	0           	0           	                	;
+ N2              	0           	50           	                	;
  N5              	0           	0           	                	;
  N4              	0           	0           	                	;
  N6              	0           	0           	                	;

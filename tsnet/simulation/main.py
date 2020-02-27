@@ -61,6 +61,9 @@ def MOCSimulator(tm, results_obj='results'):
         H[pn] = pipe.initial_head
         V[pn] = pipe.initial_velocity
 
+    for _,node in tm.nodes():
+        if node.pulse_status == True:
+                node.base_demand_coeff = node.demand_coeff
     starttime = datetime.now()
     # Start Calculation
     for ts in range(1,tn):
@@ -89,7 +92,7 @@ def MOCSimulator(tm, results_obj='results'):
             if node.burst_status == True:
                 node.emitter_coeff = node.burst_coeff[ts]
             if node.pulse_status == True:
-                node.demand_coeff = node.pulse_coeff[ts]
+                node.demand_coeff = node.base_demand_coeff*(1.+node.pulse_coeff[ts])
 
         # initialize the results at this time step
         for _, pipe in tm.pipes():

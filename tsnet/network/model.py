@@ -58,6 +58,7 @@ class TransientModel (WaterNetworkModel):
             node.leak_status = False
             node.burst_status = False
             node.blockage_status = False
+            node.pulse_status = False
             node.emitter_coeff = 0.
             node.block_per = 0.
             i+=1     ## Graph the network
