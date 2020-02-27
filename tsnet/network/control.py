@@ -204,7 +204,7 @@ def burstsetting(dt,tf,ts,tc,final_burst_coeff):
     return burst_A
 
 
-def demandpulse(dt, tf, tc, ts, stay, dp):
+def demandpulse(dt, tf, tc, ts, tp, dp):
     """Calculate demand pulse multiplier
 
     Parameters
@@ -216,14 +216,15 @@ def demandpulse(dt, tf, tc, ts, stay, dp):
         Total pulse duration
     ts : float
         Pulse start time
-    stay : float
-        Pulse stay time
+    tp : float
+        Pulse increase time
     dp : float
         Pulse multiplier
     """
     tn = int(tf/dt)
     x = np.linspace(0,tf,tn)
-    t_change = (tc-stay)/2.
+    t_change = tp
+    stay = tc - 2*tp
     if t_change !=0 :
         s = np.piecewise(x, [x<=ts, (x>ts)& (x<= ts+t_change),
                         (x>ts+t_change) & (x<=ts+t_change+stay),
@@ -240,4 +241,20 @@ def demandpulse(dt, tf, tc, ts, stay, dp):
                         [0, 1, 0])
         pulse_mul = dp * s
 
+    # import matplotlib.pyplot as plt
+
+    # fig1 = plt.figure(figsize=(4,4), dpi=150, facecolor='w', edgecolor='k')
+    # plt.plot(x,pulse_mul, 'k', lw=2.5)
+    # plt.xlim(ts-0.2,ts+tc+0.2)
+    # plt.ylim(-0.1,1.2)
+    # plt.xticks([ts,ts+tp,ts+tc],('ts', 'ts+tp', 'ts+tc'))
+    # plt.yticks([dp], ['dp'])
+    # plt.xlabel("Time [s]")
+    # plt.ylabel("Demand pulse multiplier")
+    # plt.vlines(ts+tp, -0.1, 1, 'k', linestyles='dotted')
+    # plt.vlines(ts, -0.1, 0, 'k', linestyles='dotted')
+    # plt.vlines(ts+tc, -0.1, 0, 'k', linestyles='dotted')
+    # plt.hlines(dp, ts-0.2, ts+tp, 'k', linestyles='dotted')
+    # plt.show()
+    # fig1.savefig("DemandMultiplier.pdf", format='pdf',dpi=500, bbox_inches = 'tight')
     return pulse_mul

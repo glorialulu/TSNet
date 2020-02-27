@@ -380,10 +380,10 @@ The initial setting has been changed to open to perform the closure." %name)
             stay: duration of the demand to stay at peak level [s]
             dp : demand pulse multiplier [uniteless]
         """
-        [tc, ts, stay, dp] = rule
+        [tc, ts, tp, dp] = rule
         demand_node = self.get_node(name)
         demand_node.pulse_coeff = demandpulse(self.time_step, self.simulation_period,
-                                                tc, ts, stay, dp)
+                                                tc, ts, tp, dp)
         demand_node.pulse_status = True
 
 
