@@ -14,8 +14,85 @@ for different grid configurations, including:
 from __future__ import print_function
 import numpy as np
 import warnings
+def Reynold(V, D):
+    """ Calculate Reynold number
 
-def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
+    Parameters
+    ----------
+    V : float
+        velocity
+    D : float
+        diameter
+
+    Returns
+    -------
+    Re : float
+        Reynold number
+    """
+    nu = 1.004e-6  # kinematic viscosity [m^2/s]
+    Re = V*D/nu
+
+    return Re
+
+def quasi_steady_friction_factor(Re, KD):
+    """ Update friction factor based on Reynold number
+
+    Parameters
+    ----------
+    Re : float
+        velocity
+    KD : float
+        relative roughness height (K/D)
+
+    Returns
+    -------
+    f : float
+        quasi-steady friction factor
+    """
+    a = -1.8*np.log(6.9/Re +( KD/3.7)**1.11)
+    f = (1/a)**2.
+    return f
+
+
+def unsteady_friction(Re, dVdt, dVdx, sign, a, g):
+    """ Calculate unsteady friction
+
+    Parameters
+    ----------
+    Re : float
+        velocity
+    dVdt : float
+        local instantaneous acceleration
+    dVdx : float
+        instantaneous convective acceleration
+    sign : float
+        sign of the flowrate
+    a : float
+        wave speed
+    g: float
+        gravitational acceleration
+
+    Returns
+    -------
+    Ju : float
+        unsteady friction factor
+    """
+
+    # calculate Vardy's shear decay coefficient (C)
+    if Re< 2000: # laminar flow
+        C = 4.76e-3
+    else:
+        C = 7.41 * Re**(-np.log(14.3*Re**0.05))
+
+    # calculate Brunone's friction coefficient
+    k = np.sqrt(C)/2.
+
+    Ju = k/g/2.* (dVdt + a*sign*np.abs(dVdx))
+
+    return Ju
+
+def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2,
+                friction, dVdx1=0, dVdx2=0, dVdt1=0, dVdt2=0):
     """Inner boundary MOC using C+ and C- characteristic curve
 
     Parameters
@@ -46,7 +123,21 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
-
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     Returns
     -------
     HP : float
@@ -74,11 +165,23 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2):
     A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   # m^2
     C1 = np.zeros((len(link1),2), dtype=np.float64)
     theta1 = [link1[i].theta for i in range((len(link1)))]
-
+    KD1 = [link1[i].roughness_height  for i in range(len(link1))]
+    """ TO DO: add friction models"""
 
     for i in range(len(link1)):
-        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*f1[i]*dt
-          /2./D1[i]*V1[i]*abs(V1[i])) + g/a1[i]* dt *V1[i]*theta1[i]
+        if friction == 'steady':
+            Ju = 0
+            Js = s1[i]*f1[i]*dt/2./D1[i]*V1[i]*abs(V1[i]) #steady friction
+        else:
+            Re = Reynold(V1[i], D1[i])
+            f = quasi_steady_friction_factor(Re, KD1[i])
+            Js = s1[i]*f1[i]*dt/2./D1[i]*V1[i]*abs(V1[i])
+            if friction == 'quasi-steady':
+                Ju = 0
+            elif friction == 'unsteady':
+                " TO DO: check the sign of unsteady friction"
+                Ju = unsteady_friction(Re, dVdt1[i], dVdx1[i], s1[i], a1[i], g)
+        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (Js+Ju) + g/a1[i]* dt *V1[i]*theta1[i]
         C1[i,1] = g/a1[i]
 
 #    H-W coefficients given

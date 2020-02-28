@@ -215,6 +215,7 @@ def cal_roughness_coef(pipe, V, hl):
                         The D-W coeff has been set to 0.03 "
                         %(pipe.name, pipe.roughness))
         pipe.roughness = 0.03
+    pipe.roughness_height = 3.7 * np.exp(2*np.sqrt(pipe.roughness))
 
     return pipe
 

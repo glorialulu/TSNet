@@ -19,7 +19,8 @@ from tsnet.simulation.solver import (
 )
 
 def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
-                H0, V0, H, V, H10, V10, H20, V20, pump, valve):
+                H0, V0, H, V, H10, V10, H20, V20, pump, valve,
+                friction, dVdt, dVdx):
     """MOC solution for an individual inner pipe.
 
     Parameters
@@ -58,7 +59,17 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         Characteristics of the pump
     valve : list
         Characteristics of the valve
-
+    friction: str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdt: numpy.ndarray
+        local instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
+    dVdx: numpy.ndarray
+        convective instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
     Returns
     -------
     H : numpy.ndarray
@@ -72,7 +83,6 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
     link1 = [p[abs(i)-1] for i in links1]
     link2 = [p[abs(i)-1] for i in links2]
     n = linkp.number_of_segments    # spatial discretization
-
     for i in range(n+1):
         # Pipe start
         if i == 0:
@@ -116,9 +126,15 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         if (i > 0) and (i < n):
             V1 = V0[i-1]; H1 = H0[i-1]
             V2 = V0[i+1]; H2 = H0[i+1]
-
-            H[i], V[i] = inner_node(linkp, linkp, 0,
-             H1, V1, H2, V2, dt, g, i,[1],[-1])
+            if friction == 'unsteady':
+                dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
+                dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
+                H[i], V[i] = inner_node(linkp, linkp, 0,
+                H1, V1, H2, V2, dt, g, i,[1],[-1], friction,
+                dVdx1, dVdx2, dVdt1, dVdt2)
+            else:
+                H[i], V[i] = inner_node(linkp, linkp, 0,
+                H1, V1, H2, V2, dt, g, i,[1],[-1], friction)
 
     return H, V
 
@@ -226,7 +242,6 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
 
             H[i], V[i] = inner_node(linkp, linkp, 0,
              H1, V1, H2, V2, dt, g, i,[1],[-1])
-
     return H, V
 
 def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,

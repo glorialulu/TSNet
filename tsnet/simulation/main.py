@@ -15,7 +15,7 @@ from datetime import datetime
 import pickle
 
 @memo
-def MOCSimulator(tm, results_obj='results'):
+def MOCSimulator(tm, results_obj='results', friction='steady'):
     """ MOC Main Function
 
     Parameters
@@ -24,7 +24,9 @@ def MOCSimulator(tm, results_obj='results'):
         Network
     results_obj: string, optional
         the name of the results file, by default 'results'
-
+    friction: string, optional
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
     Returns
     ------
     tm : tsnet.network.model.TransientModel
@@ -51,7 +53,10 @@ def MOCSimulator(tm, results_obj='results'):
     # results at current time step
     HN = [0] * tm.num_pipes
     VN = [0] * tm.num_pipes
-
+    # results for local and convective
+    #  instantaneous acceleration
+    dVdt = [0] * tm.num_pipes
+    dVdx = [0] * tm.num_pipes
     for _, pipe in tm.pipes():
         p.append(pipe)
 
@@ -60,7 +65,10 @@ def MOCSimulator(tm, results_obj='results'):
         pn = pipe.id-1
         H[pn] = pipe.initial_head
         V[pn] = pipe.initial_velocity
-
+        if friction == 'unsteady':
+            dVdt[pn] = np.zeros_like(V[pn])
+            diff = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
+            dVdx[pn] = np.append(diff, diff[-1])
     for _,node in tm.nodes():
         if node.pulse_status == True:
                 node.base_demand_coeff = node.demand_coeff
@@ -158,7 +166,7 @@ def MOCSimulator(tm, results_obj='results'):
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     pump, valve)
+                     pump, valve, friction, dVdt[pn], dVdx[pn])
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -371,6 +379,12 @@ def MOCSimulator(tm, results_obj='results'):
         # march in time
         for _, pipe in tm.pipes():
             pn = pipe.id-1
+            # calculate instantaneous local acceleration
+            # only for unsteady friction factor
+            if friction == 'unsteady':
+                dVdt[pn] = (VN[pn] - V[pn] )/dt
+                diff = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
+                dVdx[pn] = np.append(diff, diff[-1])
             H[pn] = HN[pn]
             V[pn] = VN[pn]
 
