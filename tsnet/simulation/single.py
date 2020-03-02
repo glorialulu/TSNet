@@ -17,10 +17,11 @@ from tsnet.simulation.solver import (
     rev_end,
     add_leakage
 )
-
+""" TO DO: add friction to inner_node """
 def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H0, V0, H, V, H10, V10, H20, V20, pump, valve,
-                friction, dVdt, dVdx):
+                friction, dVdt, dVdx,
+                dVdt10, dVdx10, dVdt20, dVdx20):
     """MOC solution for an individual inner pipe.
 
     Parameters
@@ -45,8 +46,10 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         Downstream adjacent link type, and if not pipe, their name
     p : list
         pipe list
-    n : int
-        Number of discretization of current pipe
+    H0 : numpy.ndarray
+        Head of current pipe at previous time step [m]
+    V0 : numpy.ndarray
+        Velocity of current pipe at previous time step [m/s]
     H10 : list
         Head of left adjacent nodes at previous time step [m]
     V10 : list
@@ -63,13 +66,22 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
         by default 'steady'
     dVdt: numpy.ndarray
-        local instantaneous velocity approximation to be used
+        local instantaneous acceleration approximation to be used
         for unsteady friction calculation, 0 if not
         in unsteady friction mode [m/s^2]
     dVdx: numpy.ndarray
-        convective instantaneous velocity approximation to be used
+        convective instantaneous acceleration approximation to be used
         for unsteady friction calculation, 0 if not
         in unsteady friction mode [m/s^2]
+    dVdt10 : list
+        local instantaneous acceleration of left adjacent nodes at previous time step [m]
+    dVdx10 : list
+        convective instantaneous acceleration of left adjacent nodes at previous time step [m/s]
+    dVdt20 : list
+        local instantaneous acceleration of right adjacent nodes at previous time step [m]
+    dVdx20 : list
+        convective instantaneous acceleration of right adjacent nodes at previous time step [m/s]
+
     Returns
     -------
     H : numpy.ndarray
@@ -88,58 +100,67 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         if i == 0:
             V1 = V10;     H1 = H10       #list
             V2 = V0[i+1]; H2 = H0[i+1]
+            dVdx1 = dVdx10 ; dVdt1 = dVdt10
+            dVdx2 =  dVdx[i]; dVdt2 = dVdt[i+1]
+
             if utype[0] == 'Pipe':
                 elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
                 block_per = linkp.start_node.block_per
                 H[i], V[i] = add_leakage(emitter_coeff, block_per, link1, linkp, elev,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
+                    H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                    friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif utype[0] == 'Pump':
                 pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
+                    H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                    friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif utype[0] == 'Valve':
                 valvec = valve[0]
                 H[i], V[i] = valve_node(valvec, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
+                    H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                    friction, dVdx1, dVdx2, dVdt1, dVdt2)
+
         # Pipe end
         if i == n:
             V1 = V0[i-1];    H1 = H0[i-1]
             V2 = V20;        H2 = H20
+            dVdx1 = dVdx[i] ; dVdt1 = dVdt[i-1]
+            dVdx2 =  dVdx20; dVdt2 = dVdt20
             if dtype[0] == 'Pipe':
                 elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
                 block_per =  linkp.end_node.block_per
                 H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif dtype[0] == 'Pump':
                 pumpc = pump[1]
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif dtype[0] == 'Valve':
                 valvec = valve[1]
                 H[i], V[i] = valve_node(valvec, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
         # Interior points
         if (i > 0) and (i < n):
             V1 = V0[i-1]; H1 = H0[i-1]
             V2 = V0[i+1]; H2 = H0[i+1]
-            if friction == 'unsteady':
-                dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
-                dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
-                H[i], V[i] = inner_node(linkp, linkp, 0,
-                H1, V1, H2, V2, dt, g, i,[1],[-1], friction,
-                dVdx1, dVdx2, dVdt1, dVdt2)
-            else:
-                H[i], V[i] = inner_node(linkp, linkp, 0,
-                H1, V1, H2, V2, dt, g, i,[1],[-1], friction)
+            dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
+            dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
+            H[i], V[i] = inner_node(linkp, linkp, 0,
+            H1, V1, H2, V2, dt, g, i,[1],[-1], friction,
+            dVdx1, dVdx2, dVdt1, dVdt2)
 
     return H, V
 
 def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
-                    H20, V20, utype, dtype) :
+                    H20, V20, utype, dtype,
+                    friction, dVdt, dVdx, dVdt20, dVdx20) :
     """MOC solution for an individual left boundary pipe.
 
     Parameters
@@ -176,6 +197,21 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
         Upstream adjacent link type, and if not pipe, their name
     dtype : list
         Downstream adjacent link type, and if not pipe, their name
+    friction: str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdt: numpy.ndarray
+        local instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
+    dVdx: numpy.ndarray
+        convective instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
+    dVdt20 : list
+        local instantaneous acceleration of right adjacent nodes at previous time step [m]
+    dVdx20 : list
+        convective instantaneous acceleration of right adjacent nodes at previous time step [m/s]
 
     Returns
     -------
@@ -192,36 +228,46 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
     g = 9.8                          # m/s^2
     a = linkp.wavev    # m/s
     n = linkp.number_of_segments   # spatial discretization
-
+    KD = linkp.roughness_height
     for i in range(n+1):
         # Pipe start (outer boundayr conditions)
         if i == 0:
             V2 = V0[i+1]; H2 = H0[i+1]
+            dVdx2 = dVdx[i]; dVdt2= dVdt[i+1]
             if utype[0] == 'Reservoir' or  utype[0] == 'Tank':
-                H[i], V[i] = rev_end (H2, V2, H[i], i, a, g, f, D, dt)
+                H[i], V[i] = rev_end (H2, V2, H[i], i, a, g, f, D, dt,
+                KD, friction, dVdx2, dVdt2)
             elif utype[0] == 'Valve':
-                H[i], V[i] = valve_end (H2, V2, V[i], i, a, g, f, D, dt)
+                H[i], V[i] = valve_end (H2, V2, V[i], i, a, g, f, D, dt,
+                KD, friction, dVdx2, dVdt2)
             elif utype[0] == 'Junction':
                 elev = linkp.start_node.elevation
-                H[i], V[i] = dead_end (linkp , H2, V2, elev, i, a, g, f, D, dt)
+                H[i], V[i] = dead_end (linkp , H2, V2, elev, i, a, g, f, D, dt,
+                KD, friction, dVdx2, dVdt2)
             elif utype[0] == 'Pump':  #source pump
-                H[i], V[i] = source_pump(pump[0], linkp, H2, V2, dt, g, [-1])
+                H[i], V[i] = source_pump(pump[0], linkp, H2, V2, dt, g, [-1],
+                friction, dVdx2, dVdt2)
 
         # Pipe end  (inner boundary conditions)
         if i == n:
             V1 = V0[i-1]; H1 = H0[i-1]     # upstream node
             V2 = V20;     H2 = H20         # downstream nodes
+            dVdx1 = dVdx[i-1] ; dVdx2 = dVdx20
+            dVdt1 = dVdt[i-1] ; dVdt2 = dVdt20
+
             if dtype[0] == 'Pipe':
                 elev = linkp.end_node.elevation
                 emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
                 block_per =  linkp.end_node.block_per
                 H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif dtype[0] == 'Pump':
                 pumpc = pump[1]
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif dtype[0] == 'Valve':
                 valvec = valve[1]
@@ -229,7 +275,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
                     H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt)
                 else:
                     H[i], V[i] = valve_node(valvec, linkp, link2,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2))
+                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif dtype[0] == 'Junction':
                 elev = linkp.end_node.elevation
@@ -239,13 +286,17 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
         if (i > 0) and (i < n):
             V1 = V0[i-1]; H1 = H0[i-1]
             V2 = V0[i+1]; H2 = H0[i+1]
-
+            dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
+            dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
             H[i], V[i] = inner_node(linkp, linkp, 0,
-             H1, V1, H2, V2, dt, g, i,[1],[-1])
+            H1, V1, H2, V2, dt, g, i,[1],[-1], friction,
+            dVdx1, dVdx2, dVdt1, dVdt2)
+
     return H, V
 
 def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
-                 H10, V10, utype, dtype):
+                 H10, V10, utype, dtype,
+                 friction, dVdt, dVdx, dVdt10, dVdx10):
     """MOC solution for an individual right boundary pipe.
 
     Parameters
@@ -282,8 +333,23 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
         Upstream adjacent link type, and if not pipe, their name
     dtype : list
         Downstream adjacent link type, and if not pipe, their name
+    friction: str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdt: numpy.ndarray
+        local instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
+    dVdx: numpy.ndarray
+        convective instantaneous velocity approximation to be used
+        for unsteady friction calculation, 0 if not
+        in unsteady friction mode [m/s^2]
+    dVdt10 : list
+        local instantaneous acceleration of left adjacent nodes at previous time step [m]
+    dVdx10 : list
+        convective instantaneous acceleration of left adjacent nodes at previous time step [m/s]
 
-    Returns
+   Returns
     -------
     H : numpy.ndarray
         Head results of the current pipe at current time step. [m]
@@ -298,45 +364,59 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
     g = 9.8                          # m/s^2
     a = linkp.wavev                  # m/s
     n = linkp.number_of_segments   # spatial discretization
+    KD = linkp.roughness_height
 
     for i in range(n+1):
         # Pipe start (inner boundary conditions)
         if i == 0:
             V1 = V10; H1 = H10            # upstream node
             V2 = V0[i+1]; H2 = H0[i+1]    # downstream node
+            dVdx1 = dVdx10 ; dVdx2 = dVdx[i]
+            dVdt1 = dVdt10 ; dVdt2 = dVdt[i+1]
             if utype[0] == 'Pipe':
                 elev = linkp.start_node.elevation
                 emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
                 block_per =  linkp.start_node.block_per
                 H[i], V[i] = add_leakage(emitter_coeff, block_per,link1, linkp, elev,
-                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1])
+                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1],
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif utype[0] == 'Pump':
                 pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
+                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif utype[0] == 'Valve':
                 valvec = valve[0]
                 H[i], V[i] = valve_node(valvec, link1, linkp,
-                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1])
+                     H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
         # Pipe end (outer boundary conditions )
         if i == n:
             V1 = V0[i-1]; H1 = H0[i-1]
+            dVdx1 = dVdx[i-1]
+            dVdt1 = dVdt[i-1]
             if dtype[0] == 'Reservoir' or  dtype[0] == 'Tank':
-                H[i], V[i] = rev_end (H1, V1, H[i], i, a, g, f, D, dt)
+                H[i], V[i] = rev_end (H1, V1, H[i], i, a, g, f, D, dt,
+                                    KD, friction, dVdx1, dVdt1)
             if  dtype[0] == 'Valve':
-                H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt)
+                H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt,
+                                KD, friction, dVdx1, dVdt1)
             if dtype[0] == 'Junction':
                 elev = linkp.end_node.elevation
-                H[i], V[i] = dead_end (linkp ,H1, V1, elev, i, a, g, f, D, dt)
+                H[i], V[i] = dead_end (linkp ,H1, V1, elev, i, a, g, f, D, dt,
+                            KD, friction, dVdx1, dVdt1)
 
         # Interior points
         if (i > 0) and (i < n):
             V1 = V0[i-1]; H1 = H0[i-1]
             V2 = V0[i+1]; H2 = H0[i+1]
+            dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
+            dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
+            H[i], V[i] = inner_node(linkp, linkp, 0,
+            H1, V1, H2, V2, dt, g, i,[1],[-1], friction,
+            dVdx1, dVdx2, dVdt1, dVdt2)
 
-            H[i], V[i] = inner_node(linkp, linkp,0,
-             H1, V1, H2, V2, dt, g, i,[1],[-1])
 
     return H, V

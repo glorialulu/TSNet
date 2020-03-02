@@ -30,7 +30,7 @@ def Reynold(V, D):
         Reynold number
     """
     nu = 1.004e-6  # kinematic viscosity [m^2/s]
-    Re = V*D/nu
+    Re = np.abs(V*D/nu)
 
     return Re
 
@@ -54,7 +54,7 @@ def quasi_steady_friction_factor(Re, KD):
     return f
 
 
-def unsteady_friction(Re, dVdt, dVdx, sign, a, g):
+def unsteady_friction(Re, dVdt, dVdx, V, a, g):
     """ Calculate unsteady friction
 
     Parameters
@@ -65,8 +65,8 @@ def unsteady_friction(Re, dVdt, dVdx, sign, a, g):
         local instantaneous acceleration
     dVdx : float
         instantaneous convective acceleration
-    sign : float
-        sign of the flowrate
+    V : float
+        velocity
     a : float
         wave speed
     g: float
@@ -82,17 +82,154 @@ def unsteady_friction(Re, dVdt, dVdx, sign, a, g):
     if Re< 2000: # laminar flow
         C = 4.76e-3
     else:
-        C = 7.41 * Re**(-np.log(14.3*Re**0.05))
-
+        C = 7.41 / Re**(np.log(14.3/Re**0.05))
+    print(C)
     # calculate Brunone's friction coefficient
     k = np.sqrt(C)/2.
 
-    Ju = k/g/2.* (dVdt + a*sign*np.abs(dVdx))
+    Ju = k/g/2.* (dVdt + a* np.sign(V) * np.abs(dVdx))
 
     return Ju
 
+def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
+    """ Calculate friction term
+
+    Parameters
+    ----------
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    f : float
+        steady friction factor
+    D : float
+        pipe diameter
+    V : float
+        pipe flow velocity
+    KD : float
+        relative roughness height
+    dt : float
+        time step
+    dVdt : float
+        local instantaneous acceleration
+    dVdx : float
+        convective instantaneous acceleration
+    a : float
+        wave speed
+    g : float
+        gravitational accelerations
+
+    Returns
+    -------
+    float
+        total friction, including steady and unsteady
+    """
+
+    if friction == 'steady':
+        Ju = 0
+        Js = f*dt/2./D*V*abs(V) #steady friction
+    else:
+        Re = Reynold(V, D)
+        f = quasi_steady_friction_factor(Re, KD)
+        Js = f*dt/2./D*V*abs(V)
+        if friction == 'quasi-steady':
+            Ju = 0
+        elif friction == 'unsteady':
+            " TO DO: check the sign of unsteady friction"
+            Ju = unsteady_friction(Re, dVdt, dVdx, V, a, g)
+    return Ju + Js
+
+def cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2):
+    """Calculate coefficients for MOC characteristic lines
+
+    Parameters
+    ----------
+    link1 : object
+        Pipe object of C+ charateristics curve
+    link2 : object
+        Pipe object of C- charateristics curve
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    s1 : list
+        List of signs that represent the direction of the flow
+        in C+ charateristics curve
+    s2 : list
+        List of signs that represent the direction of the flow
+        in C- charateristics curve
+    dt : float
+        Time step
+    g : float
+        Gravity acceleration
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
+
+    Returns
+    -------
+    A1: list
+        list of left adjacent pipe cross-section area
+    A2: list
+        list of right adjacent pipe cross-section area
+    C1: list
+        list of left adjacent pipe MOC coefficients
+    C2: list
+        list of right adjacent pipe MOC coefficients
+    """
+
+    # property of left adjacent pipe
+    f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
+    D1 = [link1[i].diameter  for i in range(len(link1))]        # m
+    a1 = [link1[i].wavev  for i in range(len(link1))]           # m/s
+    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   # m^2
+    C1 = np.zeros((len(link1),2), dtype=np.float64)
+    theta1 = [link1[i].theta for i in range((len(link1)))]
+    KD1 = [link1[i].roughness_height  for i in range(len(link1))]
+
+    for i in range(len(link1)):
+        J = cal_friction(friction, f1[i], D1[i], V1[i], KD1[i],
+            dt, dVdt1[i], dVdx1[i], a1[i], g )
+        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - s1[i]*J + g/a1[i]* dt *V1[i]*theta1[i]
+        C1[i,1] = g/a1[i]
+
+    # property of right adjacent pipe
+    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
+    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
+    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
+    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
+    C2 = np.zeros((len(link2),2),dtype=np.float64)
+    theta2 = [link2[i].theta for i in range((len(link2)))]
+    KD2 = [link2[i].roughness_height  for i in range(len(link2))]
+
+    for i in range(len(link2)):
+        J = cal_friction(friction, f2[i], D2[i], V2[i], KD2[i],
+            dt, dVdt2[i], dVdx2[i], a2[i], g)
+        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - s2[i]* J + g/a2[i]* dt *V2[i]*theta2[i]
+        C2[i,1] = g/a2[i]
+
+    return A1, A2, C1, C2
+
+
+
 def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2,
-                friction, dVdx1=0, dVdx2=0, dVdt1=0, dVdt2=0):
+                friction, dVdx1, dVdx2, dVdt1, dVdt2):
     """Inner boundary MOC using C+ and C- characteristic curve
 
     Parameters
@@ -151,61 +288,16 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2,
     except:
         link1 = [link1]
         V1 = [V1] ; H1 = [H1]
-
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
     try :
         list(link2)
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
 
-    # property of left adjacent pipe
-    f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
-    D1 = [link1[i].diameter  for i in range(len(link1))]        # m
-    a1 = [link1[i].wavev  for i in range(len(link1))]           # m/s
-    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   # m^2
-    C1 = np.zeros((len(link1),2), dtype=np.float64)
-    theta1 = [link1[i].theta for i in range((len(link1)))]
-    KD1 = [link1[i].roughness_height  for i in range(len(link1))]
-    """ TO DO: add friction models"""
-
-    for i in range(len(link1)):
-        if friction == 'steady':
-            Ju = 0
-            Js = s1[i]*f1[i]*dt/2./D1[i]*V1[i]*abs(V1[i]) #steady friction
-        else:
-            Re = Reynold(V1[i], D1[i])
-            f = quasi_steady_friction_factor(Re, KD1[i])
-            Js = s1[i]*f1[i]*dt/2./D1[i]*V1[i]*abs(V1[i])
-            if friction == 'quasi-steady':
-                Ju = 0
-            elif friction == 'unsteady':
-                " TO DO: check the sign of unsteady friction"
-                Ju = unsteady_friction(Re, dVdt1[i], dVdx1[i], s1[i], a1[i], g)
-        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (Js+Ju) + g/a1[i]* dt *V1[i]*theta1[i]
-        C1[i,1] = g/a1[i]
-
-#    H-W coefficients given
-#    C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*6.8405*dt*g
-#      /f1[i]**1.852/D1[i]**1.166*V1[i]*abs(V1[i])**0.852) +g/a1[i]* dt *V1[i]*theta1[i]
-#    C1[i,1] = g/a1[i]
-
-    # property of right adjacent pipe
-    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
-    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
-    C2 = np.zeros((len(link2),2),dtype=np.float64)
-    theta2 = [link2[i].theta for i in range((len(link2)))]
-
-    for i in range(len(link2)):
-        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-          dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]* dt *V2[i]*theta2[i]
-        C2[i,1] = g/a2[i]
-
-#    H-W coefficients given
-#    C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
-#      /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852) + g/a2[i]* dt *V2[i]*theta2[i]
-#    C2[i,1] = g/a2[i]
+    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
     if link1 == link2 : # inner node of one pipe
         HP = ((np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)) /
@@ -221,7 +313,8 @@ def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2,
     return HP, VP
 
 
-def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
+def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
+                friction, dVdx1, dVdx2, dVdt1, dVdt2):
     """Inline valve node MOC calculation
 
     Parameters
@@ -252,6 +345,21 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
 
     try :
@@ -259,48 +367,17 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     except:
         link1 = [link1]
         V1 = [V1] ; H1 = [H1]
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
 
     try :
         list(link2)
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
-    # property of left adjacent pipe
-    f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
-    D1 = [link1[i].diameter  for i in range(len(link1))]    # m
-    a1 = [link1[i].wavev  for i in range(len(link1))] # m/s
-    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
-    C1 = np.zeros((len(link1),2), dtype=np.float64)
-    theta1 = [link1[i].theta for i in range((len(link1)))]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
 
-    for i in range(len(link1)):
-        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*f1[i]*dt
-          /2./D1[i]*V1[i]*abs(V1[i])) + g/a1[i]* dt *V2[i]*theta1[i]
-        C1[i,1] = g/a1[i]
-# H-W coefficients given
-#    for i in range(len(link1)):
-#        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*6.8405*dt*g
-#          /f1[i]**1.852/D1[i]**1.166*V1[i]*abs(V1[i])**0.852) + g/a1[i]* dt *V2[i]*theta1[i]
-#        C1[i,1] = g/a1[i]
-
-
-    # property of right adjacent pipe
-    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       #m
-    a2 = [link2[i].wavev  for i in range(len(link2))]          #m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
-    C2 = np.zeros((len(link2),2),dtype=np.float64)
-    theta2 = [link2[i].theta for i in range((len(link2)))]
-
-    for i in range(len(link2)):
-        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-          dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
-        C2[i,1] = g/a2[i]
-#   H-W coefficients given
-#    for i in range(len(link2)):
-#        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
-#          /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852)+ g/a2[i]*dt*V2[i]*theta2[i]
-#        C2[i,1] = g/a2[i]
+    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
     # parameters of the quadratic polynomial
     aq = 1
@@ -353,7 +430,8 @@ def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     return HP, VP
 
 
-def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
+def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
+                friction, dVdx1, dVdx2, dVdt1, dVdt2):
     """ Inline pump node MOC calculation
 
     Parameters
@@ -386,6 +464,21 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
 
     try :
@@ -393,48 +486,17 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
     except:
         link1 = [link1]
         V1 = [V1] ; H1 = [H1]
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
 
     try :
         list(link2)
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
-    # property of left adjacent pipe
-    f1 = [link1[i].roughness  for i in range(len(link1))]       # unitless
-    D1 = [link1[i].diameter  for i in range(len(link1))]        # m
-    a1 = [link1[i].wavev  for i in range(len(link1))]           # m/s
-    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))] # m^2
-    C1 = np.zeros((len(link1),2), dtype=np.float64)
-    theta1 = [link1[i].theta for i in range((len(link1)))]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
 
-    # D-W coefficients given
-    for i in range(len(link1)):
-        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*f1[i]*dt
-          /2./D1[i]*V1[i]*abs(V1[i])) + g/a1[i]*dt*V1[i]*theta1[i]
-        C1[i,1] = g/a1[i]
-    # H-W coefficients given
-#     for i in range(len(link1)):
-#        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*6.8405*dt*g
-#          /f1[i]**1.852/D1[i]**1.166*V1[i]*abs(V1[i])**0.852) + g/a1[i]*dt*V1[i]*theta1[i]
-#        C1[i,1] = g/a1[i]
-
-    # property of right adjacent pipe
-    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
-    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]# m^2
-    C2 = np.zeros((len(link2),2),dtype=np.float64)
-    theta2 = [link2[i].theta for i in range(len(link2))]
-
-    for i in range(len(link2)):
-        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-          dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
-        C2[i,1] = g/a2[i]
-    # H-W coefficients given
-#    for i in range(len(link2)):
-#        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
-#          /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852)+ g/a2[i]*dt*V2[i]*theta2[i]
-#        C2[i,1] = g/a2[i]
+    A1, A2, C1, C2 = cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
     # pump power function
     ap, bp, cp = pumpc[0]
@@ -498,7 +560,8 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2):
 
     return HP, VP
 
-def source_pump(pump, link2, H2, V2, dt, g, s2):
+def source_pump(pump, link2, H2, V2, dt, g, s2,
+                friction, dVdx2, dVdt2):
     """Source Pump boundary MOC calculation
 
     Parameters
@@ -529,20 +592,24 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
 
-    # property of right adjacent pipe
-    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       # m
-    a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
-    C2 = np.zeros((len(link2),2),dtype=np.float64)
-    theta2 = [link2[i].theta for i in range(len(link2))]
+    _, A2, _, C2 = cal_Cs( link2, link2, H2, V2, H2, V2, s2, s2, g, dt,
+            friction, dVdx2, dVdx2, dVdt2, dVdt2)
 
-    # D-W coefficients given
-    for i in range(len(link2)):
-        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-          dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
-        C2[i,1] = g/a2[i]
+    # # property of right adjacent pipe
+    # f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
+    # D2 = [link2[i].diameter  for i in range(len(link2))]       # m
+    # a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
+    # A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
+    # C2 = np.zeros((len(link2),2),dtype=np.float64)
+    # theta2 = [link2[i].theta for i in range(len(link2))]
+
+    # # D-W coefficients given
+    # for i in range(len(link2)):
+    #     C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
+    #       dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
+    #     C2[i,1] = g/a2[i]
     # H-W coefficients given
 #    for i in range(len(link2)):
 #        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
@@ -584,7 +651,8 @@ def source_pump(pump, link2, H2, V2, dt, g, s2):
 
 
 
-def valve_end(H1, V1, V, nn, a, g, f, D, dt):
+def valve_end(H1, V1, V, nn, a, g, f, D, dt,
+             KD, friction, dVdx2, dVdt2):
     """ End Valve boundary MOC calculation
 
     Parameters
@@ -608,15 +676,18 @@ def valve_end(H1, V1, V, nn, a, g, f, D, dt):
     dt : float
         Time step
     """
+    J = cal_friction(friction, f, D, V, KD, dt, dVdt2, dVdx2, a, g )
     if nn == 0 :
-        HP = H1 + a/g*(V - V1) + a/g*f*dt/(2.*D)*V1*abs(V1)
+        # HP = H1 + a/g*(V - V1) + a/g*f*dt/(2.*D)*V1*abs(V1)
+        HP = H1 + a/g*(V - V1) + a/g*J
         VP = V
     else :
-        HP = H1 - a/g*(V - V1) - a/g*f*dt/(2.*D)*V1*abs(V1)
+        HP = H1 - a/g*(V - V1) - a/g*J
         VP = V
     return HP,VP
 
-def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt):
+def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt,
+            KD,friction, dVdx1, dVdt1):
     """Dead end boundary MOC calculation with pressure dependant demand
 
     Parameters
@@ -644,12 +715,13 @@ def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt):
     """
 
     A = np.pi/4. * linkp.diameter**2.
+    J = cal_friction(friction, f, D, V1, KD, dt, dVdt1, dVdx1, a, g )
     if nn == 0: # dead end is the start node of a pipe
         k = linkp.start_node.demand_coeff + linkp.start_node.emitter_coeff
         aq = 1
         bq = -a/g*k/A
-        cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
-
+        # cq = a/g *V1 - a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
+        cq = a/g *V1 - a/g*J - H1 - g/a*dt*V1*linkp.theta + elev
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
         if delta >= 0:
@@ -668,7 +740,8 @@ def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt):
         k = linkp.end_node.demand_coeff + linkp.end_node.emitter_coeff
         aq = 1
         bq = a/g*k/A
-        cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
+        # cq = -a/g *V1 + a/g*f*dt/(2.*D)*V1*abs(V1) - H1 - g/a*dt*V1*linkp.theta + elev
+        cq = -a/g *V1 + a/g*J - H1 - g/a*dt*V1*linkp.theta + elev
         # solve the quadratic equation
         delta = bq**2. - 4.*aq*cq
         if delta >= 0:
@@ -685,7 +758,8 @@ The results might not be accurate.")
         VP = V1 + g/a *H1 - f*dt/(2.*D)*V1*abs(V1) - g/a*HP + g/a*dt*V1*linkp.theta
     return HP,VP
 
-def rev_end( H2, V2, H, nn, a, g, f, D, dt):
+def rev_end( H2, V2, H, nn, a, g, f, D, dt,
+            KD, friction, dVdx2, dVdt2):
     """Reservoir/ Tank boundary MOC calculation
 
     Parameters
@@ -709,16 +783,18 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt):
     dt : float
         Time step
     """
+    J = cal_friction(friction, f, D, V2, KD, dt, dVdt2, dVdx2, a, g )
     if nn == 0 :
-        VP = V2 + g/a*(H - H2) - f*dt/(2.*D)*V2*abs(V2)
+        VP = V2 + g/a*(H - H2) - J
         HP = H
     else:
-        VP = V2 - g/a*(H - H2) - f*dt/(2.*D)*V2*abs(V2)
+        VP = V2 - g/a*(H - H2) - J
         HP = H
     return HP, VP
 
 def add_leakage(emitter_coef, block_per, link1, link2, elev,
-                 H1, V1, H2, V2, dt, g, nn, s1, s2):
+                 H1, V1, H2, V2, dt, g, nn, s1, s2,
+                 friction, dVdx1=0, dVdx2=0, dVdt1=0, dVdt2=0):
     r"""Leakage Node MOC calculation
 
     Parameters
@@ -752,6 +828,21 @@ def add_leakage(emitter_coef, block_per, link1, link2, elev,
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
 
     emitter_coef = emitter_coef  # m^3/s//(m H2O)^(1/2)
@@ -761,50 +852,16 @@ def add_leakage(emitter_coef, block_per, link1, link2, elev,
     except:
         link1 = [link1]
         V1 = [V1] ; H1 = [H1]
-
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
     try :
         list(link2)
     except:
         link2 = [link2]
         V2 = [V2] ; H2 = [H2]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
 
-    # property of left adjacent pipe
-    f1 = [link1[i].roughness  for i in range(len(link1))]   # unitless
-    D1 = [link1[i].diameter  for i in range(len(link1))]    # m
-    a1 = [link1[i].wavev  for i in range(len(link1))] # m/s
-    A1 = [np.pi * D1[i]**2. / 4.  for i in range(len(link1))]   #m^2
-    C1 = np.zeros((len(link1),2), dtype=np.float64)
-    theta1 = [link1[i].theta for i in range(len(link1))]
-    # D-W coefficients given
-    for i in range(len(link1)):
-        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*f1[i]*dt
-          /2./D1[i]*V1[i]*abs(V1[i]))+ g/a1[i]*dt*V1[i]*theta1[i]
-        C1[i,1] = g/a1[i]
-# H-W coefficients given
-#     for i in range(len(link1)):
-#        C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - (s1[i]*6.8405*dt*g
-#          /f1[i]**1.852/D1[i]**1.166*V1[i]*abs(V1[i])**0.852)+ g/a1[i]*dt*V1[i]*theta1[i]
-#        C1[i,1] = g/a1[i]
-
-
-    # property of right adjacent pipe
-    f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    D2 = [link2[i].diameter  for i in range(len(link2))]       #m
-    a2 = [link2[i].wavev  for i in range(len(link2))] #m/s
-    A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]    #m^2
-    C2 = np.zeros((len(link2),2),dtype=np.float64)
-    theta2 = [link2[i].theta for i in range(len(link2))]
-#   D-W coefficients given
-    for i in range(len(link2)):
-        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-          dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
-        C2[i,1] = g/a2[i]
-
-#   H-W coefficients given
-#    for i in range(len(link2)):
-#        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
-#          /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852)+ g/a2[i]*dt*V2[i]*theta2[i]
-#        C2[i,1] = g/a2[i]
+    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
     a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
     b = np.dot(C1[:,1], A1) + (1-block_per)*np.dot(C2[:,1],A2)

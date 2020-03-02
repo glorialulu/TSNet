@@ -39,7 +39,9 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     tt.append(0)
     dt = tm.time_step
     tn = int(tm.simulation_period/tm.time_step)  # Total time steps
-
+    # check whether input is legal
+    if not friction in ['steady', 'unsteady', 'quasi-steady']:
+        print ("Please specify a friction model from 'steady', 'unsteady', and 'quasi-steady'")
 
     # determine which node of the adjacent pipe should be call:
     # if the adjacent pipe is entering the junction, then -2
@@ -69,6 +71,9 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
             dVdt[pn] = np.zeros_like(V[pn])
             diff = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
             dVdx[pn] = np.append(diff, diff[-1])
+        else:
+            dVdt[pn] = np.zeros_like(V[pn])
+            dVdx[pn] = np.zeros_like(V[pn])
     for _,node in tm.nodes():
         if node.pulse_status == True:
                 node.base_demand_coeff = node.demand_coeff
@@ -166,7 +171,11 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     pump, valve, friction, dVdt[pn], dVdx[pn])
+                     pump, valve, friction, dVdt[pn], dVdx[pn],
+                     [dVdt[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
+                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
+                     [dVdt[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
+                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links2[pn]])
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -255,7 +264,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      links2[pn], p, pump, valve, dt,
                      [H[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     utype[pn], dtype[pn])
+                     utype[pn], dtype[pn],
+                     friction, dVdt[pn], dVdx[pn],
+                     [dVdt[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
+                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],)
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -341,7 +353,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      links1[pn], p, pump, valve,  dt,
                      [H[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
                      [V[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
-                     utype[pn], dtype[pn])
+                     utype[pn], dtype[pn],
+                     friction, dVdt[pn], dVdx[pn],
+                     [dVdt[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
+                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],)
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
