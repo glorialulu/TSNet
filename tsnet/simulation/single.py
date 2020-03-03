@@ -272,7 +272,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             elif dtype[0] == 'Valve':
                 valvec = valve[1]
                 if links2 == []:
-                    H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt)
+                    H[i], V[i] = valve_end (H1, V1, V[i], i, a, g, f, D, dt,
+                    KD, friction, dVdx1, dVdt1)
                 else:
                     H[i], V[i] = valve_node(valvec, linkp, link2,
                      H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
@@ -280,7 +281,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
 
             elif dtype[0] == 'Junction':
                 elev = linkp.end_node.elevation
-                H[i], V[i] = dead_end (linkp, H1, V1, elev, i, a, g, f, D, dt)
+                H[i], V[i] = dead_end (linkp, H1, V1, elev, i, a, g, f, D, dt,
+                KD, friction, dVdx1, dVdt1)
 
         # Interior points
         if (i > 0) and (i < n):

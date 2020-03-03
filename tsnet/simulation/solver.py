@@ -49,7 +49,7 @@ def quasi_steady_friction_factor(Re, KD):
     f : float
         quasi-steady friction factor
     """
-    a = -1.8*np.log(6.9/Re +( KD/3.7)**1.11)
+    a = -1.8*np.log10(6.9/Re +KD)
     f = (1/a)**2.
     return f
 
@@ -82,8 +82,8 @@ def unsteady_friction(Re, dVdt, dVdx, V, a, g):
     if Re< 2000: # laminar flow
         C = 4.76e-3
     else:
-        C = 7.41 / Re**(np.log(14.3/Re**0.05))
-    print(C)
+        C = 7.41 / Re**(np.log10(14.3/Re**0.05))
+
     # calculate Brunone's friction coefficient
     k = np.sqrt(C)/2.
 
@@ -129,7 +129,8 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
         Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        f = quasi_steady_friction_factor(Re, KD)
+        if Re!=0:
+            f = quasi_steady_friction_factor(Re, KD)
         Js = f*dt/2./D*V*abs(V)
         if friction == 'quasi-steady':
             Ju = 0
@@ -584,6 +585,15 @@ def source_pump(pump, link2, H2, V2, dt, g, s2,
     s2 : list
         List of signs that represent the direction of the flow
         in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
     pumpc = pump[1]
     Hsump = pump[0]
@@ -596,25 +606,6 @@ def source_pump(pump, link2, H2, V2, dt, g, s2,
 
     _, A2, _, C2 = cal_Cs( link2, link2, H2, V2, H2, V2, s2, s2, g, dt,
             friction, dVdx2, dVdx2, dVdt2, dVdt2)
-
-    # # property of right adjacent pipe
-    # f2 = [link2[i].roughness  for i in range(len(link2))]      # unitless
-    # D2 = [link2[i].diameter  for i in range(len(link2))]       # m
-    # a2 = [link2[i].wavev  for i in range(len(link2))]          # m/s
-    # A2 = [np.pi * D2[i]**2. / 4.  for i in range(len(link2))]  # m^2
-    # C2 = np.zeros((len(link2),2),dtype=np.float64)
-    # theta2 = [link2[i].theta for i in range(len(link2))]
-
-    # # D-W coefficients given
-    # for i in range(len(link2)):
-    #     C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*f2[i]*
-    #       dt/2./D2[i]*V2[i]*abs(V2[i])) + g/a2[i]*dt*V2[i]*theta2[i]
-    #     C2[i,1] = g/a2[i]
-    # H-W coefficients given
-#    for i in range(len(link2)):
-#        C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - (s2[i]*6.8405*dt*g
-#          /f2[i]**1.852/D2[i]**1.166*V2[i]*abs(V2[i])**0.852)+ g/a2[i]*dt*V2[i]*theta2[i]
-#        C2[i,1] = g/a2[i]
 
     # pump power function
     ap, bp, cp = pumpc
@@ -675,6 +666,17 @@ def valve_end(H1, V1, V, nn, a, g, f, D, dt,
         diameter of the current pipe
     dt : float
         Time step
+    KD : float
+        relative roughness height
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
     J = cal_friction(friction, f, D, V, KD, dt, dVdt2, dVdx2, a, g )
     if nn == 0 :
@@ -687,7 +689,7 @@ def valve_end(H1, V1, V, nn, a, g, f, D, dt,
     return HP,VP
 
 def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt,
-            KD,friction, dVdx1, dVdt1):
+            KD, friction, dVdx1, dVdt1):
     """Dead end boundary MOC calculation with pressure dependant demand
 
     Parameters
@@ -712,6 +714,17 @@ def dead_end(linkp, H1, V1, elev, nn, a, g, f, D, dt,
         diameter of the current pipe
     dt : float
         Time step
+    KD : float
+        relative roughness height
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
     """
 
     A = np.pi/4. * linkp.diameter**2.
@@ -782,6 +795,17 @@ def rev_end( H2, V2, H, nn, a, g, f, D, dt,
         diameter of the current pipe
     dt : float
         Time step
+    KD : float
+        relative roughness height
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
     """
     J = cal_friction(friction, f, D, V2, KD, dt, dVdt2, dVdx2, a, g )
     if nn == 0 :

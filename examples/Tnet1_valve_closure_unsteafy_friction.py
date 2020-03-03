@@ -88,25 +88,21 @@ tm3 = tsnet.simulation.MOCSimulator(tm, results_obj,friction)
 #%%
 # report results
 import matplotlib.pyplot as plt
-node = 'N7'
+node = 'N3'
 head1 = tm1.get_node(node).head
 t1 = tm1.simulation_timestamps
 head2 = tm2.get_node(node).head
 t2 = tm2.simulation_timestamps
 head3 = tm3.get_node(node).head
 t3 = tm3.simulation_timestamps
-fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(t1, head1, label='steady')
-plt.plot(t2, head2, label='quasi-steady')
-plt.plot(t3, head3, label='unsteady')
+fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
+plt.plot(t1, head1, 'k',label='steady', linewidth=2.5)
+plt.plot(t2, head2, 'b', label='quasi-steady',  linewidth=2.5)
+plt.plot(t3, head3, 'r',label='unsteady', linewidth=2.5)
 plt.xlim([t1[0],t1[-1]])
-plt.title('Pressure Head at Node %s '%node)
 plt.xlabel("Time [s]")
 plt.ylabel("Pressure Head [m]")
 plt.legend(loc='best')
-plt.grid(True)
 plt.show()
-# fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
-
-
+fig.savefig('tnet1_unsteady_friction.pdf', format='pdf',dpi=500)
 # %%
