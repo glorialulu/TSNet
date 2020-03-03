@@ -32,6 +32,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     tm : tsnet.network.model.TransientModel
             Simulated network
     """
+
     # determine network topology
     links1, links2, utype, dtype = topology(tm)
 
@@ -144,9 +145,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     # determine valve friction coefficients based on
                     # open percentage
                     if tm.links[utype[pn][1]].operating == True:
-                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100)
+                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100,
+                        tm.links[utype[pn][1]].valve_coeff)
                     else :
-                         valve[0] = valve_curve(100)
+                         valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
                 # downstream
                 if dtype[pn][0] == 'Pump':
                     pump[1] = [tm.links[dtype[pn][1]].curve_coef,"d"]
@@ -160,9 +162,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
-                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule[ts]*100)
+                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule[ts]*100,
+                        tm.links[dtype[pn][1]].valve_coeff)
                     else :
-                         valve[1] = valve_curve(100)
+                         valve[1] = valve_curve(100,tm.links[dtype[pn][1]].valve_coeff)
 
                 HN[pn], VN[pn] = inner_pipe(pipe, pn, dt,
                      links1[pn], links2[pn], utype[pn], dtype[pn], p,
@@ -249,9 +252,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
 
                 elif dtype[pn][0] == 'Valve':
                     if tm.links[dtype[pn][1]].operating == True:
-                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule*100)
+                        valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule*100,
+                        tm.links[dtype[pn][1]].valve_coeff)
                     else :
-                         valve[1] = valve_curve(100)
+                         valve[1] = valve_curve(100, tm.links[dtype[pn][1]].valve_coeff)
                     # if also the right valve end
                     if links2[pn] == ['End']:
                         links2[pn] = []
@@ -344,9 +348,11 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
 
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:
-                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100)
+                        valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100,
+                        tm.links[utype[pn][1]].valve_coef)
                     else :
-                         valve[0] = valve_curve(100)
+                         valve[0] = tm.links[utype[pn][1]].valve_curve(100,
+                         tm.links[utype[pn][1]].valve_coef)
 
                 HN[pn], VN[pn] = right_boundary(pipe, pn,
                      H[pn], V[pn], HN[pn], VN[pn],

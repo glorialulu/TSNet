@@ -248,7 +248,7 @@ class TransientModel (WaterNetworkModel):
         blockage_node.block_per = percentage
         blockage_node.block_status = True
 
-    def valve_closure(self, name, rule):
+    def valve_closure(self, name, rule, curve=None):
         """Set valve closure rule
 
         Parameters
@@ -262,6 +262,10 @@ class TransientModel (WaterNetworkModel):
             ts : closure start time [s]
             se : final open percentage [s]
             m  : closure constant [unitless]
+        curve: list
+            [(open_percentage[i], kl[i]) for i ]
+            List of open percentage and the corresponding
+            valve coefficient
         """
 
         valve = self.get_link(name)
@@ -276,7 +280,15 @@ The initial setting has been changed to open to perform the closure." %name)
         valve.operating = True
         valve.operation_rule = valveclosing(self.time_step, self.simulation_period, rule)
 
-    def valve_opening(self, name, rule):
+        if curve == None:
+            valve.valve_coeff = None
+        else:
+            p = [i for (i,j) in curve]
+            kl = [j for (i,j) in curve]
+            valve.valve_coeff = [p,kl]
+
+
+    def valve_opening(self, name, rule, curve=None):
         """Set valve opening rule
 
         Parameters
@@ -290,6 +302,10 @@ The initial setting has been changed to open to perform the closure." %name)
             ts : opening start time [s]
             se : final open percentage [s]
             m  : closure constant [unitless]
+        curve: list
+            [(open_percentage[i], kl[i]) for i ]
+            List of open percentage and the corresponding
+            valve coefficient
         """
         valve = self.get_link(name)
         if valve.link_type.lower() != 'valve':
@@ -302,6 +318,13 @@ The initial setting has been changed to closed to perform the opening." %name)
 
         valve.operating = True
         valve.operation_rule = valveopening(self.time_step, self.simulation_period, rule)
+
+        if curve == None:
+            valve.valve_coeff = None
+        else:
+            p = [i for (i,j) in curve]
+            kl = [j for (i,j) in curve]
+            valve.valve_coeff = [p,kl]
 
     def pump_shut_off(self, name, rule):
         """Set pump shut off rule
