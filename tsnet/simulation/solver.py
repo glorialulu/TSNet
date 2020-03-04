@@ -88,7 +88,6 @@ def unsteady_friction(Re, dVdt, dVdx, V, a, g):
     k = np.sqrt(C)/2.
 
     Ju = k/g/2.* (dVdt + a* np.sign(V) * np.abs(dVdx))
-
     return Ju
 
 def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):

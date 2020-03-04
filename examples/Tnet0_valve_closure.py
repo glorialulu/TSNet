@@ -6,12 +6,12 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.005
+dt = 0.01
 tf = 25   # simulation period [s]
 tm.set_time(tf,dt)
 
 # Set valve closure
-tc = 2 # valve closure period [s]
+tc = 0 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
@@ -25,68 +25,61 @@ tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
 results_obj = 'Tnet0' # name of the object for saving simulation results
-tm = tsnet.simulation.MOCSimulator(tm, results_obj)
-
-node = '3'
-node = tm.get_node(node)
-
-dt=tm.simulation_timestamps
-norm_head_nl = node.head - node.head[0]
+friction = 'steady'
+tm1 = tsnet.simulation.MOCSimulator(tm, results_obj, friction)
 
 #%%
-# Open an example network and create a transient model
-inp_file = 'networks/Tnet0.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.005
-tf = 25   # simulation period [s]
 tm.set_time(tf,dt)
-
-# Add leak
-emitter_coeff = 0.001 # [ m^3/s/(m H20)^(1/2)]
-tm.add_leak('2', emitter_coeff)
-
-## Add blockage
-#block_per = 0.01 # [ m^3/s/(m H20)^(1/2)]
-#tm.add_blockage('2', block_per )
-
-# Set valve closure
-tc = 2 # valve closure period [s]
-ts = 0 # valve closure start time [s]
-se = 0 # end open percentage [s]
-m = 1 # closure constant [dimensionless]
-valve_op = [tc,ts,se,m]
 tm.valve_closure('3',valve_op)
 
 # Initialize steady state simulation
-t0 = 0. # initialize the simulation at 0 [s]
-engine = 'DD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
+# Transient simulation
+friction = 'quasi-steady'
+tm2 = tsnet.simulation.MOCSimulator(tm, results_obj, friction)
+
+#%%
+tm = tsnet.network.TransientModel(inp_file)
+
+# Set wavespeed
+tm.set_wavespeed(1200.) # m/s
+# Set time options
+
+tm.set_time(tf,dt)
+
+
+# Set valve closure
+tm.valve_closure('3',valve_op)
+
+# Initialize steady state simulation
+tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
-results_obj = 'Tnet0' # name of the object for saving simulation results
-tm = tsnet.simulation.MOCSimulator(tm, results_obj)
-
-node = '3'
-node = tm.get_node(node)
-
-dt=tm.simulation_timestamps
-norm_head_wl = node.head - node.head[0]
-
+friction = 'unsteady'
+tm3 = tsnet.simulation.MOCSimulator(tm, results_obj, friction)
 #%%
 # report results
 import matplotlib.pyplot as plt
-fig1 = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,norm_head_nl,'k--',label='no leak')
-plt.plot(tm.simulation_timestamps,norm_head_wl,'r-',label='leak at x=0.5L')
-plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
+node = '2'
+head1 = tm1.get_node(node).head
+t1 = tm1.simulation_timestamps
+head2 = tm2.get_node(node).head
+t2 = tm2.simulation_timestamps
+head3 = tm3.get_node(node).head
+t3 = tm3.simulation_timestamps
+fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
+plt.plot(t1, head1, 'k',label='steady', linewidth=2.5)
+plt.plot(t2, head2, 'b', label='quasi-steady',  linewidth=2.5)
+plt.plot(t3, head3, 'r',label='unsteady', linewidth=2.5)
+plt.xlim([t1[0],t1[-1]])
 plt.xlabel("Time [s]")
-plt.ylabel("Pressure Head Change [m]")
-#plt.legend(loc='best')
-plt.grid(False)
+plt.ylabel("Pressure Head [m]")
+plt.legend(loc='best')
 plt.show()
-# fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
+fig.savefig('tnet0_unsteady_friction.pdf', format='pdf',dpi=500)

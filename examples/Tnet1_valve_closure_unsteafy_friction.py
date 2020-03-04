@@ -7,7 +7,7 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.1  # time step [s], if not given, use the maximum allowed dt
+dt = 0.02  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 
@@ -21,7 +21,7 @@ percent_open = np.linspace(100,0,11)
 kl = [1/0.2, 2.50, 1.25, 0.625, 0.333, 0.17,
             0.100, 0.0556, 0.0313, 0.0167, 0.0]
 curve = [(percent_open[i], kl[i]) for i in range(len(kl))]
-tm.valve_closure('VALVE',valve_op,curve)
+tm.valve_closure('VALVE', valve_op, curve)
 
 # Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0 [s]
@@ -40,7 +40,6 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 
@@ -68,7 +67,6 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 
@@ -93,7 +91,7 @@ tm3 = tsnet.simulation.MOCSimulator(tm, results_obj,friction)
 #%%
 # report results
 import matplotlib.pyplot as plt
-node = 'N3'
+node = 'N2'
 head1 = tm1.get_node(node).head
 t1 = tm1.simulation_timestamps
 head2 = tm2.get_node(node).head
