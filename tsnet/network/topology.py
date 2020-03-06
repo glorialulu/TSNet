@@ -99,7 +99,7 @@ def topology(wn):
                     links1[pn] = ['End']
 
         else:
-            utype[pn] = (wn.nodes[pipe.start_node_name].node_type,
+            utype[pn] = (wn.nodes[pipe.start_node_name].transient_node_type,
                          wn.nodes[pipe.start_node_name])
 
         if links2[pn] :
@@ -116,7 +116,7 @@ def topology(wn):
                     links2[pn] = ['End']
 
         else:
-            dtype[pn] = (wn.nodes[pipe.end_node_name].node_type,
+            dtype[pn] = (wn.nodes[pipe.end_node_name].transient_node_type,
                          wn.nodes[pipe.end_node_name])
 
     return links1, links2, utype, dtype

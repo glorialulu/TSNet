@@ -15,9 +15,10 @@ from tsnet.simulation.solver import (
     valve_end,
     dead_end,
     rev_end,
-    add_leakage
+    add_leakage,
+    surge_tank
 )
-""" TO DO: add friction to inner_node """
+
 def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                 H0, V0, H, V, H10, V10, H20, V20, pump, valve,
                 friction, dVdt, dVdx,
@@ -104,12 +105,20 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             dVdx2 =  dVdx[i]; dVdt2 = dVdt[i+1]
 
             if utype[0] == 'Pipe':
-                elev = linkp.start_node.elevation
-                emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                block_per = linkp.start_node.block_per
-                H[i], V[i] = add_leakage(emitter_coeff, block_per, link1, linkp, elev,
-                    H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
-                    friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                if linkp.start_node.transient_node_type == 'SurgeTank':
+                    shape = linkp.start_node.tank_shape
+                    H[i], V[i], Qs = surge_tank(shape, link1, linkp,
+                        H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                    linkp.start_node.water_level = H[i]
+                    linkp.start_node.tank_flow = Qs
+                else:
+                    elev = linkp.start_node.elevation
+                    emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
+                    block_per = linkp.start_node.block_per
+                    H[i], V[i] = add_leakage(emitter_coeff, block_per, link1, linkp, elev,
+                        H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif utype[0] == 'Pump':
                 pumpc = pump[0]
                 H[i], V[i] = pump_node(pumpc, link1, linkp,
@@ -128,12 +137,20 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
             dVdx1 = dVdx[i] ; dVdt1 = dVdt[i-1]
             dVdx2 =  dVdx20; dVdt2 = dVdt20
             if dtype[0] == 'Pipe':
-                elev = linkp.end_node.elevation
-                emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                block_per =  linkp.end_node.block_per
-                H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
-                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                if linkp.end_node.transient_node_type == 'SurgeTank':
+                    shape = linkp.end_node.tank_shape
+                    H[i], V[i], Qs = surge_tank(shape, linkp, link2,
+                        H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                    linkp.end_node.water_level = H[i]
+                    linkp.end_node.tank_flow = Qs
+                else:
+                    elev = linkp.end_node.elevation
+                    emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
+                    block_per =  linkp.end_node.block_per
+                    H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
+                        H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
             elif dtype[0] == 'Pump':
                 pumpc = pump[1]
                 H[i], V[i] = pump_node(pumpc, linkp, link2,
@@ -256,12 +273,20 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
             dVdt1 = dVdt[i-1] ; dVdt2 = dVdt20
 
             if dtype[0] == 'Pipe':
-                elev = linkp.end_node.elevation
-                emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
-                block_per =  linkp.end_node.block_per
-                H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
-                     H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
-                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                if linkp.end_node.transient_node_type == 'SurgeTank':
+                    shape = linkp.end_node.tank_shape
+                    H[i], V[i], Qs = surge_tank(shape, linkp, link2,
+                        H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                    linkp.end_node.water_level = H[i]
+                    linkp.end_node.tank_flow = Qs
+                else:
+                    elev = linkp.end_node.elevation
+                    emitter_coeff = linkp.end_node.emitter_coeff + linkp.end_node.demand_coeff
+                    block_per =  linkp.end_node.block_per
+                    H[i], V[i] = add_leakage(emitter_coeff, block_per,linkp, link2, elev,
+                        H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif dtype[0] == 'Pump':
                 pumpc = pump[1]
@@ -283,6 +308,8 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
                 elev = linkp.end_node.elevation
                 H[i], V[i] = dead_end (linkp, H1, V1, elev, i, a, g, f, D, dt,
                 KD, friction, dVdx1, dVdt1)
+
+
 
         # Interior points
         if (i > 0) and (i < n):
@@ -376,12 +403,20 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
             dVdx1 = dVdx10 ; dVdx2 = dVdx[i]
             dVdt1 = dVdt10 ; dVdt2 = dVdt[i+1]
             if utype[0] == 'Pipe':
-                elev = linkp.start_node.elevation
-                emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
-                block_per =  linkp.start_node.block_per
-                H[i], V[i] = add_leakage(emitter_coeff, block_per,link1, linkp, elev,
-                     H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1],
-                     friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                if linkp.start_node.transient_node_type == 'SurgeTank':
+                    shape = linkp.start_node.tank_shape
+                    H[i], V[i], Qs = surge_tank(shape, link1, linkp,
+                        H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
+                    linkp.start_node.water_level = H[i]
+                    linkp.start_node.tank_flow = Qs
+                else:
+                    elev = linkp.start_node.elevation
+                    emitter_coeff = linkp.start_node.emitter_coeff + linkp.start_node.demand_coeff
+                    block_per =  linkp.start_node.block_per
+                    H[i], V[i] = add_leakage(emitter_coeff, block_per,link1, linkp, elev,
+                        H1, V1, H2, V2, dt, g, i, np.sign(links1), [-1],
+                        friction, dVdx1, dVdx2, dVdt1, dVdt2)
 
             elif utype[0] == 'Pump':
                 pumpc = pump[0]

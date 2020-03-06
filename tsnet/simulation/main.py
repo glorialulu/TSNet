@@ -78,6 +78,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     for _,node in tm.nodes():
         if node.pulse_status == True:
                 node.base_demand_coeff = node.demand_coeff
+        if node.transient_node_type == 'SurgeTank':
+                node.water_level_timeseries = np.zeros(tn)
+                node.tank_flow_timeseries = np.zeros(tn)
+                node.water_level_timeseries[0] = node.water_level
     starttime = datetime.now()
     # Start Calculation
     for ts in range(1,tn):
@@ -187,7 +191,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                 pipe.start_node_head[ts] = HN[pn][0]
                 pipe.end_node_head[ts] = HN[pn][-1]
 
-                if pipe.start_node.node_type == 'Junction':
+                if pipe.start_node.transient_node_type == 'Junction':
                     if HN[pn][0] - pipe.start_node.elevation >0:
                         h = HN[pn][0] - pipe.start_node.elevation
                         pipe.start_node.demand_discharge[ts] = pipe.start_node.demand_coeff * np.sqrt(h)
@@ -198,7 +202,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         warnings.warn("Negative pressure on node %s.\
                         Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
-                if pipe.end_node.node_type == 'Junction':
+                if pipe.end_node.transient_node_type == 'Junction':
                     if HN[pn][-1]  -pipe.end_node.elevation >0:
                         h = HN[pn][-1] -pipe.end_node.elevation
                         pipe.end_node.emitter_discharge[ts] = pipe.end_node.emitter_coeff * np.sqrt(h)
@@ -408,6 +412,13 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                 dVdx[pn] = np.append(diff, diff[-1])
             H[pn] = HN[pn]
             V[pn] = VN[pn]
+
+        for _,node in tm.nodes():
+            if node.transient_node_type == 'SurgeTank':
+                node.tank_shape[1] = max(node.water_level,0)
+                node.tank_shape[2] = node.tank_flow
+                node.water_level_timeseries[ts] = max(node.water_level,0)
+                node.tank_flow_timeseries[ts] = node.tank_flow
 
     for _,pipe in tm.pipes():
         if not isinstance(pipe.start_node.head, np.ndarray):

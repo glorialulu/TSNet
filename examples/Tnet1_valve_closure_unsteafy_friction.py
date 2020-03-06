@@ -7,7 +7,7 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-dt = 0.02  # time step [s], if not given, use the maximum allowed dt
+dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
 tm.set_time(tf,dt)
 

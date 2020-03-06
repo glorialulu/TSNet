@@ -61,6 +61,7 @@ class TransientModel (WaterNetworkModel):
             node.pulse_status = False
             node.emitter_coeff = 0.
             node.block_per = 0.
+            node.transient_node_type = node.node_type
             i+=1     ## Graph the network
 
         # calculate the slope and area for each pipe
@@ -408,6 +409,26 @@ The initial setting has been changed to open to perform the closure." %name)
         demand_node.pulse_coeff = demandpulse(self.time_step, self.simulation_period,
                                                 tc, ts, tp, dp)
         demand_node.pulse_status = True
+
+
+    def add_surge_tank(self, name, shape):
+        """ Add surge tank
+
+        Parameters
+        ----------
+        name : str
+            the name of the node to add a surge tank
+        shape : list
+            [As, Hs]
+            As : cross-sectional area of the surge tank
+            Hs : initial water height in the surge tank
+        """
+        surge_node = self.get_node(name)
+        surge_node.transient_node_type = 'SurgeTank'
+        surge_node.tank_flow = 0
+        shape.append(0)
+        surge_node.tank_shape = shape # append tank flow
+        surge_node.water_level = shape[1]
 
 
     def detect_pressure_change(self, name, threshold, drift, show=False, ax=None):

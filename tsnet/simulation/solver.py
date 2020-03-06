@@ -911,3 +911,91 @@ def add_leakage(emitter_coef, block_per, link1, link2, elev,
     else:        # pipe end
         VP = np.float64(C1[:,0] - C1[:,1]*HP)
     return HP, VP
+
+
+def surge_tank(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
+                friction, dVdx1, dVdx2, dVdt1, dVdt2):
+
+    """Surge tank node MOC calculation
+
+    Parameters
+    ----------
+    tank : int
+        tank shape parameters
+        [As, z, Qs]
+            As : cross-sectional area of the surge tank
+            z : water level in the surge tank at previous time step
+            Qs : water flow into the tank at last time step
+    link1 : object
+        Pipe object of C+ charateristics curve
+    link2 : object
+        Pipe object of C- charateristics curve
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float
+        Time step
+    g : float
+        Gravity acceleration
+    nn : int
+        The index of the calculation node
+    s1 : list
+        List of signs that represent the direction of the flow
+        in C+ charateristics curve
+    s2 : list
+        List of signs that represent the direction of the flow
+        in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
+    """
+
+    try :
+        list(link1)
+    except:
+        link1 = [link1]
+        V1 = [V1] ; H1 = [H1]
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
+    try :
+        list(link2)
+    except:
+        link2 = [link2]
+        V2 = [V2] ; H2 = [H2]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
+
+    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
+
+    As, z, Qs = tank
+    at = 2.* As/dt
+
+    HP = ((np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2) + at*z + Qs ) /
+         (np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2) + at))
+
+    VP2 = -C2[:,0]+ C2[:,1]*HP
+    VP1 = C1[:,0] - C1[:,1]*HP
+    QPs = (np.sum(np.array(VP1)*np.array(A1)) -
+            np.sum(np.array(VP2)*np.array(A2)))
+
+    if nn == 0:  # pipe start
+        VP =np.float64(VP2)
+    else:        # pipe end
+        VP = np.float64(VP1)
+    return HP, VP, QPs
