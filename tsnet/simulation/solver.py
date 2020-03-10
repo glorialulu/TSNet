@@ -14,6 +14,7 @@ for different grid configurations, including:
 from __future__ import print_function
 import numpy as np
 import warnings
+
 def Reynold(V, D):
     """ Calculate Reynold number
 
@@ -86,7 +87,7 @@ def unsteady_friction(Re, dVdt, dVdx, V, a, g):
 
     # calculate Brunone's friction coefficient
     k = np.sqrt(C)/2.
-
+    " TO DO: check the sign of unsteady friction"
     Ju = k/g/2.* (dVdt + a* np.sign(V) * np.abs(dVdx))
     return Ju
 
@@ -134,7 +135,7 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
         if friction == 'quasi-steady':
             Ju = 0
         elif friction == 'unsteady':
-            " TO DO: check the sign of unsteady friction"
+
             Ju = unsteady_friction(Re, dVdt, dVdx, V, a, g)
     return Ju + Js
 
@@ -993,6 +994,108 @@ def surge_tank(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
     VP1 = C1[:,0] - C1[:,1]*HP
     QPs = (np.sum(np.array(VP1)*np.array(A1)) -
             np.sum(np.array(VP2)*np.array(A2)))
+
+    if nn == 0:  # pipe start
+        VP =np.float64(VP2)
+    else:        # pipe end
+        VP = np.float64(VP1)
+    return HP, VP, QPs
+
+def air_chamber(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
+                friction, dVdx1, dVdx2, dVdt1, dVdt2):
+
+    """Surge tank node MOC calculation
+
+    Parameters
+    ----------
+    tank : int
+        tank shape parameters
+        [As, ht, C, z, Qs]
+            As : cross-sectional area of the surge tank
+            ht : tank height
+            C : air constant
+            z : water level in the surge tank at previous time step
+            Qs : water flow into the tank at last time step
+    link1 : object
+        Pipe object of C+ charateristics curve
+    link2 : object
+        Pipe object of C- charateristics curve
+    H1 : list
+        List of the head of C+ charateristics curve
+    V1 : list
+        List of the velocity of C+ charateristics curve
+    H2 : list
+        List of the head of C- charateristics curve
+    V2 : list
+        List of the velocity of C- charateristics curve
+    dt : float
+        Time step
+    g : float
+        Gravity acceleration
+    nn : int
+        The index of the calculation node
+    s1 : list
+        List of signs that represent the direction of the flow
+        in C+ charateristics curve
+    s2 : list
+        List of signs that represent the direction of the flow
+        in C- charateristics curve
+    friction : str
+        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
+        by default 'steady'
+    dVdx1 : list
+        List of convective instantaneous acceleration on the
+        C+ characteristic curve
+    dVdx2 : list
+        List of convective instantaneous acceleration on the
+        C- characteristic curve
+    dVdt1 : list
+        List of local instantaneous acceleration on the
+        C+ characteristic curve
+    dVdt2 : list
+        List of local instantaneous acceleration on the
+        C- characteristic curve
+    """
+
+    try :
+        list(link1)
+    except:
+        link1 = [link1]
+        V1 = [V1] ; H1 = [H1]
+        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
+    try :
+        list(link2)
+    except:
+        link2 = [link2]
+        V2 = [V2] ; H2 = [H2]
+        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
+
+    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
+            friction, dVdx1, dVdx2, dVdt1, dVdt2)
+
+    # parameters
+    Hb = 10.3 # barometric pressure head
+    m = 1.2
+    As, ht, C, z, Qs = tank  # tank properties and results at last time step
+    at = 2.* As/dt
+    Va = (ht-z)*As  # air volume at last time step
+    Cor = 0.2
+
+    a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
+    b = np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)
+
+    from scipy import optimize
+
+    def tank_flow(QPs, Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb):
+        return (((a-QPs)/b+ Hb - z - at*(Qs+QPs) - Cor*Qs*np.abs(Qs))
+                 * (Va- at*(Qs+QPs)*As)**m - C)
+
+    QPs = optimize.newton(tank_flow, Qs,
+            args=(Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb))
+
+    HP = (a - QPs) /b
+    VP2 = -C2[:,0]+ C2[:,1]*HP
+    VP1 = C1[:,0] - C1[:,1]*HP
 
     if nn == 0:  # pipe start
         VP =np.float64(VP2)

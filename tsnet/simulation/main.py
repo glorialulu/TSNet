@@ -77,11 +77,11 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
             dVdx[pn] = np.zeros_like(V[pn])
     for _,node in tm.nodes():
         if node.pulse_status == True:
-                node.base_demand_coeff = node.demand_coeff
-        if node.transient_node_type == 'SurgeTank':
-                node.water_level_timeseries = np.zeros(tn)
-                node.tank_flow_timeseries = np.zeros(tn)
-                node.water_level_timeseries[0] = node.water_level
+            node.base_demand_coeff = node.demand_coeff
+        if node.transient_node_type == 'SurgeTank' or node.transient_node_type == 'Chamber':
+            node.water_level_timeseries = np.zeros(tn)
+            node.tank_flow_timeseries = np.zeros(tn)
+            node.water_level_timeseries[0] = node.water_level
     starttime = datetime.now()
     # Start Calculation
     for ts in range(1,tn):
@@ -415,8 +415,8 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
 
         for _,node in tm.nodes():
             if node.transient_node_type == 'SurgeTank':
-                node.tank_shape[1] = max(node.water_level,0)
-                node.tank_shape[2] = node.tank_flow
+                node.tank_shape[-2] = max(node.water_level,0)
+                node.tank_shape[-1] = node.tank_flow
                 node.water_level_timeseries[ts] = max(node.water_level,0)
                 node.tank_flow_timeseries[ts] = node.tank_flow
 

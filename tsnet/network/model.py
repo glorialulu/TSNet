@@ -411,7 +411,7 @@ The initial setting has been changed to open to perform the closure." %name)
         demand_node.pulse_status = True
 
 
-    def add_surge_tank(self, name, shape):
+    def add_surge_tank(self, name, shape, tank_type='open'):
         """ Add surge tank
 
         Parameters
@@ -422,13 +422,26 @@ The initial setting has been changed to open to perform the closure." %name)
             [As, Hs]
             As : cross-sectional area of the surge tank
             Hs : initial water height in the surge tank
+        tank_type : int
+            type of the surge tank, "closed" or "open",
+            by default 'open'
         """
         surge_node = self.get_node(name)
-        surge_node.transient_node_type = 'SurgeTank'
+        if tank_type == 'open':
+            surge_node.transient_node_type = 'SurgeTank'
+        elif tank_type == 'closed':
+            surge_node.transient_node_type = 'Chamber'
+            surge_node.tank_height = shape[2]
+            Hb = 10.3
+            surge_node.air_constant = Hb*shape[0]*(shape[1]-shape[2])
+        else :
+            print ("tank type can be 'closed' or 'open'.")
         surge_node.tank_flow = 0
-        shape.append(0)
+        shape.insert(2,surge_node.air_constant)
+        shape.append(0.)
         surge_node.tank_shape = shape # append tank flow
-        surge_node.water_level = shape[1]
+        surge_node.water_level = shape[-2]
+        print (surge_node.water_level)
 
 
     def detect_pressure_change(self, name, threshold, drift, show=False, ax=None):

@@ -25,7 +25,11 @@ tm.valve_closure('VALVE', valve_op)
 t0 = 0. # initialize the simulation at 0 [s]
 engine = 'DD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
-tm.add_surge_tank('N3', [100,191])
+tank_node = 'N4'
+tank_area = 200.
+tank_height = 200
+water_height = 100
+tm.add_surge_tank(tank_node, [tank_area, tank_height, water_height], 'closed')
 # Transient simulation
 results_obj = 'Tnet1' # name of the object for saving simulation results
 friction = 'steady'
@@ -44,7 +48,9 @@ tm.valve_closure('VALVE', valve_op)
 t0 = 0. # initialize the simulation at 0 [s]
 engine = 'DD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
-
+#tank_area = 1.
+#tank_height = 191
+#tm.add_surge_tank(tank_node, [tank_area, tank_height])
 # Transient simulation
 results_obj = 'Tnet1' # name of the object for saving simulation results
 friction = 'steady'
@@ -52,7 +58,7 @@ tm2= tsnet.simulation.MOCSimulator(tm, results_obj,friction)
 #%%
 # report results
 import matplotlib.pyplot as plt
-node = 'N2'
+node = 'N3'
 head1 = tm1.get_node(node).head
 t1 = tm1.simulation_timestamps
 head2 = tm2.get_node(node).head
@@ -69,8 +75,7 @@ fig.savefig('tnet1_unsteady_friction.pdf', format='pdf',dpi=500)
 # %%
 # report results
 import matplotlib.pyplot as plt
-node = 'N3'
-node = tm1.get_node(node)
+node = tm1.get_node(tank_node)
 t1 = tm1.simulation_timestamps
 fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
 plt.plot(t1, node.water_level_timeseries, 'k',label='w surge tank', linewidth=2.5)
