@@ -74,7 +74,7 @@ def Initializer(tm, t0, engine='DD'):
             The engine can only be 'DD' or 'PDD'.")
 
     for _,node in tm.nodes():
-        node.head = results.node['head'].loc[t0, node.name]
+        node.initial_head = results.node['head'].loc[t0, node.name]
 
     for _,link in tm.links():
         link.initial_flow = results.link['flowrate'].loc[t0, link.name]
@@ -226,7 +226,7 @@ def cal_roughness_coef(pipe, V, hl):
 def pump_operation_points(tm):
     #add operation points to the pump
     for _, pump in tm.pumps():
-        opt_point = (pump.initial_flow, abs(pump.end_node.head-pump.start_node.head))
+        opt_point = (pump.initial_flow, abs(pump.end_node.initial_head-pump.start_node.initial_head))
         def_points = pump.get_pump_curve().points
         dist = []
         for (i,j) in def_points:

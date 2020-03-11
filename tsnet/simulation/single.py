@@ -115,10 +115,10 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                     linkp.start_node.tank_flow = Qs
                 elif linkp.start_node.transient_node_type == 'Chamber':
                     shape = linkp.start_node.tank_shape
-                    H[i], V[i], Qs = air_chamber(shape, link1, linkp,
+                    H[i], V[i], Qs, zp = air_chamber(shape, link1, linkp,
                         H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
                         friction, dVdx1, dVdx2, dVdt1, dVdt2)
-                    linkp.start_node.water_level = H[i]
+                    linkp.start_node.water_level = zp
                     linkp.start_node.tank_flow = Qs
                 else:
                     elev = linkp.start_node.elevation
@@ -154,10 +154,10 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
                     linkp.end_node.tank_flow = Qs
                 elif linkp.end_node.transient_node_type == 'Chamber':
                     shape = linkp.end_node.tank_shape
-                    H[i], V[i], Qs = air_chamber(shape, linkp, link2,
+                    H[i], V[i], Qs,zp = air_chamber(shape, linkp, link2,
                         H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
                         friction, dVdx1, dVdx2, dVdt1, dVdt2)
-                    linkp.end_node.water_level = H[i]
+                    linkp.end_node.water_level = zp
                     linkp.end_node.tank_flow = Qs
                 else:
                     elev = linkp.end_node.elevation
@@ -298,10 +298,10 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
 
                 elif linkp.end_node.transient_node_type == 'Chamber':
                     shape = linkp.end_node.tank_shape
-                    H[i], V[i], Qs = air_chamber(shape, linkp, link2,
+                    H[i], V[i], Qs, zp = air_chamber(shape, linkp, link2,
                         H1, V1, H2, V2, dt, g, i, [1], np.sign(links2),
                         friction, dVdx1, dVdx2, dVdt1, dVdt2)
-                    linkp.end_node.water_level = H[i]
+                    linkp.end_node.water_level = zp
                     linkp.end_node.tank_flow = Qs
                 else:
                     elev = linkp.end_node.elevation
@@ -435,10 +435,10 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
                     linkp.start_node.tank_flow = Qs
                 if linkp.start_node.transient_node_type == 'Chamber':
                     shape = linkp.start_node.tank_shape
-                    H[i], V[i], Qs = air_chamber(shape, link1, linkp,
+                    H[i], V[i], Qs, zp = air_chamber(shape, link1, linkp,
                         H1, V1, H2, V2, dt, g, i,  np.sign(links1), [-1],
                         friction, dVdx1, dVdx2, dVdt1, dVdt2)
-                    linkp.start_node.water_level = H[i]
+                    linkp.start_node.water_level = zp
                     linkp.start_node.tank_flow = Qs
 
                 else:

@@ -50,6 +50,8 @@ class TransientModel (WaterNetworkModel):
         for _, link in self.links():
             link.id = i
             i+=1
+        for _,valve in self.valves():
+            valve.valve_coeff = None
 
         # assign ID to each links, start from 1.
         i =1
@@ -419,29 +421,29 @@ The initial setting has been changed to open to perform the closure." %name)
         name : str
             the name of the node to add a surge tank
         shape : list
-            [As, Hs]
-            As : cross-sectional area of the surge tank
-            Hs : initial water height in the surge tank
+            if closed: [As, Ht, Hs]
+                As : cross-sectional area of the surge tank
+                Ht : tank height
+                Hs : initial water height in the surge tank
+            if open: [As]
         tank_type : int
             type of the surge tank, "closed" or "open",
             by default 'open'
         """
         surge_node = self.get_node(name)
+        surge_node.tank_flow = 0
+        shape.append(0.)
         if tank_type == 'open':
             surge_node.transient_node_type = 'SurgeTank'
         elif tank_type == 'closed':
             surge_node.transient_node_type = 'Chamber'
-            surge_node.tank_height = shape[2]
-            Hb = 10.3
-            surge_node.air_constant = Hb*shape[0]*(shape[1]-shape[2])
+            surge_node.tank_height = shape[1]
+            surge_node.water_level = shape[-2]
         else :
             print ("tank type can be 'closed' or 'open'.")
-        surge_node.tank_flow = 0
-        shape.insert(2,surge_node.air_constant)
-        shape.append(0.)
         surge_node.tank_shape = shape # append tank flow
-        surge_node.water_level = shape[-2]
-        print (surge_node.water_level)
+
+
 
 
     def detect_pressure_change(self, name, threshold, drift, show=False, ax=None):

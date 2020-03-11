@@ -1072,33 +1072,34 @@ def air_chamber(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
 
     A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
             friction, dVdx1, dVdx2, dVdt1, dVdt2)
-
     # parameters
     Hb = 10.3 # barometric pressure head
-    m = 1.2
+    m = 1.4
     As, ht, C, z, Qs = tank  # tank properties and results at last time step
     at = 2.* As/dt
     Va = (ht-z)*As  # air volume at last time step
-    Cor = 0.2
+    Cor = 0
 
     a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
     b = np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)
 
-    from scipy import optimize
-
     def tank_flow(QPs, Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb):
-        return (((a-QPs)/b+ Hb - z - at*(Qs+QPs) - Cor*Qs*np.abs(Qs))
-                 * (Va- at*(Qs+QPs)*As)**m - C)
+        return (((a-QPs)/b + Hb - z - (Qs+QPs)/at - Cor*Qs*np.abs(Qs))
+                 * (Va- (Qs+QPs)*As/at)**m - C)
 
+    # solve nonlinear equation for tank flow at this time step
+    from scipy import optimize
     QPs = optimize.newton(tank_flow, Qs,
-            args=(Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb))
+            args=(Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb)
+            )
 
+    zp = z + (Qs+QPs)/at
     HP = (a - QPs) /b
     VP2 = -C2[:,0]+ C2[:,1]*HP
     VP1 = C1[:,0] - C1[:,1]*HP
 
     if nn == 0:  # pipe start
-        VP =np.float64(VP2)
+        VP = np.float64(VP2)
     else:        # pipe end
         VP = np.float64(VP1)
-    return HP, VP, QPs
+    return HP, VP, QPs, zp

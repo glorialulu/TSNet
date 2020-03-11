@@ -60,6 +60,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     #  instantaneous acceleration
     dVdt = [0] * tm.num_pipes
     dVdx = [0] * tm.num_pipes
+    Hb = 10.3 # barometric head
     for _, pipe in tm.pipes():
         p.append(pipe)
 
@@ -79,6 +80,15 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
         if node.pulse_status == True:
             node.base_demand_coeff = node.demand_coeff
         if node.transient_node_type == 'SurgeTank' or node.transient_node_type == 'Chamber':
+            if node.transient_node_type == 'Chamber':
+                m = 1.4
+                Ha = node.initial_head - node.water_level + Hb # air pressure head
+                Va = node.tank_shape[0]*(node.tank_height-node.water_level) # air volume
+                node.air_constant = Ha * Va**m
+                node.tank_shape.insert(2,node.air_constant)
+            elif node.transient_node_type == 'SurgeTank':
+                node.water_level = node.initial_head
+                node.tank_shape.insert(1,node.water_level)
             node.water_level_timeseries = np.zeros(tn)
             node.tank_flow_timeseries = np.zeros(tn)
             node.water_level_timeseries[0] = node.water_level
@@ -233,7 +243,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     # source pump
                     # pump[0][0]: elevation of the reservoir/tank
                     # pump[0][1]: three points for pump characteristic curve
-                    pump[0] = [[tm.links[utype[pn][1]].start_node.head][0],
+                    pump[0] = [[tm.links[utype[pn][1]].start_node.initial_head][0],
                          tm.links[utype[pn][1]].curve_coef]
                     if tm.links[utype[pn][1]].operating == True:
                         points = tm.links[utype[pn][1]].get_pump_curve().points
@@ -329,14 +339,13 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                 elif dtype[pn][0] == 'Pump':
                     # pump[1][0]: elevation of the reservoir/tank
                     # pump[1][1]: three points for pump characteristic curve
-                    pump[1] = [[tm.links[utype[pn][1]].end_node.head][0],
+                    pump[1] = [[tm.links[utype[pn][1]].end_node.initial_head][0],
                          tm.links[dtype[pn][1]].curve_coef]
                     if tm.links[dtype[pn][1]].operating == True:
                         points = tm.links[dtype[pn][1]].get_pump_curve().points
                         po = tm.links[dtype[pn][1]].operation_rule[ts]
                         points=[(i*po,j*po**2) for (i,j) in points]
                         pump[1][1] = calc_parabola_vertex(points)
-
                 else :
                      warnings.warn('Pipe %s miss %s downstream.' %(pipe, dtype[pn][0]))
                 # LEFT boundary
@@ -414,7 +423,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
             V[pn] = VN[pn]
 
         for _,node in tm.nodes():
-            if node.transient_node_type == 'SurgeTank':
+            if node.transient_node_type == 'SurgeTank' or node.transient_node_type == 'Chamber':
                 node.tank_shape[-2] = max(node.water_level,0)
                 node.tank_shape[-1] = node.tank_flow
                 node.water_level_timeseries[ts] = max(node.water_level,0)
