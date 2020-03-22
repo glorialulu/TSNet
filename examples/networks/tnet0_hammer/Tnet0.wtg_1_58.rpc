@@ -1,0 +1,53 @@
+  Page 1                                    Sat Mar 21 12:33:32 2020
+
+******************************************************************
+*                        W A T E R G E M S                       *
+*                   Hydraulic and Water Quality                  *
+*                   Analysis for Pipe Networks                   *
+*                          Version 8.11                          *
+******************************************************************
+
+ 
+    Number of Junctions................ 2
+    Number of Reservoirs............... 1
+    Number of Tanks ................... 0
+    Number of Pipes ................... 2
+    Number of Pumps ................... 0
+    Number of Variable Speed Pumps .... 0
+    Number of Valves .................. 0
+    Headloss Formula .................. Darcy-Weisbach
+    Hydraulic Timestep ................ 1.00 hrs
+    Hydraulic Accuracy ................ 0.001000
+    Status Check Frequency ............ 2
+    Maximum Trials Checked ............ 10
+    Damping Limit Threshold ........... 0.000000
+    Maximum Trials .................... 40
+    Quality Analysis .................. None
+    Specific Gravity .................. 1.00
+    Relative Kinematic Viscosity ...... 0.99
+    Relative Chemical Diffusivity ..... -769230769230769150.00
+    Demand Multiplier ................. 1.00
+    Total Duration .................... 0.00 hrs
+    Reporting Criteria:
+       No Nodes
+       No Links
+ 
+[Analysis Started]
+Sat Mar 21 12:33:32 2020
+
+[Steady State]
+<   0:00:00 Balancing the network:>
+         Trial  1: relative flow change = 1.968338
+         Trial  2: relative flow change = 0.152481
+         Trial  3: relative flow change = 0.011763
+         Trial  4: relative flow change = 0.000069
+<   0:00:00 Balanced after 4 trials; relative flow change = 0.000069>
+<Flow Summary>
+Flow Supplied 792.48 gpm
+Flow Demanded 792.48 gpm
+Flow Stored 0.00 gpm
+<Flow Summary>
+   0:00:00 Reservoir 63 is emptying
+ 
+[Analysis Ended]
+Sat Mar 21 12:33:32 2020

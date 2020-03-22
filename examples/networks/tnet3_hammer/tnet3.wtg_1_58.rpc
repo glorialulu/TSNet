@@ -1,0 +1,80 @@
+  Page 1                                    Fri Mar 20 21:52:34 2020
+
+******************************************************************
+*                        W A T E R G E M S                       *
+*                   Hydraulic and Water Quality                  *
+*                   Analysis for Pipe Networks                   *
+*                          Version 8.11                          *
+******************************************************************
+
+ 
+    Number of Junctions................ 130
+    Number of Reservoirs............... 1
+    Number of Tanks ................... 2
+    Number of Pipes ................... 172
+    Number of Pumps ................... 2
+    Number of Variable Speed Pumps .... 0
+    Number of Valves .................. 8
+    Headloss Formula .................. Hazen-Williams
+    Hydraulic Timestep ................ 0.50 hrs
+    Hydraulic Accuracy ................ 0.001000
+    Status Check Frequency ............ 2
+    Maximum Trials Checked ............ 10
+    Damping Limit Threshold ........... 0.000000
+    Maximum Trials .................... 40
+    Quality Analysis .................. None
+    Specific Gravity .................. 1.00
+    Relative Kinematic Viscosity ...... 0.00
+    Relative Chemical Diffusivity ..... -769230769230769150.00
+    Demand Multiplier ................. 1.00
+    Total Duration .................... 1.00 hrs
+    Reporting Criteria:
+       No Nodes
+       No Links
+ 
+[Analysis Started]
+Fri Mar 20 21:52:34 2020
+
+[0:00:00]
+<   0:00:00 Balancing the network:>
+         Trial  1: relative flow change = 1.203840
+         Trial  2: relative flow change = 0.965026
+         Trial  3: relative flow change = 0.672653
+         Trial  4: relative flow change = 0.276990
+         Trial  5: relative flow change = 0.043313
+         Trial  6: relative flow change = 0.002033
+         Trial  7: relative flow change = 0.000310
+<   0:00:00 Balanced after 7 trials; relative flow change = 0.000310>
+<Flow Summary>
+Flow Supplied 1096.50 gpm
+Flow Demanded 912.60 gpm
+Flow Stored 183.89 gpm
+<Flow Summary>
+   0:00:00 Reservoir 190 is emptying
+   0:00:00 Tank 192 is filling at 15.16 ft
+   0:00:00 Tank 191 is emptying at 17.95 ft
+ 
+[0:30:00]
+<   0:30:00 Balancing the network:>
+         Trial  1: relative flow change = 0.009964
+         Trial  2: relative flow change = 0.000054
+<   0:30:00 Balanced after 2 trials; relative flow change = 0.000054>
+<Flow Summary>
+Flow Supplied 1095.17 gpm
+Flow Demanded 803.80 gpm
+Flow Stored 291.37 gpm
+<Flow Summary>
+ 
+[1:00:00]
+<   1:00:00 Balancing the network:>
+         Trial  1: relative flow change = 0.009497
+         Trial  2: relative flow change = 0.000068
+<   1:00:00 Balanced after 2 trials; relative flow change = 0.000068>
+<Flow Summary>
+Flow Supplied 1093.85 gpm
+Flow Demanded 700.45 gpm
+Flow Stored 393.40 gpm
+<Flow Summary>
+ 
+[Analysis Ended]
+Fri Mar 20 21:52:34 2020

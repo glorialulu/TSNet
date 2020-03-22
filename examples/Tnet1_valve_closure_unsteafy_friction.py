@@ -9,7 +9,8 @@ tm.set_wavespeed(1200.) # m/s
 # Set time options
 dt = 0.1  # time step [s], if not given, use the maximum allowed dt
 tf = 60   # simulation period [s]
-tm.set_time(tf,dt)
+n = 100
+tm.set_time_N(tf,n)
 
 # Set valve closure
 tc = 0.6 # valve closure period [s]
@@ -18,10 +19,7 @@ se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
 valve_op = [tc,ts,se,m]
 percent_open = np.linspace(100,0,11)
-kl = [1/0.2, 2.50, 1.25, 0.625, 0.333, 0.17,
-            0.100, 0.0556, 0.0313, 0.0167, 0.0]
-curve = [(percent_open[i], kl[i]) for i in range(len(kl))]
-tm.valve_closure('VALVE', valve_op, curve)
+tm.valve_closure('VALVE', valve_op)
 
 # Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0 [s]
@@ -40,8 +38,7 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-tf = 60   # simulation period [s]
-tm.set_time(tf,dt)
+tm.set_time_N(tf,n)
 
 # Set valve closure
 tc = 0.6 # valve closure period [s]
@@ -67,8 +64,8 @@ tm = tsnet.network.TransientModel(inp_file)
 # Set wavespeed
 tm.set_wavespeed(1200.) # m/s
 # Set time options
-tf = 60   # simulation period [s]
-tm.set_time(tf,dt)
+tm.set_time_N(tf,n)
+
 
 # Set valve closure
 tc = 0.6 # valve closure period [s]

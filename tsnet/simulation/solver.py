@@ -50,8 +50,10 @@ def quasi_steady_friction_factor(Re, KD):
     f : float
         quasi-steady friction factor
     """
-    a = -1.8*np.log10(6.9/Re +KD)
-    f = (1/a)**2.
+
+    a = -1.8*np.log10(6.9/Re + KD)
+    f = (1./a)**2.
+
     return f
 
 
@@ -83,7 +85,10 @@ def unsteady_friction(Re, dVdt, dVdx, V, a, g):
     if Re< 2000: # laminar flow
         C = 4.76e-3
     else:
-        C = 7.41 / Re**(np.log10(14.3/Re**0.05))
+        try:
+            C = 7.41 / Re**(np.log10(14.3/Re**0.05))
+        except:
+            print (Re)
 
     # calculate Brunone's friction coefficient
     k = np.sqrt(C)/2.
@@ -126,16 +131,21 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
 
     if friction == 'steady':
         Ju = 0
-        Js = f*dt/2./D*V*abs(V) #steady friction
+        if V==0:
+            Js = 0
+        else:
+            Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        if Re!=0:
+        if Re <= 1e-6:
+            Js = 0
+        else:
+            # print (Re)
             f = quasi_steady_friction_factor(Re, KD)
-        Js = f*dt/2./D*V*abs(V)
+            Js = f*dt/2./D*V*abs(V)
         if friction == 'quasi-steady':
             Ju = 0
         elif friction == 'unsteady':
-
             Ju = unsteady_friction(Re, dVdt, dVdx, V, a, g)
     return Ju + Js
 
@@ -531,18 +541,22 @@ def pump_node(pumpc,link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
     elif VP<0 :
         warnings.warn( "Reverse flow stopped by check valve!")
         VP = 0
-        hp = cp
-        # suction or discharge side?
-        if pumpc[1] == "s": # suction side
-            if nn == 0:  # pipe start
-                HP = (C2[0,0] + VP ) / C2[0,1]
-            else :
-                HP = (C1[0,0] - VP) / C1[0,1]
-        else: #discharge
-            if nn == 0:  # pipe start
-                HP = (C1[0,0] - VP) / C1[0,1] + hp
-            else :
-                HP = (C2[0,0] + VP ) / C2[0,1] + hp
+        if nn == 0:  # pipe start
+             HP = (C2[0,0] + VP ) / C2[0,1]
+        else :
+             HP = (C1[0,0] - VP) / C1[0,1]
+        # hp = cp
+        # # suction or discharge side?
+        # if pumpc[1] == "s": # suction side
+        #     if nn == 0:  # pipe start
+        #         HP = (C2[0,0] + VP ) / C2[0,1]
+        #     else :
+        #         HP = (C1[0,0] - VP) / C1[0,1]
+        # else: #discharge
+        #     if nn == 0:  # pipe start
+        #         HP = (C1[0,0] - VP) / C1[0,1] + hp
+        #     else :
+        #         HP = (C2[0,0] + VP ) / C2[0,1] + hp
     else: # positive flow and negative head gain
         warnings.warn( "Negative head gain activates by-pass!")
         hp = 0
@@ -996,7 +1010,7 @@ def surge_tank(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
             np.sum(np.array(VP2)*np.array(A2)))
 
     if nn == 0:  # pipe start
-        VP =np.float64(VP2)
+        VP = np.float64(VP2)
     else:        # pipe end
         VP = np.float64(VP1)
     return HP, VP, QPs
@@ -1074,29 +1088,35 @@ def air_chamber(tank, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
             friction, dVdx1, dVdx2, dVdt1, dVdt2)
     # parameters
     Hb = 10.3 # barometric pressure head
-    m = 1.4
+    m = 1.2
     As, ht, C, z, Qs = tank  # tank properties and results at last time step
     at = 2.* As/dt
     Va = (ht-z)*As  # air volume at last time step
     Cor = 0
-
     a = np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)
     b = np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)
 
     def tank_flow(QPs, Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb):
-        return (((a-QPs)/b + Hb - z - (Qs+QPs)/at - Cor*Qs*np.abs(Qs))
+        return (((a-QPs)/b + Hb - z - (Qs+QPs)/at - Cor*QPs*np.abs(QPs))
                  * (Va- (Qs+QPs)*As/at)**m - C)
+
+    def tank_flow_prime(QPs, Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb):
+        p1 = (-m*As/at * (Va- (Qs+QPs)*As/at)**(m-1)*
+            ((a-QPs)/b + Hb - z - (Qs+QPs)/at - Cor*QPs*np.abs(QPs)))
+        p2 = (-1/b -1/at - Cor*2.*QPs*np.sign(QPs))* (Va- (Qs+QPs)*As/at)**m
+        return p1+p2
 
     # solve nonlinear equation for tank flow at this time step
     from scipy import optimize
-    QPs = optimize.newton(tank_flow, Qs,
-            args=(Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb)
-            )
+    QPs = optimize.newton(
+            tank_flow, Qs, fprime=tank_flow_prime,
+            args=(Qs, a, b, As, ht, C, z, at, Va, Cor, m, Hb),
+            tol=1e-10)
 
     zp = z + (Qs+QPs)/at
-    HP = (a - QPs) /b
-    VP2 = -C2[:,0]+ C2[:,1]*HP
-    VP1 = C1[:,0] - C1[:,1]*HP
+    HP = (a - QPs)/b
+    VP2 = -C2[:,0] + C2[:,1]*HP
+    VP1 =  C1[:,0] - C1[:,1]*HP
 
     if nn == 0:  # pipe start
         VP = np.float64(VP2)

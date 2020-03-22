@@ -1,0 +1,198 @@
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+                Type of Run: Full
+                Date of Run: 03/21/20
+                Time of Run: 12:33 pm
+                  Data File: Tnet0.wtg.sqlite.$$$
+            Hydrograph File: Not Selected
+                     Labels: Long
+ 
+ 
+    ***  SYSTEM INFORMATION  ***
+ 
+             ---------------------------------------------------
+             | ITEM                             | VALUE        |
+             ---------------------------------------------------
+             |                                  |              |
+             | Time Step (s)                    |              |
+             |    Automatic                     | 0.1000       |
+             |    User-Selected                 | 0.1000       |
+             |    Total Number                  | 600          |
+             | Total Simulation Time (s)        | 60.00        |
+             | Units                            | cms, m       |
+             | Total Number of Nodes            | 3            |
+             | Total Number of Pipes            | 2            |
+             | Specific Gravity                 | 1.00         |
+             | Wave Speed (m/s)                 | 1200         |
+             | Vapour Pressure(m)               | -10.0        |
+             | Reports                          |              |
+             |    Number of Nodes               | All          |
+             |    Number of Time Steps          | All          |
+             |    Number of Paths               | 0            |
+             | Output                           |              |
+             |    Standard                      | No           |
+             |    Cavities (Open/Close)         | No           |
+             | Adjustments                      |              |
+             |    Adjusted Variable             | Wave Speed   |
+             |    Warning Limit (%)             | 50.00        |
+             |    Minimize                      | Adjustments  |
+             | Calculate Transient Forces       | No           |
+             | Use Auxiliary Data File          | Yes          |
+             ---------------------------------------------------
+ 
+    ***  PREFERENCE AND DEBUG INFORMATION  ***
+ 
+             --------------------------------------------------------
+             | ITEM                                  | VALUE        |
+             --------------------------------------------------------
+             |                                       |              |
+             | Tolerances                            |              |
+             |    Initial Flow Consistency Value     | 0.0006       |
+             |    Initial Head Consistency Value     | 0.030        |
+             |    Criterion for Fr. Coef. Flag       | 0.020        |
+             | Adjustments                           |              |
+             |    Elevation Decrease                 | 0.00         |
+             | Extreme Heads Display                 |              |
+             |    All Times                          | Yes          |
+             |    After First Extreme                | No           |
+             | Friction Coefficient                  |              |
+             |    Model                              | Steady       |
+             |    1,000,000 x Kinematic Viscosity    | n/a          |
+             | Debug Parameters                      |              |
+             |    Level                              | Null         |
+             --------------------------------------------------------
+
+   ***  NODE INFORMATION  ***
+ 
+    ----------------------------------------------------------------------------------------------------
+    |            | CATEGORY      | TYPE          | ELEVATION    |            |            | VAP PRESS  |
+    | LABEL      | DESCRIPTION   | DESCRIPTION   |      (m)     | X COORD    | Y COORD    |      (m)   |
+    ----------------------------------------------------------------------------------------------------
+    |            |               |               |              |            |            |            |
+    | 1          | Reservoir     | 1 or more     | 0.0          | 0.0        | 0.0        | -10.0      |
+    | D2A-3      | Valve         | to atmos.     | 0.0          | 2613.2     | 10.3       | -10.0      |
+    | 2          | Junction      | 2 or more     | 0.0          | 1152.3     | 10.3       | -10.0      |
+    ----------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+   ***  NODE DATA  ***
+ 
+    ----------------------------------------------------------------------
+    |    LABEL     |                       DATA                          |
+    ----------------------------------------------------------------------
+    |              |                                                     |
+    | 1            |                                                     |
+    |              |                                                     |
+    | D2A-3        |             Initial/typical Outflow: 0.0500         |
+    |              |              Corresponding Pressure: 749.9          |
+    |              |                      Operating Time: 2              |
+    |              |                            Time Lag: 0              |
+    |              |                                                     |
+    | 2            |                                                     |
+    ----------------------------------------------------------------------
+ 
+ 
+ 
+   ***  CONNECTIVITY  ***
+ 
+             ---------------------------------------------
+             | PIPE LABEL    | FROM NODE   | TO NODE     |
+             ---------------------------------------------
+             |               |             |             |
+             | 2             | 2           | D2A-3       |
+             | 1             | 1           | 2           |
+             ---------------------------------------------
+ 
+ 
+ 
+   ***  PIPE INFORMATION  ***
+ 
+    -----------------------------------------------------------------------------------------
+    |                 |  LENGTH     | DIAMETER    | WAVESPEED   |    D-W      |  CHECK      |
+    | LABEL           |     (m)     |    (mm)     |   (m /s)    | FR. COEF.   |  VALVE      |
+    -----------------------------------------------------------------------------------------
+    |                 |             |             |             |             |             |
+    | 2               | 2400.0      | 1200.00     | 1200.0      | *0.021      |             |
+    | 1               | 1200.0      | 600.00      | 1200.0      | 0.018       |             |
+    -----------------------------------------------------------------------------------------
+              * Darcy-Weisbach friction coefficient exceeds 0.020
+
+    ***  INITIAL PIPE CONDITIONS  ***
+ 
+    -------------------------------------------------------------------------------------
+    |    FROM     |    HEAD     |     TO      |    HEAD     |    FLOW     |     VEL     |
+    |    NODE     |     (m)     |    NODE     |     (m)     |    (cms)    |    (m/s)    |
+    -------------------------------------------------------------------------------------
+    |             |             |             |             |             |             |
+    | 2           | 749.9       | D2A-3       | 749.9       | 0.0         | 0.0         |
+    | 1           | 750.0       | 2           | 749.9       | 0.0         | 0.2         |
+    -------------------------------------------------------------------------------------
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+
+   ***  List of end points with possible discrepancies in input values  ***
+
+         NOTE: End points where initial surges generated are included.
+
+                                  2:D2A-3         
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+ 
+    ***  LIST OF SORTED VAPOUR AND AIR POCKETS  ***
+ 
+ 
+          No vapour/air pockets were formed.
+ 
+ 
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+ 
+    ***  SUMMARY FOR  Default Project-Base-Tnet0.wtg.sqlite.$$$  ***
+ 
+    --------------------------------------------------------------------------------
+    |    END           | MAX. PRESS.  | MIN. PRESS.  |  MAX. HEAD   |  MIN. HEAD   |
+    |   POINT          |     (mH)     |     (mH)     |      (m)     |      (m)     |
+    --------------------------------------------------------------------------------
+    |                  |              |              |              |              |
+    | 2:2              | 759.3        | 740.6        | 759.3        | 740.6        |
+    | 2:D2A-3          | 761.8        | 738.3        | 761.8        | 738.3        |
+    | 1:1              | 750.0        | 750.0        | 750.0        | 750.0        |
+    | 1:2              | 759.3        | 740.6        | 759.3        | 740.6        |
+    --------------------------------------------------------------------------------
+ 
+ 
+ 
+ 
+ 
+     ***  Maximum pressure in entire network is 761.8 mH at point 2:D2A-3
+ 
+     ***  Minimum pressure in entire network is 738.3 mH at point 2:D2A-3
+
+
+
+Elapsed time: 0 s.            

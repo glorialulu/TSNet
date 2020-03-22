@@ -218,7 +218,7 @@ def cal_roughness_coef(pipe, V, hl):
                         %(pipe.name, pipe.roughness))
         pipe.roughness = 0.03
     if pipe.roughness!= 0:
-        pipe.roughness_height = 10**(-1/1.8/np.sqrt(pipe.roughness)) - 6.9/pipe.initial_Re
+        pipe.roughness_height = max(10**(-1/1.8/np.sqrt(pipe.roughness)) - 6.9/pipe.initial_Re, 0)
     else:
         pipe.roughness_height = 0
     return pipe

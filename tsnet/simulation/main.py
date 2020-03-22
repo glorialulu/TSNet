@@ -48,6 +48,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     # if the adjacent pipe is entering the junction, then -2
     # if the adjacent pipe is leaving the junction, then 1
     a = {1:-2, -1:1}
+    b = {1:-1, -1:0}
     # generat a list of pipe
     p = []
     # results from last time step
@@ -71,17 +72,16 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
         V[pn] = pipe.initial_velocity
         if friction == 'unsteady':
             dVdt[pn] = np.zeros_like(V[pn])
-            diff = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
-            dVdx[pn] = np.append(diff, diff[-1])
+            dVdx[pn] = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
         else:
             dVdt[pn] = np.zeros_like(V[pn])
-            dVdx[pn] = np.zeros_like(V[pn])
+            dVdx[pn] = np.zeros_like(V[pn][:-1])
     for _,node in tm.nodes():
         if node.pulse_status == True:
             node.base_demand_coeff = node.demand_coeff
         if node.transient_node_type == 'SurgeTank' or node.transient_node_type == 'Chamber':
             if node.transient_node_type == 'Chamber':
-                m = 1.4
+                m = 1.2
                 Ha = node.initial_head - node.water_level + Hb # air pressure head
                 Va = node.tank_shape[0]*(node.tank_height-node.water_level) # air volume
                 node.air_constant = Ha * Va**m
@@ -190,9 +190,9 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      [V[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
                      pump, valve, friction, dVdt[pn], dVdx[pn],
                      [dVdt[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
-                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
+                     [dVdx[abs(i)-1][b[np.sign(i)]] for i in links1[pn]],
                      [dVdt[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links2[pn]])
+                     [dVdx[abs(i)-1][b[np.sign(i)]] for i in links2[pn]])
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -285,7 +285,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      utype[pn], dtype[pn],
                      friction, dVdt[pn], dVdx[pn],
                      [dVdt[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],
-                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links2[pn]],)
+                     [dVdx[abs(i)-1][b[np.sign(i)]] for i in links2[pn]],)
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -375,7 +375,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                      utype[pn], dtype[pn],
                      friction, dVdt[pn], dVdx[pn],
                      [dVdt[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],
-                     [dVdx[abs(i)-1][a[np.sign(i)]] for i in links1[pn]],)
+                     [dVdx[abs(i)-1][b[np.sign(i)]] for i in links1[pn]],)
                 # record results
                 pipe.start_node_velocity[ts] = VN[pn][0]
                 pipe.end_node_velocity[ts] = VN[pn][-1]
@@ -417,8 +417,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
             # only for unsteady friction factor
             if friction == 'unsteady':
                 dVdt[pn] = (VN[pn] - V[pn] )/dt
-                diff = np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
-                dVdx[pn] = np.append(diff, diff[-1])
+                dVdx[pn] =  np.diff(V[pn])/(pipe.length/pipe.number_of_segments)
             H[pn] = HN[pn]
             V[pn] = VN[pn]
 

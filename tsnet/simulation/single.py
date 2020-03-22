@@ -142,7 +142,7 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
         if i == n:
             V1 = V0[i-1];    H1 = H0[i-1]
             V2 = V20;        H2 = H20
-            dVdx1 = dVdx[i] ; dVdt1 = dVdt[i-1]
+            dVdx1 = dVdx[i-1] ; dVdt1 = dVdt[i-1]
             dVdx2 =  dVdx20; dVdt2 = dVdt20
             if dtype[0] == 'Pipe':
                 if linkp.end_node.transient_node_type == 'SurgeTank':

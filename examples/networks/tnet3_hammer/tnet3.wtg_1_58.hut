@@ -1,0 +1,1596 @@
+
+  *** WARNING: The wavespeed or length approximations deviate excessively from the entered values.
+               Reduce the time step, or lengthen short pipes and/or subdivide longer pipes.
+
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+                Type of Run: Full
+                Date of Run: 03/20/20
+                Time of Run: 09:52 pm
+                  Data File: BWSN_Network_1.wtg.sqlite.$$$
+            Hydrograph File: Not Selected
+                     Labels: Long
+ 
+ 
+    ***  SYSTEM INFORMATION  ***
+ 
+             ---------------------------------------------------
+             | ITEM                             | VALUE        |
+             ---------------------------------------------------
+             |                                  |              |
+             | Time Step (s)                    |              |
+             |    Automatic                     | 0.0270       |
+             |    User-Selected                 | 0.0020       |
+             |    Total Number                  | 10000        |
+             | Total Simulation Time (s)        | 20.00        |
+             | Units                            | cfs, ft      |
+             | Total Number of Nodes            | 123          |
+             | Total Number of Pipes            | 172          |
+             | Specific Gravity                 | 1.00         |
+             | Wave Speed (ft/s)                | Variable     |
+             | Vapour Pressure(ft)              | -32.8        |
+             | Reports                          |              |
+             |    Number of Nodes               | All          |
+             |    Number of Time Steps          | All          |
+             |    Number of Paths               | 0            |
+             | Output                           |              |
+             |    Standard                      | No           |
+             |    Cavities (Open/Close)         | No           |
+             | Adjustments                      |              |
+             |    Adjusted Variable             | Wave Speed   |
+             |    Warning Limit (%)             | 50.00        |
+             |    Minimize                      | Adjustments  |
+             | Calculate Transient Forces       | No           |
+             | Use Auxiliary Data File          | Yes          |
+             ---------------------------------------------------
+ 
+    ***  PREFERENCE AND DEBUG INFORMATION  ***
+ 
+             --------------------------------------------------------
+             | ITEM                                  | VALUE        |
+             --------------------------------------------------------
+             |                                       |              |
+             | Tolerances                            |              |
+             |    Initial Flow Consistency Value     | 0.0200       |
+             |    Initial Head Consistency Value     | 0.100        |
+             |    Criterion for Fr. Coef. Flag       | 0.020        |
+             | Adjustments                           |              |
+             |    Elevation Decrease                 | 0.00         |
+             | Extreme Heads Display                 |              |
+             |    All Times                          | Yes          |
+             |    After First Extreme                | No           |
+             | Friction Coefficient                  |              |
+             |    Model                              | Steady       |
+             |    1,000,000 x Kinematic Viscosity    | n/a          |
+             | Debug Parameters                      |              |
+             |    Level                              | Null         |
+             --------------------------------------------------------
+
+   ***  NODE INFORMATION  ***
+ 
+    ----------------------------------------------------------------------------------------------------
+    |            | CATEGORY      | TYPE          | ELEVATION    |            |            | VAP PRESS  |
+    | LABEL      | DESCRIPTION   | DESCRIPTION   |     (ft)     | X COORD    | Y COORD    |     (ft)   |
+    ----------------------------------------------------------------------------------------------------
+    |            |               |               |              |            |            |            |
+    | VALVE-180  | Valve         | var. types    | 434.0        | 21395.8    | 13403.2    | -32.8      |
+    | VALVE-176  | Valve         | var. types    | 404.0        | 13720.1    | 13599.9    | -32.8      |
+    | VALVE-175  | Valve         | var. types    | 533.0        | 11944.5    | 10664.5    | -32.8      |
+    | VALVE-174  | Valve         | var. types    | 359.0        | 9369.6     | 12982.9    | -32.8      |
+    | VALVE-173  | Valve         | var. types    | 418.0        | 7745.6     | 12079.7    | -32.8      |
+    | VALVE-178  | Valve         | var. types    | 957.0        | 22991.7    | 4273.8     | -32.8      |
+    | VALVE-177  | Valve         | var. types    | 849.0        | 21965.2    | 7831.7     | -32.8      |
+    | VALVE-179  | Valve         | var. types    | 758.0        | 20305.3    | 5422.2     | -32.8      |
+    | PUMP-172   | Pump          | var spd       | 0.0          | 757.3      | 112.0      | -32.8      |
+    | PUMP-170   | Pump          | const spd     | 0.0          | 22430.7    | 7591.7     | -32.8      |
+    | TANK-131   | Prot equip    | surge tank    | 1137.1       | 25878.9    | 4001.1     | -32.8      |
+    | TANK-130   | Prot equip    | surge tank    | 843.9        | 21851.9    | 6930.2     | -32.8      |
+    | RESERVOIR-129| Reservoir     | 1 or more     | 0.0          | 0.0        | 601.5      | -32.8      |
+    | JUNCTION-128| Junction      | 2 or more     | 0.0          | 248.2      | 620.4      | -32.8      |
+    | JUNCTION-110| Junction      | 2 or more     | 0.0          | 841.1      | 224.0      | -32.8      |
+    | JUNCTION-109| Junction      | 2 or more     | 0.0          | 673.6      | 0.0        | -32.8      |
+    | JUNCTION-106| Junction      | 2 or more     | 0.0          | 22677.5    | 7668.4     | -32.8      |
+    | JUNCTION-105| Junction      | 2 or more     | 0.0          | 22183.8    | 7515.0     | -32.8      |
+    | JUNCTION-104| Consumptio    | 1 or more     | 860.6        | 22727.3    | 7989.0     | -32.8      |
+    | JUNCTION-103| Consumptio    | 1 or more     | 1031.7       | 24285.3    | 3405.4     | -32.8      |
+    | JUNCTION-102| Consumptio    | 1 or more     | 1094.1       | 25869.9    | 3359.9     | -32.8      |
+    | JUNCTION-101| Consumptio    | 1 or more     | 645.1        | 11435.8    | 7145.2     | -32.8      |
+    | JUNCTION-100| Consumptio    | 1 or more     | 637.9        | 10474.4    | 6512.3     | -32.8      |
+    | JUNCTION-99| Consumptio    | 1 or more     | 641.9        | 10777.2    | 6323.6     | -32.8      |
+    | JUNCTION-98| Consumptio    | 1 or more     | 643.0        | 11483.4    | 6829.3     | -32.8      |
+    | JUNCTION-97| Consumptio    | 1 or more     | 629.0        | 11988.2    | 6824.7     | -32.8      |
+    | JUNCTION-96| Consumptio    | 1 or more     | 629.1        | 12258.5    | 6882.6     | -32.8      |
+    | JUNCTION-95| Consumptio    | 1 or more     | 630.9        | 11898.8    | 7243.2     | -32.8      |
+    | JUNCTION-94| Consumptio    | 1 or more     | 633.5        | 11146.0    | 7217.3     | -32.8      |
+    | JUNCTION-93| Consumptio    | 1 or more     | 643.7        | 10914.4    | 7076.2     | -32.8      |
+    | JUNCTION-92| Junction      | 2 or more     | 628.2        | 11329.3    | 7415.8     | -32.8      |
+    | JUNCTION-91| Junction      | 2 or more     | 637.4        | 11049.8    | 7438.4     | -32.8      |
+    | JUNCTION-90| Junction      | 2 or more     | 644.1        | 10195.6    | 7695.3     | -32.8      |
+    | JUNCTION-89| Consumptio    | 1 or more     | 626.8        | 10213.9    | 6766.2     | -32.8      |
+    | JUNCTION-88| Junction      | 2 or more     | 621.7        | 9858.2     | 6722.5     | -32.8      |
+    | JUNCTION-87| Junction      | 2 or more     | 622.3        | 9783.7     | 7326.9     | -32.8      |
+    | JUNCTION-86| Junction      | 2 or more     | 623.5        | 9854.9     | 7388.1     | -32.8      |
+    | JUNCTION-85| Junction      | 2 or more     | 620.2        | 9258.4     | 7105.7     | -32.8      |
+    | JUNCTION-84| Consumptio    | 1 or more     | 619.9        | 8730.4     | 6653.7     | -32.8      |
+    | JUNCTION-83| Consumptio    | 1 or more     | 617.7        | 8323.8     | 6956.3     | -32.8      |
+    | JUNCTION-82| Consumptio    | 1 or more     | 618.8        | 8957.1     | 6711.1     | -32.8      |
+    | JUNCTION-81| Consumptio    | 1 or more     | 623.6        | 8720.2     | 6306.0     | -32.8      |
+    | JUNCTION-80| Junction      | 2 or more     | 616.9        | 9547.3     | 6843.1     | -32.8      |
+    | JUNCTION-79| Junction      | 2 or more     | 617.9        | 9464.5     | 6666.2     | -32.8      |
+    | JUNCTION-78| Junction      | 2 or more     | 618.0        | 10145.3    | 6591.0     | -32.8      |
+    | JUNCTION-77| Consumptio    | 1 or more     | 624.6        | 9030.7     | 6468.5     | -32.8      |
+    | JUNCTION-76| Consumptio    | 1 or more     | 622.5        | 9586.3     | 6217.9     | -32.8      |
+    | JUNCTION-75| Consumptio    | 1 or more     | 629.2        | 9925.0     | 6101.5     | -32.8      |
+    | JUNCTION-74| Consumptio    | 1 or more     | 622.3        | 9287.7     | 5689.5     | -32.8      |
+    | JUNCTION-73| Consumptio    | 1 or more     | 620.4        | 8948.6     | 5664.6     | -32.8      |
+
+ 
+    | JUNCTION-72| Consumptio    | 1 or more     | 622.3        | 9863.8     | 5789.0     | -32.8      |
+    | JUNCTION-71| Consumptio    | 1 or more     | 632.2        | 11119.0    | 5746.1     | -32.8      |
+    | JUNCTION-70| Consumptio    | 1 or more     | 619.1        | 10159.9    | 5492.0     | -32.8      |
+    | JUNCTION-69| Consumptio    | 1 or more     | 626.0        | 10656.1    | 4919.1     | -32.8      |
+    | JUNCTION-68| Consumptio    | 1 or more     | 617.1        | 12557.6    | 5460.0     | -32.8      |
+    | JUNCTION-67| Junction      | 2 or more     | 624.5        | 13279.9    | 5819.7     | -32.8      |
+    | JUNCTION-66| Junction      | 2 or more     | 619.7        | 12934.2    | 5907.1     | -32.8      |
+    | JUNCTION-65| Junction      | 2 or more     | 619.4        | 12428.1    | 5637.1     | -32.8      |
+    | JUNCTION-64| Junction      | 2 or more     | 623.1        | 12839.1    | 6041.1     | -32.8      |
+    | JUNCTION-63| Junction      | 2 or more     | 624.0        | 13117.2    | 6348.0     | -32.8      |
+    | JUNCTION-62| Junction      | 2 or more     | 625.4        | 13532.3    | 5946.6     | -32.8      |
+    | JUNCTION-61| Junction      | 2 or more     | 625.4        | 13602.4    | 5773.7     | -32.8      |
+    | JUNCTION-60| Junction      | 2 or more     | 624.0        | 13791.8    | 6134.5     | -32.8      |
+    | JUNCTION-59| Junction      | 2 or more     | 621.0        | 14148.9    | 5772.1     | -32.8      |
+    | JUNCTION-58| Consumptio    | 1 or more     | 610.2        | 12868.5    | 5333.0     | -32.8      |
+    | JUNCTION-57| Consumptio    | 1 or more     | 618.0        | 12620.4    | 7598.3     | -32.8      |
+    | JUNCTION-56| Junction      | 2 or more     | 606.9        | 15593.5    | 6259.5     | -32.8      |
+    | JUNCTION-55| Consumptio    | 1 or more     | 603.3        | 15431.0    | 5873.3     | -32.8      |
+    | JUNCTION-54| Consumptio    | 1 or more     | 602.1        | 15121.8    | 5808.6     | -32.8      |
+    | JUNCTION-53| Consumptio    | 1 or more     | 607.6        | 15786.2    | 6502.1     | -32.8      |
+    | JUNCTION-52| Consumptio    | 1 or more     | 613.3        | 16207.1    | 7913.8     | -32.8      |
+    | JUNCTION-51| Consumptio    | 1 or more     | 623.7        | 16592.9    | 8263.2     | -32.8      |
+    | JUNCTION-50| Consumptio    | 1 or more     | 611.1        | 16530.4    | 7578.3     | -32.8      |
+    | JUNCTION-49| Consumptio    | 1 or more     | 623.9        | 16906.3    | 6921.4     | -32.8      |
+    | JUNCTION-48| Junction      | 2 or more     | 637.5        | 16883.7    | 7732.4     | -32.8      |
+    | JUNCTION-47| Junction      | 2 or more     | 640.5        | 16834.7    | 8674.2     | -32.8      |
+    | JUNCTION-46| Consumptio    | 1 or more     | 820.2        | 21256.8    | 7712.6     | -32.8      |
+    | JUNCTION-45| Consumptio    | 1 or more     | 747.3        | 21174.2    | 8720.9     | -32.8      |
+    | JUNCTION-44| Consumptio    | 1 or more     | 678.5        | 18623.9    | 7147.8     | -32.8      |
+    | JUNCTION-43| Consumptio    | 1 or more     | 653.1        | 18469.2    | 6808.9     | -32.8      |
+    | JUNCTION-42| Consumptio    | 1 or more     | 728.0        | 18364.6    | 9448.2     | -32.8      |
+    | JUNCTION-41| Consumptio    | 1 or more     | 700.2        | 17839.8    | 9907.3     | -32.8      |
+    | JUNCTION-40| Consumptio    | 1 or more     | 741.6        | 19078.3    | 10194.3    | -32.8      |
+    | JUNCTION-39| Consumptio    | 1 or more     | 703.2        | 19144.9    | 10524.3    | -32.8      |
+    | JUNCTION-38| Dead end      | 1 pipe        | 646.5        | 18586.8    | 10731.6    | -32.8      |
+    | JUNCTION-37| Consumptio    | 1 or more     | 677.0        | 18964.7    | 10649.3    | -32.8      |
+    | JUNCTION-36| Dead end      | 1 pipe        | 634.1        | 20382.6    | 10491.0    | -32.8      |
+    | JUNCTION-35| Consumptio    | 1 or more     | 652.0        | 19651.9    | 10705.0    | -32.8      |
+    | JUNCTION-34| Junction      | 2 or more     | 200.0        | 1229.3     | 517.0      | -32.8      |
+    | JUNCTION-33| Consumptio    | 1 or more     | 622.8        | 12403.2    | 7436.5     | -32.8      |
+    | JUNCTION-32| Consumptio    | 1 or more     | 625.8        | 13216.9    | 6351.0     | -32.8      |
+    | JUNCTION-31| Consumptio    | 1 or more     | 600.4        | 15150.2    | 5759.0     | -32.8      |
+    | JUNCTION-30| Consumptio    | 1 or more     | 636.0        | 17050.1    | 5147.0     | -32.8      |
+    | JUNCTION-29| Junction      | 2 or more     | 846.3        | 21832.5    | 7401.0     | -32.8      |
+    | JUNCTION-28| Consumptio    | 1 or more     | 701.7        | 19665.5    | 7311.9     | -32.8      |
+    | JUNCTION-27| Consumptio    | 1 or more     | 690.7        | 19085.7    | 7571.5     | -32.8      |
+    | JUNCTION-26| Junction      | 2 or more     | 683.4        | 19031.8    | 7370.0     | -32.8      |
+    | JUNCTION-25| Consumptio    | 1 or more     | 653.9        | 18088.2    | 7414.0     | -32.8      |
+    | JUNCTION-24| Junction      | 2 or more     | 636.6        | 17978.7    | 7369.5     | -32.8      |
+    | JUNCTION-23| Consumptio    | 1 or more     | 604.3        | 17389.3    | 5906.7     | -32.8      |
+    | JUNCTION-22| Consumptio    | 1 or more     | 626.0        | 17226.1    | 7017.4     | -32.8      |
+    | JUNCTION-21| Junction      | 2 or more     | 652.4        | 17038.5    | 8061.9     | -32.8      |
+    | JUNCTION-20| Consumptio    | 1 or more     | 617.7        | 17913.2    | 10624.4    | -32.8      |
+    | JUNCTION-19| Consumptio    | 1 or more     | 558.9        | 18855.7    | 11372.0    | -32.8      |
+    | JUNCTION-18| Consumptio    | 1 or more     | 478.1        | 11035.9    | 11158.5    | -32.8      |
+    | JUNCTION-17| Consumptio    | 1 or more     | 385.1        | 11369.0    | 12740.0    | -32.8      |
+    | JUNCTION-16| Dead end      | 1 pipe        | 383.0        | 6315.6     | 11942.4    | -32.8      |
+    | JUNCTION-15| Consumptio    | 1 or more     | 423.5        | 8238.8     | 12284.0    | -32.8      |
+    | JUNCTION-14| Junction      | 2 or more     | 416.9        | 8230.3     | 12462.8    | -32.8      |
+    | JUNCTION-13| Dead end      | 1 pipe        | 326.0        | 6854.9     | 12866.6    | -32.8      |
+
+ 
+    | JUNCTION-12| Consumptio    | 1 or more     | 379.5        | 7680.5     | 12925.5    | -32.8      |
+    | JUNCTION-11| Consumptio    | 1 or more     | 344.1        | 8786.5     | 13171.9    | -32.8      |
+    | JUNCTION-10| Consumptio    | 1 or more     | 333.6        | 9907.0     | 13563.1    | -32.8      |
+    | JUNCTION-9 | Junction      | 2 or more     | 488.3        | 10712.6    | 11636.9    | -32.8      |
+    | JUNCTION-8 | Consumptio    | 1 or more     | 493.4        | 9560.2     | 10770.9    | -32.8      |
+    | JUNCTION-7 | Dead end      | 1 pipe        | 535.2        | 9229.1     | 11217.7    | -32.8      |
+    | JUNCTION-6 | Consumptio    | 1 or more     | 505.0        | 8992.6     | 11098.6    | -32.8      |
+    | JUNCTION-5 | Consumptio    | 1 or more     | 494.2        | 8990.4     | 11387.3    | -32.8      |
+    | JUNCTION-4 | Consumptio    | 1 or more     | 477.8        | 9475.2     | 11990.5    | -32.8      |
+    | JUNCTION-3 | Consumptio    | 1 or more     | 428.1        | 8386.7     | 12309.4    | -32.8      |
+    | JUNCTION-2 | Consumptio    | 1 or more     | 363.1        | 10075.1    | 12981.1    | -32.8      |
+    | JUNCTION-1 | Junction      | 2 or more     | 192.0        | 211.1      | 216.5      | -32.8      |
+    | JUNCTION-0 | Consumptio    | 1 or more     | 376.1        | 10639.7    | 12717.8    | -32.8      |
+    ----------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+   ***  NODE DATA  ***
+ 
+    ----------------------------------------------------------------------
+    |    LABEL     |                       DATA                          |
+    ----------------------------------------------------------------------
+    |              |                                                     |
+    | VALVE-180    |                       Type of Valve: globe          |
+    |              |                            Diameter: 8              |
+    |              |       Disch. Coeff. at Full Opening: 6.261          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-176    |                       Type of Valve: globe          |
+    |              |                            Diameter: 6              |
+    |              |       Disch. Coeff. at Full Opening: 3.522          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-175    |                       Type of Valve: globe          |
+    |              |                            Diameter: 10             |
+    |              |       Disch. Coeff. at Full Opening: 9.783          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+
+ 
+    | VALVE-174    |                       Type of Valve: globe          |
+    |              |                            Diameter: 6              |
+    |              |       Disch. Coeff. at Full Opening: 3.522          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-173    |                       Type of Valve: globe          |
+    |              |                            Diameter: 6              |
+    |              |       Disch. Coeff. at Full Opening: 1000000        |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-178    |                       Type of Valve: globe          |
+    |              |                            Diameter: 6              |
+    |              |       Disch. Coeff. at Full Opening: 3.522          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-177    |                       Type of Valve: globe          |
+    |              |                            Diameter: 6              |
+    |              |       Disch. Coeff. at Full Opening: 3.522          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+    | VALVE-179    |                       Type of Valve: globe          |
+    |              |                            Diameter: 8              |
+    |              |       Disch. Coeff. at Full Opening: 6.261          |
+    |              |           No. of Oper. Rule Records: 2              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |       Oper. Rule First Rel. Closure: 0              |
+    |              |                Oper. Rule Last Time: 1000000        |
+    |              |        Oper. Rule Last Rel. Closure: 0              |
+    |              |                        Control Type: PRV            |
+    |              |                       Control Value: 0              |
+    |              |                      Control Status: throttled      |
+    |              |                                                     |
+
+ 
+    | PUMP-172     |           Inertia of Pump and Motor: 2373           |
+    |              |                        Nominal Flow: 2.443          |
+    |              |                        Nominal Head: 433.8          |
+    |              |                       Nominal Speed: 20             |
+    |              |          Nominal Percent Efficiency: 75             |
+    |              |               Closure Time of Valve: 0              |
+    |              |                   Diameter of Valve: 184            |
+    |              |                      Specific Speed: 1280           |
+    |              |                    Control Variable: Speed          |
+    |              |           No. of Oper. Rule Records: 3              |
+    |              |               Oper. Rule First Time: 0              |
+    |              |      Oper. Rule First Control Value: 20             |
+    |              |                Oper. Rule Last Time: 20             |
+    |              |       Oper. Rule Last Control Value: 0              |
+    |              |                       Report Period: 0              |
+    |              |                                                     |
+    | PUMP-170     |                      Specific Speed: 1280           |
+    |              |                        Nominal Flow: 2.900          |
+    |              |                        Nominal Head: 293.3          |
+    |              |                                                     |
+    | TANK-131     |                 Surge Tank Diameter: 1272           |
+    |              |                     Throat Diameter: 16             |
+    |              |          Head Loss Coeff. (Outflow): 0              |
+    |              |            Ratio of Losses (In/out): 1              |
+    |              |               Check Valve Installed: 0              |
+    |              |                 Initial Water Level: 1155           |
+    |              |               Top Elevation of Tank: 1179           |
+    |              |                       Report Period: 0              |
+    |              |                    Weir Coefficient: 0              |
+    |              |                                                     |
+    | TANK-130     |                 Surge Tank Diameter: 2232           |
+    |              |                     Throat Diameter: 24             |
+    |              |          Head Loss Coeff. (Outflow): 0              |
+    |              |            Ratio of Losses (In/out): 1              |
+    |              |               Check Valve Installed: 0              |
+    |              |                 Initial Water Level: 859.1          |
+    |              |               Top Elevation of Tank: 876            |
+    |              |                       Report Period: 0              |
+    |              |                    Weir Coefficient: 0              |
+    |              |                                                     |
+    | RESERVOIR-129|                                                     |
+    |              |                                                     |
+    | JUNCTION-128 |                                                     |
+    |              |                                                     |
+    | JUNCTION-110 |                                                     |
+    |              |                                                     |
+    | JUNCTION-109 |                                                     |
+    |              |                                                     |
+    | JUNCTION-106 |                                                     |
+    |              |                                                     |
+    | JUNCTION-105 |                                                     |
+    |              |                                                     |
+    | JUNCTION-104 |                                                     |
+    |              |                                                     |
+    | JUNCTION-103 |                                                     |
+    |              |                                                     |
+    | JUNCTION-102 |                                                     |
+    |              |                                                     |
+
+ 
+    | JUNCTION-101 |                                                     |
+    |              |                                                     |
+    | JUNCTION-100 |                                                     |
+    |              |                                                     |
+    | JUNCTION-99  |                                                     |
+    |              |                                                     |
+    | JUNCTION-98  |                                                     |
+    |              |                                                     |
+    | JUNCTION-97  |                                                     |
+    |              |                                                     |
+    | JUNCTION-96  |                                                     |
+    |              |                                                     |
+    | JUNCTION-95  |                                                     |
+    |              |                                                     |
+    | JUNCTION-94  |                                                     |
+    |              |                                                     |
+    | JUNCTION-93  |                                                     |
+    |              |                                                     |
+    | JUNCTION-92  |                                                     |
+    |              |                                                     |
+    | JUNCTION-91  |                                                     |
+    |              |                                                     |
+    | JUNCTION-90  |                                                     |
+    |              |                                                     |
+    | JUNCTION-89  |                                                     |
+    |              |                                                     |
+    | JUNCTION-88  |                                                     |
+    |              |                                                     |
+    | JUNCTION-87  |                                                     |
+    |              |                                                     |
+    | JUNCTION-86  |                                                     |
+    |              |                                                     |
+    | JUNCTION-85  |                                                     |
+    |              |                                                     |
+    | JUNCTION-84  |                                                     |
+    |              |                                                     |
+    | JUNCTION-83  |                                                     |
+    |              |                                                     |
+    | JUNCTION-82  |                                                     |
+    |              |                                                     |
+    | JUNCTION-81  |                                                     |
+    |              |                                                     |
+    | JUNCTION-80  |                                                     |
+    |              |                                                     |
+    | JUNCTION-79  |                                                     |
+    |              |                                                     |
+    | JUNCTION-78  |                                                     |
+    |              |                                                     |
+    | JUNCTION-77  |                                                     |
+    |              |                                                     |
+    | JUNCTION-76  |                                                     |
+    |              |                                                     |
+    | JUNCTION-75  |                                                     |
+    |              |                                                     |
+    | JUNCTION-74  |                                                     |
+    |              |                                                     |
+    | JUNCTION-73  |                                                     |
+    |              |                                                     |
+
+ 
+    | JUNCTION-72  |                                                     |
+    |              |                                                     |
+    | JUNCTION-71  |                                                     |
+    |              |                                                     |
+    | JUNCTION-70  |                                                     |
+    |              |                                                     |
+    | JUNCTION-69  |                                                     |
+    |              |                                                     |
+    | JUNCTION-68  |                                                     |
+    |              |                                                     |
+    | JUNCTION-67  |                                                     |
+    |              |                                                     |
+    | JUNCTION-66  |                                                     |
+    |              |                                                     |
+    | JUNCTION-65  |                                                     |
+    |              |                                                     |
+    | JUNCTION-64  |                                                     |
+    |              |                                                     |
+    | JUNCTION-63  |                                                     |
+    |              |                                                     |
+    | JUNCTION-62  |                                                     |
+    |              |                                                     |
+    | JUNCTION-61  |                                                     |
+    |              |                                                     |
+    | JUNCTION-60  |                                                     |
+    |              |                                                     |
+    | JUNCTION-59  |                                                     |
+    |              |                                                     |
+    | JUNCTION-58  |                                                     |
+    |              |                                                     |
+    | JUNCTION-57  |                                                     |
+    |              |                                                     |
+    | JUNCTION-56  |                                                     |
+    |              |                                                     |
+    | JUNCTION-55  |                                                     |
+    |              |                                                     |
+    | JUNCTION-54  |                                                     |
+    |              |                                                     |
+    | JUNCTION-53  |                                                     |
+    |              |                                                     |
+    | JUNCTION-52  |                                                     |
+    |              |                                                     |
+    | JUNCTION-51  |                                                     |
+    |              |                                                     |
+    | JUNCTION-50  |                                                     |
+    |              |                                                     |
+    | JUNCTION-49  |                                                     |
+    |              |                                                     |
+    | JUNCTION-48  |                                                     |
+    |              |                                                     |
+    | JUNCTION-47  |                                                     |
+    |              |                                                     |
+    | JUNCTION-46  |                                                     |
+    |              |                                                     |
+    | JUNCTION-45  |                                                     |
+    |              |                                                     |
+    | JUNCTION-44  |                                                     |
+    |              |                                                     |
+
+ 
+    | JUNCTION-43  |                                                     |
+    |              |                                                     |
+    | JUNCTION-42  |                                                     |
+    |              |                                                     |
+    | JUNCTION-41  |                                                     |
+    |              |                                                     |
+    | JUNCTION-40  |                                                     |
+    |              |                                                     |
+    | JUNCTION-39  |                                                     |
+    |              |                                                     |
+    | JUNCTION-38  |                  Initial Vapour Vol: 0              |
+    |              |                                                     |
+    | JUNCTION-37  |                                                     |
+    |              |                                                     |
+    | JUNCTION-36  |                  Initial Vapour Vol: 0              |
+    |              |                                                     |
+    | JUNCTION-35  |                                                     |
+    |              |                                                     |
+    | JUNCTION-34  |                                                     |
+    |              |                                                     |
+    | JUNCTION-33  |                                                     |
+    |              |                                                     |
+    | JUNCTION-32  |                                                     |
+    |              |                                                     |
+    | JUNCTION-31  |                                                     |
+    |              |                                                     |
+    | JUNCTION-30  |                                                     |
+    |              |                                                     |
+    | JUNCTION-29  |                                                     |
+    |              |                                                     |
+    | JUNCTION-28  |                                                     |
+    |              |                                                     |
+    | JUNCTION-27  |                                                     |
+    |              |                                                     |
+    | JUNCTION-26  |                                                     |
+    |              |                                                     |
+    | JUNCTION-25  |                                                     |
+    |              |                                                     |
+    | JUNCTION-24  |                                                     |
+    |              |                                                     |
+    | JUNCTION-23  |                                                     |
+    |              |                                                     |
+    | JUNCTION-22  |                                                     |
+    |              |                                                     |
+    | JUNCTION-21  |                                                     |
+    |              |                                                     |
+    | JUNCTION-20  |                                                     |
+    |              |                                                     |
+    | JUNCTION-19  |                                                     |
+    |              |                                                     |
+    | JUNCTION-18  |                                                     |
+    |              |                                                     |
+    | JUNCTION-17  |                                                     |
+    |              |                                                     |
+    | JUNCTION-16  |                  Initial Vapour Vol: 0              |
+    |              |                                                     |
+    | JUNCTION-15  |                                                     |
+    |              |                                                     |
+
+ 
+    | JUNCTION-14  |                                                     |
+    |              |                                                     |
+    | JUNCTION-13  |                  Initial Vapour Vol: 0              |
+    |              |                                                     |
+    | JUNCTION-12  |                                                     |
+    |              |                                                     |
+    | JUNCTION-11  |                                                     |
+    |              |                                                     |
+    | JUNCTION-10  |                                                     |
+    |              |                                                     |
+    | JUNCTION-9   |                                                     |
+    |              |                                                     |
+    | JUNCTION-8   |                                                     |
+    |              |                                                     |
+    | JUNCTION-7   |                  Initial Vapour Vol: 0              |
+    |              |                                                     |
+    | JUNCTION-6   |                                                     |
+    |              |                                                     |
+    | JUNCTION-5   |                                                     |
+    |              |                                                     |
+    | JUNCTION-4   |                                                     |
+    |              |                                                     |
+    | JUNCTION-3   |                                                     |
+    |              |                                                     |
+    | JUNCTION-2   |                                                     |
+    |              |                                                     |
+    | JUNCTION-1   |                                                     |
+    |              |                                                     |
+    | JUNCTION-0   |                                                     |
+    ----------------------------------------------------------------------
+ 
+ 
+ 
+   ***  CONNECTIVITY  ***
+ 
+             ---------------------------------------------
+             | PIPE LABEL    | FROM NODE   | TO NODE     |
+             ---------------------------------------------
+             |               |             |             |
+             | PUMP-172-A    | JUNCTION-109| PUMP-172    |
+             | PUMP-172-B    | PUMP-172    | JUNCTION-110|
+             | PUMP-170-A    | JUNCTION-105| PUMP-170    |
+             | PUMP-170-B    | PUMP-170    | JUNCTION-106|
+             | LINK-98       | JUNCTION-62 | JUNCTION-63 |
+             | LINK-97       | JUNCTION-61 | JUNCTION-62 |
+             | LINK-96       | JUNCTION-60 | JUNCTION-61 |
+             | LINK-95       | JUNCTION-60 | JUNCTION-59 |
+             | LINK-94       | JUNCTION-59 | JUNCTION-60 |
+             | LINK-93       | JUNCTION-58 | JUNCTION-59 |
+             | LINK-92       | JUNCTION-31 | JUNCTION-58 |
+             | LINK-91       | JUNCTION-57 | JUNCTION-33 |
+             | LINK-90       | JUNCTION-32 | JUNCTION-57 |
+             | LINK-89       | JUNCTION-55 | JUNCTION-56 |
+             | LINK-88       | JUNCTION-55 | JUNCTION-54 |
+             | LINK-87       | JUNCTION-56 | JUNCTION-55 |
+             | LINK-86       | JUNCTION-53 | JUNCTION-56 |
+             | LINK-85       | JUNCTION-54 | JUNCTION-31 |
+             | LINK-84       | JUNCTION-53 | JUNCTION-54 |
+             | LINK-83       | JUNCTION-23 | JUNCTION-53 |
+
+ 
+             | LINK-82       | JUNCTION-52 | JUNCTION-50 |
+             | LINK-81       | JUNCTION-52 | JUNCTION-47 |
+             | LINK-80       | JUNCTION-51 | JUNCTION-52 |
+             | LINK-79       | JUNCTION-51 | JUNCTION-48 |
+             | LINK-78       | JUNCTION-50 | JUNCTION-51 |
+             | LINK-77       | JUNCTION-49 | JUNCTION-50 |
+             | LINK-76       | JUNCTION-49 | JUNCTION-22 |
+             | LINK-75       | JUNCTION-48 | JUNCTION-49 |
+             | LINK-74       | JUNCTION-47 | JUNCTION-48 |
+             | LINK-73       | JUNCTION-21 | JUNCTION-47 |
+             | LINK-72       | JUNCTION-29 | TANK-130    |
+             | LINK-71       | JUNCTION-44 | JUNCTION-28 |
+             | LINK-70       | JUNCTION-44 | JUNCTION-26 |
+             | LINK-69       | JUNCTION-43 | JUNCTION-44 |
+             | LINK-68       | JUNCTION-43 | JUNCTION-25 |
+             | LINK-67       | JUNCTION-24 | JUNCTION-43 |
+             | LINK-66       | JUNCTION-42 | JUNCTION-27 |
+             | LINK-65       | JUNCTION-42 | JUNCTION-41 |
+             | LINK-64       | JUNCTION-40 | JUNCTION-42 |
+             | LINK-63       | JUNCTION-40 | JUNCTION-41 |
+             | LINK-62       | JUNCTION-39 | JUNCTION-40 |
+             | LINK-61       | JUNCTION-37 | JUNCTION-39 |
+             | LINK-60       | JUNCTION-35 | JUNCTION-38 |
+             | LINK-59       | JUNCTION-37 | JUNCTION-20 |
+             | LINK-58       | JUNCTION-35 | JUNCTION-37 |
+             | LINK-57       | JUNCTION-35 | JUNCTION-36 |
+             | LINK-56       | JUNCTION-19 | JUNCTION-35 |
+             | LINK-55       | JUNCTION-33 | JUNCTION-57 |
+             | LINK-54       | JUNCTION-32 | JUNCTION-33 |
+             | LINK-53       | JUNCTION-31 | JUNCTION-32 |
+             | LINK-52       | JUNCTION-30 | JUNCTION-31 |
+             | LINK-51       | JUNCTION-27 | JUNCTION-28 |
+             | LINK-50       | JUNCTION-26 | JUNCTION-27 |
+             | LINK-49       | JUNCTION-25 | JUNCTION-26 |
+             | LINK-48       | JUNCTION-24 | JUNCTION-25 |
+             | LINK-47       | JUNCTION-22 | JUNCTION-24 |
+             | LINK-46       | JUNCTION-23 | JUNCTION-30 |
+             | LINK-45       | JUNCTION-22 | JUNCTION-23 |
+             | LINK-44       | JUNCTION-21 | JUNCTION-22 |
+             | LINK-43       | JUNCTION-19 | JUNCTION-20 |
+             | LINK-40       | JUNCTION-20 | JUNCTION-21 |
+             | LINK-39       | VALVE-176   | JUNCTION-17 |
+             | LINK-38       | JUNCTION-11 | JUNCTION-10 |
+             | LINK-37       | JUNCTION-2  | JUNCTION-3  |
+             | LINK-36       | JUNCTION-41 | JUNCTION-39 |
+             | LINK-35       | JUNCTION-34 | JUNCTION-30 |
+             | LINK-33       | JUNCTION-23 | VALVE-179   |
+             | LINK-32       | JUNCTION-45 | JUNCTION-46 |
+             | LINK-31       | JUNCTION-29 | JUNCTION-28 |
+             | LINK-30       | JUNCTION-0  | JUNCTION-4  |
+             | LINK-29       | JUNCTION-18 | VALVE-175   |
+             | LINK-28       | JUNCTION-17 | JUNCTION-18 |
+             | LINK-27       | JUNCTION-14 | JUNCTION-16 |
+             | LINK-26       | VALVE-173   | JUNCTION-14 |
+             | LINK-24       | JUNCTION-15 | JUNCTION-3  |
+             | LINK-23       | JUNCTION-5  | JUNCTION-15 |
+             | LINK-22       | JUNCTION-14 | JUNCTION-12 |
+             | LINK-21       | JUNCTION-12 | JUNCTION-11 |
+             | LINK-20       | JUNCTION-12 | JUNCTION-13 |
+             | LINK-19       | RESERVOIR-129| JUNCTION-128|
+
+ 
+             | LINK-18       | JUNCTION-128| JUNCTION-1  |
+             | LINK-17       | JUNCTION-110| JUNCTION-34 |
+             | LINK-16       | JUNCTION-10 | JUNCTION-11 |
+             | LINK-15       | JUNCTION-1  | JUNCTION-109|
+             | LINK-13       | JUNCTION-2  | VALVE-174   |
+             | LINK-12       | JUNCTION-9  | JUNCTION-8  |
+             | LINK-11       | JUNCTION-18 | JUNCTION-9  |
+             | LINK-10       | JUNCTION-9  | JUNCTION-8  |
+             | LINK-9        | JUNCTION-8  | JUNCTION-6  |
+             | LINK-8        | JUNCTION-6  | JUNCTION-7  |
+             | LINK-7        | JUNCTION-5  | JUNCTION-6  |
+             | LINK-6        | JUNCTION-5  | JUNCTION-4  |
+             | LINK-3        | JUNCTION-3  | JUNCTION-4  |
+             | LINK-2        | JUNCTION-0  | JUNCTION-2  |
+             | LINK-1        | JUNCTION-17 | JUNCTION-0  |
+             | LINK-169      | JUNCTION-103| JUNCTION-104|
+             | LINK-167      | JUNCTION-106| JUNCTION-104|
+             | LINK-166      | JUNCTION-29 | JUNCTION-105|
+             | LINK-165      | JUNCTION-102| TANK-131    |
+             | LINK-164      | JUNCTION-103| JUNCTION-102|
+             | LINK-162      | JUNCTION-46 | VALVE-177   |
+             | LINK-161      | JUNCTION-45 | JUNCTION-46 |
+             | LINK-160      | JUNCTION-97 | JUNCTION-71 |
+             | LINK-159      | JUNCTION-98 | JUNCTION-99 |
+             | LINK-158      | JUNCTION-100| JUNCTION-101|
+             | LINK-157      | JUNCTION-101| JUNCTION-98 |
+             | LINK-156      | JUNCTION-100| JUNCTION-101|
+             | LINK-155      | JUNCTION-99 | JUNCTION-100|
+             | LINK-154      | JUNCTION-98 | JUNCTION-99 |
+             | LINK-153      | JUNCTION-97 | JUNCTION-98 |
+             | LINK-152      | JUNCTION-97 | JUNCTION-96 |
+             | LINK-151      | JUNCTION-91 | JUNCTION-97 |
+             | LINK-150      | JUNCTION-96 | JUNCTION-95 |
+             | LINK-149      | JUNCTION-95 | JUNCTION-96 |
+             | LINK-148      | JUNCTION-92 | JUNCTION-95 |
+             | LINK-147      | JUNCTION-93 | JUNCTION-94 |
+             | LINK-146      | JUNCTION-94 | JUNCTION-92 |
+             | LINK-145      | JUNCTION-93 | JUNCTION-94 |
+             | LINK-144      | JUNCTION-90 | JUNCTION-93 |
+             | LINK-143      | JUNCTION-92 | JUNCTION-33 |
+             | LINK-142      | JUNCTION-91 | JUNCTION-92 |
+             | LINK-141      | JUNCTION-90 | JUNCTION-91 |
+             | LINK-140      | JUNCTION-89 | JUNCTION-90 |
+             | LINK-139      | JUNCTION-89 | JUNCTION-86 |
+             | LINK-138      | JUNCTION-88 | JUNCTION-89 |
+             | LINK-137      | JUNCTION-88 | JUNCTION-79 |
+             | LINK-136      | JUNCTION-87 | JUNCTION-88 |
+             | LINK-135      | JUNCTION-87 | JUNCTION-85 |
+             | LINK-134      | JUNCTION-86 | JUNCTION-87 |
+             | LINK-133      | JUNCTION-85 | JUNCTION-86 |
+             | LINK-132      | JUNCTION-82 | JUNCTION-85 |
+             | LINK-131      | JUNCTION-84 | JUNCTION-83 |
+             | LINK-130      | JUNCTION-84 | JUNCTION-81 |
+             | LINK-129      | JUNCTION-83 | JUNCTION-84 |
+             | LINK-128      | JUNCTION-82 | JUNCTION-83 |
+             | LINK-127      | JUNCTION-80 | JUNCTION-82 |
+             | LINK-126      | JUNCTION-78 | JUNCTION-71 |
+             | LINK-125      | JUNCTION-81 | JUNCTION-77 |
+             | LINK-124      | JUNCTION-80 | JUNCTION-81 |
+             | LINK-123      | JUNCTION-79 | JUNCTION-80 |
+
+ 
+             | LINK-122      | JUNCTION-78 | JUNCTION-79 |
+             | LINK-121      | JUNCTION-76 | JUNCTION-78 |
+             | LINK-120      | JUNCTION-77 | JUNCTION-73 |
+             | LINK-119      | JUNCTION-76 | JUNCTION-77 |
+             | LINK-118      | JUNCTION-75 | JUNCTION-76 |
+             | LINK-117      | JUNCTION-75 | JUNCTION-74 |
+             | LINK-116      | JUNCTION-72 | JUNCTION-75 |
+             | LINK-115      | JUNCTION-74 | JUNCTION-73 |
+             | LINK-114      | JUNCTION-72 | JUNCTION-74 |
+             | LINK-113      | JUNCTION-73 | JUNCTION-69 |
+             | LINK-112      | JUNCTION-70 | JUNCTION-72 |
+             | LINK-111      | JUNCTION-70 | JUNCTION-71 |
+             | LINK-110      | JUNCTION-69 | JUNCTION-70 |
+             | LINK-109      | JUNCTION-68 | JUNCTION-69 |
+             | LINK-108      | JUNCTION-63 | JUNCTION-62 |
+             | LINK-107      | JUNCTION-65 | JUNCTION-68 |
+             | LINK-106      | JUNCTION-64 | JUNCTION-65 |
+             | LINK-105      | JUNCTION-68 | JUNCTION-58 |
+             | LINK-104      | JUNCTION-66 | JUNCTION-67 |
+             | LINK-103      | JUNCTION-67 | JUNCTION-61 |
+             | LINK-102      | JUNCTION-66 | JUNCTION-67 |
+             | LINK-101      | JUNCTION-65 | JUNCTION-66 |
+             | LINK-100      | JUNCTION-64 | JUNCTION-65 |
+             | LINK-99       | JUNCTION-63 | JUNCTION-64 |
+             | LINK-42       | JUNCTION-19 | VALVE-180   |
+             | LINK-0        | VALVE-180   | VALVE-176   |
+             | LINK-41       | JUNCTION-20 | VALVE-175   |
+             | LINK-14       | VALVE-174   | JUNCTION-10 |
+             | LINK-25       | JUNCTION-15 | VALVE-173   |
+             | LINK-168      | JUNCTION-103| VALVE-178   |
+             | LINK-163      | VALVE-177   | JUNCTION-104|
+             | LINK-34       | VALVE-178   | VALVE-179   |
+             ---------------------------------------------
+ 
+ 
+ 
+   ***  PIPE INFORMATION  ***
+ 
+    -----------------------------------------------------------------------------------------
+    |                 |  LENGTH     | DIAMETER    | WAVESPEED   |    D-W      |  CHECK      |
+    | LABEL           |    (ft)     |    (in.)    |   (ft /s)   | FR. COEF.   |  VALVE      |
+    -----------------------------------------------------------------------------------------
+    |                 |             |             |             |             |             |
+    | PUMP-172-A      | 1.0         | 99.00       | 3937.0      | 0.000       |             |
+    | PUMP-172-B      | 1.0         | 99.00       | 3937.0      | 0.000       |             |
+    | PUMP-170-A      | 1.0         | 99.00       | 3937.0      | 0.000       |             |
+    | PUMP-170-B      | 1.0         | 99.00       | 3937.0      | 0.000       |             |
+    | LINK-98         | 187.0       | 8.00        | 3937.0      | *0.035      |             |
+    | LINK-97         | 138.0       | 8.00        | 3937.0      | *0.040      |             |
+    | LINK-96         | 133.0       | 8.00        | 3937.0      | *0.027      |             |
+    | LINK-95         | 196.0       | 8.00        | 3937.0      | *0.035      |             |
+    | LINK-94         | 943.0       | 8.00        | 3937.0      | *0.040      |             |
+    | LINK-93         | 413.0       | 8.00        | 3937.0      | *0.029      |             |
+    | LINK-92         | 1155.0      | 10.00       | 3937.0      | *0.024      |             |
+    | LINK-91         | 230.0       | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-90         | 945.0       | 8.00        | 3937.0      | *0.029      |             |
+    | LINK-89         | 873.0       | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-88         | 254.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-87         | 390.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-86         | 232.0       | 8.00        | 3937.0      | *0.030      |             |
+
+ 
+    | LINK-85         | 229.0       | 10.00       | 3937.0      | *0.027      |             |
+    | LINK-84         | 386.0       | 10.00       | 3937.0      | *0.027      |             |
+    | LINK-83         | 919.0       | 10.00       | 3937.0      | *0.025      |             |
+    | LINK-82         | 1381.0      | 8.00        | 3937.0      | *0.036      |             |
+    | LINK-81         | 549.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-80         | 393.0       | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-79         | 236.0       | 8.00        | 3937.0      | *0.040      |             |
+    | LINK-78         | 388.0       | 8.00        | 3937.0      | *0.038      |             |
+    | LINK-77         | 577.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-76         | 158.0       | 8.00        | 3937.0      | *0.027      |             |
+    | LINK-75         | 574.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-74         | 805.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-73         | 91.0        | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-72         | 242.0       | 24.00       | 3937.0      | 0.016       |             |
+    | LINK-71         | 752.0       | 8.00        | 3937.0      | *0.022      |             |
+    | LINK-70         | 556.0       | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-69         | 373.0       | 8.00        | 3937.0      | *0.020      |             |
+    | LINK-68         | 420.0       | 8.00        | 3937.0      | *0.024      |             |
+    | LINK-67         | 544.0       | 8.00        | 3937.0      | *0.021      |             |
+    | LINK-66         | 2581.0      | 8.02        | 3937.0      | *0.023      |             |
+    | LINK-65         | 668.0       | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-64         | 538.0       | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-63         | 619.0       | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-62         | 998.0       | 8.30        | 3937.0      | *0.024      |             |
+    | LINK-61         | 348.0       | 8.00        | 3937.0      | *0.022      |             |
+    | LINK-60         | 552.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-59         | 739.0       | 8.00        | 3937.0      | *0.024      |             |
+    | LINK-58         | 246.0       | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-57         | 507.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-56         | 1113.0      | 8.00        | 3937.0      | *0.024      |             |
+    | LINK-55         | 754.0       | 8.41        | 3937.0      | *0.036      |             |
+    | LINK-54         | 645.0       | 12.00       | 3937.0      | *0.026      |             |
+    | LINK-53         | 1699.0      | 12.00       | 3937.0      | *0.025      |             |
+    | LINK-52         | 1146.0      | 12.00       | 3937.0      | *0.023      |             |
+    | LINK-51         | 144.0       | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-50         | 76.0        | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-49         | 336.0       | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-48         | 178.0       | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-47         | 292.0       | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-46         | 1175.0      | 24.00       | 3937.0      | *0.021      |             |
+    | LINK-45         | 1101.0      | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-44         | 1257.0      | 20.00       | 3937.0      | *0.024      |             |
+    | LINK-43         | 942.0       | 20.00       | 3937.0      | *0.026      |             |
+    | LINK-40         | 2125.0      | 20.00       | 3937.0      | *0.023      |             |
+    | LINK-39         | 1537.0      | 16.00       | 3937.0      | *0.032      |             |
+    | LINK-38         | 1000.0      | 8.00        | 3937.0      | *0.048      |             |
+    | LINK-37         | 1066.0      | 8.00        | 3937.0      | *0.038      |             |
+    | LINK-36         | 1066.0      | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-35         | 10260.3     | 24.00       | 3937.0      | 0.020       |             |
+    | LINK-33         | 1845.0      | 12.00       | 3937.0      | 0.014       |             |
+    | LINK-32         | 1811.0      | 8.00        | 3937.0      | *0.041      |             |
+    | LINK-31         | 1402.0      | 24.00       | 3937.0      | 0.015       |             |
+    | LINK-30         | 1570.0      | 8.00        | 3937.0      | *0.037      |             |
+    | LINK-29         | 731.0       | 16.00       | 3937.0      | *0.030      |             |
+    | LINK-28         | 1382.0      | 16.00       | 3937.0      | *0.034      |             |
+    | LINK-27         | 928.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-26         | 69.0        | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-24         | 50.0        | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-23         | 2089.0      | 8.00        | 3937.0      | 0.018       |             |
+    | LINK-22         | 332.0       | 8.00        | 3937.0      | *0.046      |             |
+
+ 
+    | LINK-21         | 671.0       | 8.00        | 3937.0      | *0.044      |             |
+    | LINK-20         | 597.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-19         | 51.0        | 30.00       | 3937.0      | *0.020      |             |
+    | LINK-18         | 320.0       | 30.00       | 3937.0      | *0.020      |             |
+    | LINK-17         | 124.0       | 12.00       | 3937.0      | 0.018       |             |
+    | LINK-16         | 409.0       | 8.00        | 3937.0      | *0.072      |             |
+    | LINK-15         | 125.0       | 16.00       | 3937.0      | 0.019       |             |
+    | LINK-13         | 56.0        | 8.00        | 3937.0      | *0.127      |             |
+    | LINK-12         | 837.0       | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-11         | 308.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-10         | 377.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-9          | 396.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-8          | 502.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-7          | 238.0       | 8.00        | 3937.0      | *0.042      |             |
+    | LINK-6          | 574.0       | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-3          | 697.0       | 8.00        | 3937.0      | *0.046      |             |
+    | LINK-2          | 324.0       | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-1          | 359.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-169        | 4700.0      | 10.12       | 3937.0      | 0.017       |             |
+    | LINK-167        | 84.0        | 8.00        | 3937.0      | 0.017       |             |
+    | LINK-166        | 169.0       | 11.97       | 3937.0      | 0.017       |             |
+    | LINK-165        | 559.0       | 16.00       | 3937.0      | 0.015       |             |
+    | LINK-164        | 930.0       | 12.00       | 3937.0      | 0.014       |             |
+    | LINK-162        | 315.0       | 10.00       | 3937.0      | *0.022      |             |
+    | LINK-161        | 718.0       | 10.00       | 3937.0      | *0.037      |             |
+    | LINK-160        | 1214.0      | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-159        | 784.0       | 8.00        | 3937.0      | *0.037      |             |
+    | LINK-158        | 620.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-157        | 152.0       | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-156        | 812.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-155        | 148.0       | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-154        | 597.0       | 8.00        | 3937.0      | *0.036      |             |
+    | LINK-153        | 285.0       | 8.00        | 3937.0      | *0.028      |             |
+    | LINK-152        | 122.0       | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-151        | 489.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-150        | 1432.0      | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-149        | 332.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-148        | 177.0       | 8.00        | 3937.0      | *0.028      |             |
+    | LINK-147        | 1805.0      | 8.00        | 3937.0      | *0.032      |             |
+    | LINK-146        | 157.0       | 8.00        | 3937.0      | *0.028      |             |
+    | LINK-145        | 331.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-144        | 143.0       | 8.00        | 3937.0      | *0.120      |             |
+    | LINK-143        | 403.0       | 10.00       | 3937.0      | *0.024      |             |
+    | LINK-142        | 167.0       | 10.00       | 3937.0      | *0.027      |             |
+    | LINK-141        | 178.0       | 10.00       | 3937.0      | *0.029      |             |
+    | LINK-140        | 464.0       | 10.00       | 3937.0      | *0.029      |             |
+    | LINK-139        | 926.0       | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-138        | 191.0       | 10.00       | 3937.0      | *0.031      |             |
+    | LINK-137        | 250.0       | 10.00       | 3937.0      | *0.023      |             |
+    | LINK-136        | 195.0       | 8.00        | 3937.0      | *0.024      |             |
+    | LINK-135        | 507.0       | 8.00        | 3937.0      | *0.038      |             |
+    | LINK-134        | 341.0       | 8.00        | 3937.0      | *0.356      |             |
+    | LINK-133        | 456.0       | 8.00        | 3937.0      | *0.035      |             |
+    | LINK-132        | 174.0       | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-131        | 1586.0      | 8.00        | 3937.0      | *0.029      |             |
+    | LINK-130        | 152.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-129        | 430.0       | 8.00        | 3937.0      | *0.026      |             |
+    | LINK-128        | 205.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-127        | 372.0       | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-126        | 895.0       | 8.00        | 3937.0      | *0.034      |             |
+
+ 
+    | LINK-125        | 60.0        | 10.00       | 3937.0      | *0.079      |             |
+    | LINK-124        | 333.0       | 10.00       | 3937.0      | *0.133      |             |
+    | LINK-123        | 195.0       | 10.00       | 3937.0      | *0.030      |             |
+    | LINK-122        | 169.0       | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-121        | 167.0       | 8.00        | 3937.0      | *0.043      |             |
+    | LINK-120        | 655.0       | 10.00       | 3937.0      | *0.029      |             |
+    | LINK-119        | 417.0       | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-118        | 772.0       | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-117        | 336.0       | 8.00        | 3937.0      | *0.033      |             |
+    | LINK-116        | 928.0       | 8.00        | 3937.0      | *0.036      |             |
+    | LINK-115        | 127.0       | 8.00        | 3937.0      | 0.015       |             |
+    | LINK-114        | 169.0       | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-113        | 938.0       | 10.00       | 3937.0      | *0.031      |             |
+    | LINK-112        | 528.0       | 8.00        | 3937.0      | *0.036      |             |
+    | LINK-111        | 695.0       | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-110        | 231.0       | 8.00        | 3937.0      | *0.029      |             |
+    | LINK-109        | 1095.0      | 10.00       | 3937.0      | *0.027      |             |
+    | LINK-108        | 713.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-107        | 199.0       | 8.00        | 3937.0      | *0.030      |             |
+    | LINK-106        | 872.0       | 8.00        | 3937.0      | *0.042      |             |
+    | LINK-105        | 381.0       | 10.00       | 3937.0      | *0.027      |             |
+    | LINK-104        | 398.0       | 8.00        | 3937.0      | *0.048      |             |
+    | LINK-103        | 209.0       | 8.00        | 3937.0      | *0.034      |             |
+    | LINK-102        | 420.0       | 8.00        | 3937.0      | *0.048      |             |
+    | LINK-101        | 65.0        | 8.00        | 3937.0      | *0.025      |             |
+    | LINK-100        | 300.0       | 8.00        | 3937.0      | *0.039      |             |
+    | LINK-99         | 134.0       | 8.00        | 3937.0      | *0.031      |             |
+    | LINK-42         | 2125.0      | 20.00       | 3937.0      | *0.032      |             |
+    | LINK-0          | 7401.0      | 20.50       | 3937.0      | *0.032      |             |
+    | LINK-41         | 3227.0      | 16.00       | 3937.0      | *0.030      |             |
+    | LINK-14         | 599.0       | 8.00        | 3937.0      | *0.024      |             |
+    | LINK-25         | 57.0        | 8.00        | 3937.0      | 0.000       |             |
+    | LINK-168        | 291.0       | 12.00       | 3937.0      | 0.014       |             |
+    | LINK-163        | 76.0        | 10.00       | 3937.0      | 0.000       |             |
+    | LINK-34         | 2433.0      | 12.00       | 3937.0      | 0.014       |             |
+    -----------------------------------------------------------------------------------------
+              * Darcy-Weisbach friction coefficient exceeds 0.020
+ 
+ 
+ 
+   ***  INITIAL PIPE CONDITIONS  ***
+ 
+    -------------------------------------------------------------------------------------
+    |    FROM     |    HEAD     |     TO      |    HEAD     |    FLOW     |     VEL     |
+    |    NODE     |    (ft)     |    NODE     |    (ft)     |    (cfs)    |   (ft/s)    |
+    -------------------------------------------------------------------------------------
+    |             |             |             |             |             |             |
+    | JUNCTION-109| 424.9       | PUMP-172    | 424.9       | 2.4         | 0.0         |
+    | PUMP-172    | 868.5       | JUNCTION-110| 868.5       | 2.4         | 0.0         |
+    | JUNCTION-105| 858.8       | PUMP-170    | 858.8       | 2.9         | 0.1         |
+    | PUMP-170    | 1158.0      | JUNCTION-106| 1158.0      | 2.9         | 0.1         |
+    | JUNCTION-62 | 867.0       | JUNCTION-63 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-61 | 867.0       | JUNCTION-62 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-60 | 867.0       | JUNCTION-61 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-60 | 867.0       | JUNCTION-59 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-59 | 867.0       | JUNCTION-60 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-58 | 867.0       | JUNCTION-59 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-31 | 867.1       | JUNCTION-58 | 867.0       | 0.3         | 0.5         |
+    | JUNCTION-57 | 867.0       | JUNCTION-33 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-32 | 867.0       | JUNCTION-57 | 867.0       | 0.1         | 0.2         |
+
+ 
+    | JUNCTION-55 | 867.1       | JUNCTION-56 | 867.1       | 0.0         | -0.1        |
+    | JUNCTION-55 | 867.1       | JUNCTION-54 | 867.1       | 0.0         | 0.1         |
+    | JUNCTION-56 | 867.1       | JUNCTION-55 | 867.1       | 0.0         | 0.1         |
+    | JUNCTION-53 | 867.1       | JUNCTION-56 | 867.1       | 0.1         | 0.1         |
+    | JUNCTION-54 | 867.1       | JUNCTION-31 | 867.1       | 0.1         | 0.3         |
+    | JUNCTION-53 | 867.1       | JUNCTION-54 | 867.1       | 0.1         | 0.2         |
+    | JUNCTION-23 | 867.2       | JUNCTION-53 | 867.1       | 0.2         | 0.3         |
+    | JUNCTION-52 | 864.6       | JUNCTION-50 | 864.6       | 0.0         | 0.0         |
+    | JUNCTION-52 | 864.6       | JUNCTION-47 | 864.6       | 0.0         | 0.1         |
+    | JUNCTION-51 | 864.6       | JUNCTION-52 | 864.6       | 0.0         | 0.1         |
+    | JUNCTION-51 | 864.6       | JUNCTION-48 | 864.6       | 0.0         | -0.1        |
+    | JUNCTION-50 | 864.6       | JUNCTION-51 | 864.6       | 0.0         | 0.0         |
+    | JUNCTION-49 | 864.6       | JUNCTION-50 | 864.6       | 0.0         | 0.1         |
+    | JUNCTION-49 | 864.6       | JUNCTION-22 | 864.6       | -0.1        | -0.3        |
+    | JUNCTION-48 | 864.6       | JUNCTION-49 | 864.6       | 0.0         | -0.1        |
+    | JUNCTION-47 | 864.6       | JUNCTION-48 | 864.6       | 0.0         | -0.1        |
+    | JUNCTION-21 | 864.6       | JUNCTION-47 | 864.6       | -0.1        | -0.1        |
+    | JUNCTION-29 | 859.4       | TANK-130    | 859.1       | 10.7        | 3.4         |
+    | JUNCTION-44 | 863.0       | JUNCTION-28 | 862.5       | 0.4         | 1.2         |
+    | JUNCTION-44 | 863.0       | JUNCTION-26 | 862.9       | 0.2         | 0.5         |
+    | JUNCTION-43 | 863.5       | JUNCTION-44 | 863.0       | 0.6         | 1.7         |
+    | JUNCTION-43 | 863.5       | JUNCTION-25 | 863.6       | -0.2        | -0.5        |
+    | JUNCTION-24 | 864.0       | JUNCTION-43 | 863.5       | 0.4         | 1.2         |
+    | JUNCTION-42 | 863.9       | JUNCTION-27 | 862.8       | 0.3         | 0.9         |
+    | JUNCTION-42 | 863.9       | JUNCTION-41 | 863.9       | -0.2        | -0.5        |
+    | JUNCTION-40 | 863.9       | JUNCTION-42 | 863.8       | 0.2         | 0.5         |
+    | JUNCTION-40 | 863.9       | JUNCTION-41 | 863.9       | 0.0         | 0.0         |
+    | JUNCTION-39 | 864.1       | JUNCTION-40 | 863.9       | 0.2         | 0.5         |
+    | JUNCTION-37 | 864.3       | JUNCTION-39 | 864.1       | 0.4         | 1.1         |
+    | JUNCTION-35 | 864.3       | JUNCTION-38 | 864.3       | 0.0         | 0.0         |
+    | JUNCTION-37 | 864.3       | JUNCTION-20 | 864.5       | -0.2        | -0.7        |
+    | JUNCTION-35 | 864.3       | JUNCTION-37 | 864.3       | 0.2         | 0.4         |
+    | JUNCTION-35 | 864.3       | JUNCTION-36 | 864.3       | 0.0         | 0.0         |
+    | JUNCTION-19 | 864.5       | JUNCTION-35 | 864.3       | 0.2         | 0.5         |
+    | JUNCTION-33 | 867.0       | JUNCTION-57 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-32 | 867.0       | JUNCTION-33 | 867.0       | 0.2         | 0.3         |
+    | JUNCTION-31 | 867.1       | JUNCTION-32 | 867.0       | 0.3         | 0.4         |
+    | JUNCTION-30 | 867.2       | JUNCTION-31 | 867.1       | 0.4         | 0.5         |
+    | JUNCTION-27 | 862.8       | JUNCTION-28 | 862.5       | 13.2        | 4.2         |
+    | JUNCTION-26 | 862.9       | JUNCTION-27 | 862.8       | 12.9        | 4.1         |
+    | JUNCTION-25 | 863.6       | JUNCTION-26 | 862.9       | 12.7        | 4.1         |
+    | JUNCTION-24 | 864.0       | JUNCTION-25 | 863.6       | 12.9        | 4.1         |
+    | JUNCTION-22 | 864.6       | JUNCTION-24 | 864.0       | 13.4        | 4.3         |
+    | JUNCTION-23 | 867.2       | JUNCTION-30 | 867.2       | -1.6        | -0.5        |
+    | JUNCTION-22 | 864.6       | JUNCTION-23 | 867.2       | -14.1       | -4.5        |
+    | JUNCTION-21 | 864.6       | JUNCTION-22 | 864.6       | -0.6        | -0.3        |
+    | JUNCTION-19 | 864.5       | JUNCTION-20 | 864.5       | -0.3        | -0.1        |
+    | JUNCTION-20 | 864.5       | JUNCTION-21 | 864.5       | -0.6        | -0.3        |
+    | VALVE-176   | 864.5       | JUNCTION-17 | 864.5       | 0.1         | 0.1         |
+    | JUNCTION-11 | 864.5       | JUNCTION-10 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-2  | 864.5       | JUNCTION-3  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-41 | 863.9       | JUNCTION-39 | 864.1       | -0.2        | -0.5        |
+    | JUNCTION-34 | 868.2       | JUNCTION-30 | 867.2       | 2.4         | 0.8         |
+    | JUNCTION-23 | 867.2       | VALVE-179   | 968.2       | -12.6       | -16.1       |
+    | JUNCTION-45 | 1155.8      | JUNCTION-46 | 1155.8      | 0.0         | 0.0         |
+    | JUNCTION-29 | 859.4       | JUNCTION-28 | 862.5       | -13.6       | -4.3        |
+    | JUNCTION-0  | 864.5       | JUNCTION-4  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-18 | 864.5       | VALVE-175   | 864.5       | -0.1        | -0.1        |
+    | JUNCTION-17 | 864.5       | JUNCTION-18 | 864.5       | -0.1        | 0.0         |
+    | JUNCTION-14 | 864.5       | JUNCTION-16 | 864.5       | 0.0         | 0.0         |
+
+ 
+    | VALVE-173   | 864.5       | JUNCTION-14 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-15 | 864.5       | JUNCTION-3  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-5  | 864.5       | JUNCTION-15 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-14 | 864.5       | JUNCTION-12 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-12 | 864.5       | JUNCTION-11 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-12 | 864.5       | JUNCTION-13 | 864.5       | 0.0         | 0.0         |
+    | RESERVOIR-129| 425.0       | JUNCTION-128| 425.0       | 2.4         | 0.5         |
+    | JUNCTION-128| 425.0       | JUNCTION-1  | 425.0       | 2.4         | 0.5         |
+    | JUNCTION-110| 868.5       | JUNCTION-34 | 868.2       | 2.4         | 3.1         |
+    | JUNCTION-10 | 864.5       | JUNCTION-11 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-1  | 425.0       | JUNCTION-109| 424.9       | 2.4         | 1.7         |
+    | JUNCTION-2  | 864.5       | VALVE-174   | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-9  | 864.5       | JUNCTION-8  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-18 | 864.5       | JUNCTION-9  | 864.5       | 0.0         | 0.1         |
+    | JUNCTION-9  | 864.5       | JUNCTION-8  | 864.5       | 0.0         | 0.1         |
+    | JUNCTION-8  | 864.5       | JUNCTION-6  | 864.5       | 0.0         | 0.1         |
+    | JUNCTION-6  | 864.5       | JUNCTION-7  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-5  | 864.5       | JUNCTION-6  | 864.5       | 0.0         | -0.1        |
+    | JUNCTION-5  | 864.5       | JUNCTION-4  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-3  | 864.5       | JUNCTION-4  | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-0  | 864.5       | JUNCTION-2  | 864.5       | 0.0         | 0.1         |
+    | JUNCTION-17 | 864.5       | JUNCTION-0  | 864.5       | 0.0         | 0.1         |
+    | JUNCTION-103| 1117.4      | JUNCTION-104| 1155.8      | -2.8        | -5.1        |
+    | JUNCTION-106| 1158.0      | JUNCTION-104| 1155.8      | 2.9         | 8.3         |
+    | JUNCTION-29 | 859.4       | JUNCTION-105| 858.8       | 2.9         | 3.7         |
+    | JUNCTION-102| 1149.9      | TANK-131    | 1155.0      | -10.3       | -7.3        |
+    | JUNCTION-103| 1117.4      | JUNCTION-102| 1149.9      | -9.9        | -12.6       |
+    | JUNCTION-46 | 1155.8      | VALVE-177   | 1155.8      | 0.0         | -0.1        |
+    | JUNCTION-45 | 1155.8      | JUNCTION-46 | 1155.8      | 0.0         | 0.0         |
+    | JUNCTION-97 | 866.9       | JUNCTION-71 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-98 | 866.9       | JUNCTION-99 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-100| 866.9       | JUNCTION-101| 866.9       | 0.0         | 0.0         |
+    | JUNCTION-101| 866.9       | JUNCTION-98 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-100| 866.9       | JUNCTION-101| 866.9       | 0.0         | 0.0         |
+    | JUNCTION-99 | 866.9       | JUNCTION-100| 866.9       | 0.0         | 0.0         |
+    | JUNCTION-98 | 866.9       | JUNCTION-99 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-97 | 866.9       | JUNCTION-98 | 866.9       | 0.1         | 0.2         |
+    | JUNCTION-97 | 866.9       | JUNCTION-96 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-91 | 867.0       | JUNCTION-97 | 866.9       | 0.0         | 0.1         |
+    | JUNCTION-96 | 866.9       | JUNCTION-95 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-95 | 867.0       | JUNCTION-96 | 866.9       | 0.0         | 0.1         |
+    | JUNCTION-92 | 867.0       | JUNCTION-95 | 867.0       | 0.1         | 0.2         |
+    | JUNCTION-93 | 867.0       | JUNCTION-94 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-94 | 867.0       | JUNCTION-92 | 867.0       | -0.1        | -0.2        |
+    | JUNCTION-93 | 867.0       | JUNCTION-94 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-90 | 867.0       | JUNCTION-93 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-92 | 867.0       | JUNCTION-33 | 867.0       | -0.3        | -0.5        |
+    | JUNCTION-91 | 867.0       | JUNCTION-92 | 867.0       | -0.1        | -0.2        |
+    | JUNCTION-90 | 867.0       | JUNCTION-91 | 867.0       | -0.1        | -0.1        |
+    | JUNCTION-89 | 866.9       | JUNCTION-90 | 866.9       | -0.1        | -0.1        |
+    | JUNCTION-89 | 866.9       | JUNCTION-86 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-88 | 866.9       | JUNCTION-89 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-88 | 866.9       | JUNCTION-79 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-87 | 866.9       | JUNCTION-88 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-87 | 866.9       | JUNCTION-85 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-86 | 866.9       | JUNCTION-87 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-85 | 866.9       | JUNCTION-86 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-82 | 866.9       | JUNCTION-85 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-84 | 866.9       | JUNCTION-83 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-84 | 866.9       | JUNCTION-81 | 866.9       | 0.0         | -0.1        |
+
+ 
+    | JUNCTION-83 | 866.9       | JUNCTION-84 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-82 | 866.9       | JUNCTION-83 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-80 | 866.9       | JUNCTION-82 | 866.9       | 0.0         | 0.1         |
+    | JUNCTION-78 | 866.9       | JUNCTION-71 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-81 | 866.9       | JUNCTION-77 | 866.9       | 0.0         | -0.1        |
+    | JUNCTION-80 | 866.9       | JUNCTION-81 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-79 | 866.9       | JUNCTION-80 | 866.9       | 0.0         | 0.1         |
+    | JUNCTION-78 | 866.9       | JUNCTION-79 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-76 | 866.9       | JUNCTION-78 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-77 | 866.9       | JUNCTION-73 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-76 | 866.9       | JUNCTION-77 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-75 | 866.9       | JUNCTION-76 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-75 | 866.9       | JUNCTION-74 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-72 | 866.9       | JUNCTION-75 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-74 | 866.9       | JUNCTION-73 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-72 | 866.9       | JUNCTION-74 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-73 | 866.9       | JUNCTION-69 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-70 | 866.9       | JUNCTION-72 | 866.9       | 0.0         | 0.1         |
+    | JUNCTION-70 | 866.9       | JUNCTION-71 | 866.9       | 0.0         | 0.0         |
+    | JUNCTION-69 | 867.0       | JUNCTION-70 | 866.9       | 0.1         | 0.1         |
+    | JUNCTION-68 | 867.0       | JUNCTION-69 | 866.9       | 0.1         | 0.2         |
+    | JUNCTION-63 | 867.0       | JUNCTION-62 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-65 | 867.0       | JUNCTION-68 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-64 | 867.0       | JUNCTION-65 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-68 | 867.0       | JUNCTION-58 | 867.0       | -0.1        | -0.2        |
+    | JUNCTION-66 | 867.0       | JUNCTION-67 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-67 | 867.0       | JUNCTION-61 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-66 | 867.0       | JUNCTION-67 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-65 | 867.0       | JUNCTION-66 | 867.0       | 0.0         | -0.1        |
+    | JUNCTION-64 | 867.0       | JUNCTION-65 | 867.0       | 0.0         | 0.0         |
+    | JUNCTION-63 | 867.0       | JUNCTION-64 | 867.0       | 0.0         | 0.1         |
+    | JUNCTION-19 | 864.5       | VALVE-180   | 864.5       | 0.1         | 0.0         |
+    | VALVE-180   | 864.5       | VALVE-176   | 864.5       | 0.1         | 0.0         |
+    | JUNCTION-20 | 864.5       | VALVE-175   | 864.5       | 0.1         | 0.1         |
+    | VALVE-174   | 864.5       | JUNCTION-10 | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-15 | 864.5       | VALVE-173   | 864.5       | 0.0         | 0.0         |
+    | JUNCTION-103| 1117.4      | VALVE-178   | 1101.4      | 12.6        | 16.1        |
+    | VALVE-177   | 1155.8      | JUNCTION-104| 1155.8      | 0.0         | -0.1        |
+    | VALVE-178   | 1101.4      | VALVE-179   | 968.2       | 12.6        | 16.1        |
+    -------------------------------------------------------------------------------------
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+
+   ***  List of end points with possible discrepancies in input values  ***
+
+         NOTE: End points where initial surges generated are included.
+
+                                  PUMP-172-A:PUMP-172
+                                  PUMP-172-B:PUMP-172
+                                  LINK-33:VALVE-179
+                                  LINK-168:VALVE-178
+                                  LINK-34:VALVE-178
+                                  LINK-34:VALVE-179
+
+          Check valve at node "PUMP-172" closes in     0.46 seconds.
+
+
+
+
+          LEVELS ARE IN INPUT UNITS : FT OR M
+
+     EXTREME LEVELS IN SURGE TANK AT NODE "TANK-131" ARE AS FOLLOWS:
+
+          MAXIMUM LEVEL IN SURGE TANK ABOVE PIPE =   17.95
+
+          MINIMUM LEVEL IN SURGE TANK ABOVE PIPE =   17.92
+
+
+
+
+
+
+          LEVELS ARE IN INPUT UNITS : FT OR M
+
+     EXTREME LEVELS IN SURGE TANK AT NODE "TANK-130" ARE AS FOLLOWS:
+
+          MAXIMUM LEVEL IN SURGE TANK ABOVE PIPE =   15.16
+
+          MINIMUM LEVEL IN SURGE TANK ABOVE PIPE =   15.16
+
+
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+ 
+    ***  LIST OF SORTED VAPOUR AND AIR POCKETS  ***
+ 
+ 
+          No vapour/air pockets were formed.
+ 
+ 
+
+                        -----------------------------------
+                        |   HAMMER Engine 08.11.06.113    |
+ -------------------------------------------------------------------------------
+        Based on Technology Originally Developed by GENIVAR(EHG).  Compiled by IVF.
+        Copyright (C) 2011 Bentley Systems, Incorporated. All Rights Reserved.
+ -------------------------------------------------------------------------------
+
+ 
+    ***  SUMMARY FOR  Default Project-Base-BWSN_Network_1.wtg.sqlite.  ***
+ 
+    --------------------------------------------------------------------------------
+    |    END           | MAX. PRESS.  | MIN. PRESS.  |  MAX. HEAD   |  MIN. HEAD   |
+    |   POINT          |     (ftH)    |     (ftH)    |     (ft)     |     (ft)     |
+    --------------------------------------------------------------------------------
+    |                  |              |              |              |              |
+    | PUMP-172-A:JUNCTION-109| 475.4        | 374.4        | 475.4        | 374.4        |
+    | PUMP-172-A:PUMP-172| 475.4        | 374.4        | 475.4        | 374.4        |
+    | PUMP-172-B:PUMP-172| 938.2        | 769.2        | 938.2        | 769.2        |
+    | PUMP-172-B:JUNCTION-110| 938.3        | 769.2        | 938.3        | 769.2        |
+    | PUMP-170-A:JUNCTION-105| 866.5        | 846.7        | 866.5        | 846.7        |
+    | PUMP-170-A:PUMP-170| 866.5        | 846.8        | 866.5        | 846.8        |
+    | PUMP-170-B:PUMP-170| 1165.2       | 1145.1       | 1165.2       | 1145.1       |
+    | PUMP-170-B:JUNCTION-106| 1165.2       | 1145.0       | 1165.2       | 1145.0       |
+    | LINK-98:JUNCTION-62| 332.2        | 164.9        | 957.6        | 790.3        |
+    | LINK-98:JUNCTION-63| 333.6        | 165.6        | 957.5        | 789.6        |
+    | LINK-97:JUNCTION-61| 331.5        | 167.5        | 956.8        | 792.9        |
+    | LINK-97:JUNCTION-62| 332.2        | 164.9        | 957.6        | 790.3        |
+    | LINK-96:JUNCTION-60| 331.9        | 170.2        | 955.9        | 794.2        |
+    | LINK-96:JUNCTION-61| 331.5        | 167.5        | 956.8        | 792.9        |
+    | LINK-95:JUNCTION-60| 331.9        | 170.2        | 955.9        | 794.2        |
+    | LINK-95:JUNCTION-59| 332.4        | 173.8        | 953.4        | 794.8        |
+    | LINK-94:JUNCTION-59| 332.4        | 173.8        | 953.4        | 794.8        |
+    | LINK-94:JUNCTION-60| 331.9        | 170.2        | 955.9        | 794.2        |
+    | LINK-93:JUNCTION-58| 333.1        | 188.0        | 943.3        | 798.2        |
+    | LINK-93:JUNCTION-59| 332.4        | 173.8        | 953.4        | 794.8        |
+    | LINK-92:JUNCTION-31| 314.0        | 193.0        | 914.4        | 793.4        |
+    | LINK-92:JUNCTION-58| 333.1        | 188.0        | 943.3        | 798.2        |
+    | LINK-91:JUNCTION-57| 324.9        | 154.0        | 942.8        | 771.9        |
+    | LINK-91:JUNCTION-33| 317.4        | 148.9        | 940.2        | 771.6        |
+    | LINK-90:JUNCTION-32| 314.2        | 156.0        | 940.0        | 781.9        |
+    | LINK-90:JUNCTION-57| 324.9        | 154.0        | 942.8        | 771.9        |
+    | LINK-89:JUNCTION-55| 309.2        | 170.7        | 912.6        | 774.0        |
+    | LINK-89:JUNCTION-56| 303.4        | 165.0        | 910.3        | 772.0        |
+    | LINK-88:JUNCTION-55| 309.2        | 170.7        | 912.6        | 774.0        |
+    | LINK-88:JUNCTION-54| 309.3        | 182.4        | 911.4        | 784.5        |
+    | LINK-87:JUNCTION-56| 303.4        | 165.0        | 910.3        | 772.0        |
+    | LINK-87:JUNCTION-55| 309.2        | 170.7        | 912.6        | 774.0        |
+    | LINK-86:JUNCTION-53| 300.2        | 172.4        | 907.8        | 780.0        |
+    | LINK-86:JUNCTION-56| 303.4        | 165.0        | 910.3        | 772.0        |
+    | LINK-85:JUNCTION-54| 309.3        | 182.4        | 911.4        | 784.5        |
+    | LINK-85:JUNCTION-31| 314.0        | 193.0        | 914.4        | 793.4        |
+    | LINK-84:JUNCTION-53| 300.2        | 172.4        | 907.8        | 780.0        |
+    | LINK-84:JUNCTION-54| 309.3        | 182.4        | 911.4        | 784.5        |
+    | LINK-83:JUNCTION-23| 292.7        | 197.0        | 897.0        | 801.4        |
+    | LINK-83:JUNCTION-53| 300.2        | 172.4        | 907.8        | 780.0        |
+    | LINK-82:JUNCTION-52| 288.5        | 181.9        | 901.8        | 795.2        |
+    | LINK-82:JUNCTION-50| 292.3        | 180.9        | 903.4        | 792.0        |
+
+    | LINK-81:JUNCTION-52| 288.5        | 181.9        | 901.8        | 795.2        |
+    | LINK-81:JUNCTION-47| 258.3        | 165.6        | 898.7        | 806.1        |
+    | LINK-80:JUNCTION-51| 277.8        | 171.3        | 901.5        | 795.0        |
+    | LINK-80:JUNCTION-52| 288.5        | 181.9        | 901.8        | 795.2        |
+    | LINK-79:JUNCTION-51| 277.8        | 171.3        | 901.5        | 795.0        |
+    | LINK-79:JUNCTION-48| 262.7        | 160.5        | 900.2        | 798.0        |
+    | LINK-78:JUNCTION-50| 292.3        | 180.9        | 903.4        | 792.0        |
+    | LINK-78:JUNCTION-51| 277.8        | 171.3        | 901.5        | 795.0        |
+    | LINK-77:JUNCTION-49| 274.5        | 181.6        | 898.4        | 805.5        |
+    | LINK-77:JUNCTION-50| 292.3        | 180.9        | 903.4        | 792.0        |
+    | LINK-76:JUNCTION-49| 274.5        | 181.6        | 898.4        | 805.5        |
+    | LINK-76:JUNCTION-22| 269.0        | 187.2        | 895.0        | 813.2        |
+    | LINK-75:JUNCTION-48| 262.7        | 160.5        | 900.2        | 798.0        |
+    | LINK-75:JUNCTION-49| 274.5        | 181.6        | 898.4        | 805.5        |
+    | LINK-74:JUNCTION-47| 258.3        | 165.6        | 898.7        | 806.1        |
+    | LINK-74:JUNCTION-48| 262.7        | 160.5        | 900.2        | 798.0        |
+    | LINK-73:JUNCTION-21| 245.2        | 156.4        | 897.6        | 808.8        |
+    | LINK-73:JUNCTION-47| 258.3        | 165.6        | 898.7        | 806.1        |
+    | LINK-72:JUNCTION-29| 17.5         | 4.5          | 863.7        | 850.8        |
+    | LINK-72:TANK-130 | 15.2         | 15.2         | 859.1        | 859.1        |
+    | LINK-71:JUNCTION-44| 210.4        | 135.7        | 888.9        | 814.2        |
+    | LINK-71:JUNCTION-28| 182.4        | 116.1        | 884.1        | 817.8        |
+    | LINK-70:JUNCTION-44| 210.4        | 135.7        | 888.9        | 814.2        |
+    | LINK-70:JUNCTION-26| 202.6        | 133.3        | 886.1        | 816.7        |
+    | LINK-69:JUNCTION-43| 237.4        | 162.5        | 890.5        | 815.6        |
+    | LINK-69:JUNCTION-44| 210.4        | 135.7        | 888.9        | 814.2        |
+    | LINK-68:JUNCTION-43| 237.4        | 162.5        | 890.5        | 815.6        |
+    | LINK-68:JUNCTION-25| 235.0        | 162.3        | 888.9        | 816.3        |
+    | LINK-67:JUNCTION-24| 254.4        | 179.2        | 891.0        | 815.9        |
+    | LINK-67:JUNCTION-43| 237.4        | 162.5        | 890.5        | 815.6        |
+    | LINK-66:JUNCTION-42| 198.2        | 78.1         | 926.2        | 806.2        |
+    | LINK-66:JUNCTION-27| 194.7        | 126.4        | 885.4        | 817.0        |
+    | LINK-65:JUNCTION-42| 198.2        | 78.1         | 926.2        | 806.2        |
+    | LINK-65:JUNCTION-41| 227.2        | 109.4        | 927.5        | 809.6        |
+    | LINK-64:JUNCTION-40| 186.1        | 68.1         | 927.7        | 809.7        |
+    | LINK-64:JUNCTION-42| 198.2        | 78.1         | 926.2        | 806.2        |
+    | LINK-63:JUNCTION-40| 186.1        | 68.1         | 927.7        | 809.7        |
+    | LINK-63:JUNCTION-41| 227.2        | 109.4        | 927.5        | 809.6        |
+    | LINK-62:JUNCTION-39| 220.8        | 104.7        | 924.0        | 807.9        |
+    | LINK-62:JUNCTION-40| 186.1        | 68.1         | 927.7        | 809.7        |
+    | LINK-61:JUNCTION-37| 246.2        | 126.7        | 923.3        | 803.8        |
+    | LINK-61:JUNCTION-39| 220.8        | 104.7        | 924.0        | 807.9        |
+    | LINK-60:JUNCTION-35| 276.8        | 146.7        | 928.7        | 798.7        |
+    | LINK-60:JUNCTION-38| 286.7        | 148.1        | 933.2        | 794.6        |
+    | LINK-59:JUNCTION-37| 246.2        | 126.7        | 923.3        | 803.8        |
+    | LINK-59:JUNCTION-20| 296.0        | 188.3        | 913.8        | 806.1        |
+    | LINK-58:JUNCTION-35| 276.8        | 146.7        | 928.7        | 798.7        |
+    | LINK-58:JUNCTION-37| 246.2        | 126.7        | 923.3        | 803.8        |
+    | LINK-57:JUNCTION-35| 276.8        | 146.7        | 928.7        | 798.7        |
+    | LINK-57:JUNCTION-36| 297.8        | 162.1        | 931.9        | 796.2        |
+    | LINK-56:JUNCTION-19| 359.7        | 245.7        | 918.6        | 804.6        |
+    | LINK-56:JUNCTION-35| 276.8        | 146.7        | 928.7        | 798.7        |
+    | LINK-55:JUNCTION-33| 317.4        | 148.9        | 940.2        | 771.6        |
+    | LINK-55:JUNCTION-57| 324.9        | 154.0        | 942.8        | 771.9        |
+    | LINK-54:JUNCTION-32| 314.2        | 156.0        | 940.0        | 781.9        |
+    | LINK-54:JUNCTION-33| 317.4        | 148.9        | 940.2        | 771.6        |
+    | LINK-53:JUNCTION-31| 314.0        | 193.0        | 914.4        | 793.4        |
+    | LINK-53:JUNCTION-32| 314.2        | 156.0        | 940.0        | 781.9        |
+    | LINK-52:JUNCTION-30| 272.3        | 152.3        | 908.3        | 788.3        |
+    | LINK-52:JUNCTION-31| 314.0        | 193.0        | 914.4        | 793.4        |
+
+    | LINK-51:JUNCTION-27| 194.7        | 126.4        | 885.4        | 817.0        |
+    | LINK-51:JUNCTION-28| 182.4        | 116.1        | 884.1        | 817.8        |
+    | LINK-50:JUNCTION-26| 202.6        | 133.3        | 886.1        | 816.7        |
+    | LINK-50:JUNCTION-27| 194.7        | 126.4        | 885.4        | 817.0        |
+    | LINK-49:JUNCTION-25| 235.0        | 162.3        | 888.9        | 816.3        |
+    | LINK-49:JUNCTION-26| 202.6        | 133.3        | 886.1        | 816.7        |
+    | LINK-48:JUNCTION-24| 254.4        | 179.2        | 891.0        | 815.9        |
+    | LINK-48:JUNCTION-25| 235.0        | 162.3        | 888.9        | 816.3        |
+    | LINK-47:JUNCTION-22| 269.0        | 187.2        | 895.0        | 813.2        |
+    | LINK-47:JUNCTION-24| 254.4        | 179.2        | 891.0        | 815.9        |
+    | LINK-46:JUNCTION-23| 292.7        | 197.0        | 897.0        | 801.4        |
+    | LINK-46:JUNCTION-30| 272.3        | 152.3        | 908.3        | 788.3        |
+    | LINK-45:JUNCTION-22| 269.0        | 187.2        | 895.0        | 813.2        |
+    | LINK-45:JUNCTION-23| 292.7        | 197.0        | 897.0        | 801.4        |
+    | LINK-44:JUNCTION-21| 245.2        | 156.4        | 897.6        | 808.8        |
+    | LINK-44:JUNCTION-22| 269.0        | 187.2        | 895.0        | 813.2        |
+    | LINK-43:JUNCTION-19| 359.7        | 245.7        | 918.6        | 804.6        |
+    | LINK-43:JUNCTION-20| 296.0        | 188.3        | 913.8        | 806.1        |
+    | LINK-40:JUNCTION-20| 296.0        | 188.3        | 913.8        | 806.1        |
+    | LINK-40:JUNCTION-21| 245.2        | 156.4        | 897.6        | 808.8        |
+    | LINK-39:VALVE-176| 527.6        | 389.5        | 931.6        | 793.5        |
+    | LINK-39:JUNCTION-17| 567.0        | 415.6        | 952.1        | 800.7        |
+    | LINK-38:JUNCTION-11| 619.2        | 446.5        | 963.3        | 790.6        |
+    | LINK-38:JUNCTION-10| 627.1        | 459.1        | 960.7        | 792.7        |
+    | LINK-37:JUNCTION-2| 589.0        | 441.0        | 952.1        | 804.2        |
+    | LINK-37:JUNCTION-3| 527.3        | 372.3        | 955.4        | 800.4        |
+    | LINK-36:JUNCTION-41| 227.2        | 109.4        | 927.5        | 809.6        |
+    | LINK-36:JUNCTION-39| 220.8        | 104.7        | 924.0        | 807.9        |
+    | LINK-35:JUNCTION-34| 731.3        | 568.9        | 931.3        | 768.9        |
+    | LINK-35:JUNCTION-30| 272.3        | 152.3        | 908.3        | 788.3        |
+    | LINK-33:JUNCTION-23| 292.7        | 197.0        | 897.0        | 801.4        |
+    | LINK-33:VALVE-179| 235.3        | 142.6        | 993.3        | 900.6        |
+    | LINK-32:JUNCTION-45| 426.1        | 397.1        | 1173.4       | 1144.5       |
+    | LINK-32:JUNCTION-46| 349.4        | 326.6        | 1169.6       | 1146.8       |
+    | LINK-31:JUNCTION-29| 17.5         | 4.5          | 863.7        | 850.8        |
+    | LINK-31:JUNCTION-28| 182.4        | 116.1        | 884.1        | 817.8        |
+    | LINK-30:JUNCTION-0| 578.9        | 432.9        | 955.0        | 809.0        |
+    | LINK-30:JUNCTION-4| 483.7        | 327.8        | 961.5        | 805.6        |
+    | LINK-29:JUNCTION-18| 476.2        | 324.6        | 954.3        | 802.8        |
+    | LINK-29:VALVE-175| 414.6        | 270.8        | 947.6        | 803.8        |
+    | LINK-28:JUNCTION-17| 567.0        | 415.6        | 952.1        | 800.7        |
+    | LINK-28:JUNCTION-18| 476.2        | 324.6        | 954.3        | 802.8        |
+    | LINK-27:JUNCTION-14| 539.5        | 380.2        | 956.4        | 797.0        |
+    | LINK-27:JUNCTION-16| 583.4        | 412.3        | 966.4        | 795.3        |
+    | LINK-26:VALVE-173| 537.6        | 380.2        | 955.6        | 798.2        |
+    | LINK-26:JUNCTION-14| 539.5        | 380.2        | 956.4        | 797.0        |
+    | LINK-24:JUNCTION-15| 531.7        | 375.7        | 955.2        | 799.2        |
+    | LINK-24:JUNCTION-3| 527.3        | 372.3        | 955.4        | 800.4        |
+    | LINK-23:JUNCTION-5| 469.7        | 312.1        | 963.9        | 806.4        |
+    | LINK-23:JUNCTION-15| 531.7        | 375.7        | 955.2        | 799.2        |
+    | LINK-22:JUNCTION-14| 539.5        | 380.2        | 956.4        | 797.0        |
+    | LINK-22:JUNCTION-12| 580.0        | 412.6        | 959.5        | 792.1        |
+    | LINK-21:JUNCTION-12| 580.0        | 412.6        | 959.5        | 792.1        |
+    | LINK-21:JUNCTION-11| 619.2        | 446.5        | 963.3        | 790.6        |
+    | LINK-20:JUNCTION-12| 580.0        | 412.6        | 959.5        | 792.1        |
+    | LINK-20:JUNCTION-13| 636.3        | 462.8        | 962.3        | 788.8        |
+    | LINK-19:RESERVOIR-129| 425.0        | 425.0        | 425.0        | 425.0        |
+    | LINK-19:JUNCTION-128| 429.0        | 421.1        | 429.0        | 421.1        |
+    | LINK-18:JUNCTION-128| 429.0        | 421.1        | 429.0        | 421.1        |
+    | LINK-18:JUNCTION-1| 258.8        | 208.1        | 450.8        | 400.1        |
+
+    | LINK-17:JUNCTION-110| 938.3        | 769.2        | 938.3        | 769.2        |
+    | LINK-17:JUNCTION-34| 731.3        | 568.9        | 931.3        | 768.9        |
+    | LINK-16:JUNCTION-10| 627.1        | 459.1        | 960.7        | 792.7        |
+    | LINK-16:JUNCTION-11| 619.2        | 446.5        | 963.3        | 790.6        |
+    | LINK-15:JUNCTION-1| 258.8        | 208.1        | 450.8        | 400.1        |
+    | LINK-15:JUNCTION-109| 475.4        | 374.4        | 475.4        | 374.4        |
+    | LINK-13:JUNCTION-2| 589.0        | 441.0        | 952.1        | 804.2        |
+    | LINK-13:VALVE-174| 592.2        | 444.3        | 951.2        | 803.3        |
+    | LINK-12:JUNCTION-9| 470.3        | 314.0        | 958.6        | 802.3        |
+    | LINK-12:JUNCTION-8| 467.9        | 309.6        | 961.3        | 803.0        |
+    | LINK-11:JUNCTION-18| 476.2        | 324.6        | 954.3        | 802.8        |
+    | LINK-11:JUNCTION-9| 470.3        | 314.0        | 958.6        | 802.3        |
+    | LINK-10:JUNCTION-9| 470.3        | 314.0        | 958.6        | 802.3        |
+    | LINK-10:JUNCTION-8| 467.9        | 309.6        | 961.3        | 803.0        |
+    | LINK-9:JUNCTION-8| 467.9        | 309.6        | 961.3        | 803.0        |
+    | LINK-9:JUNCTION-6| 459.2        | 299.8        | 964.2        | 804.8        |
+    | LINK-8:JUNCTION-6| 459.2        | 299.8        | 964.2        | 804.8        |
+    | LINK-8:JUNCTION-7| 431.3        | 268.6        | 966.5        | 803.8        |
+    | LINK-7:JUNCTION-5| 469.7        | 312.1        | 963.9        | 806.4        |
+    | LINK-7:JUNCTION-6| 459.2        | 299.8        | 964.2        | 804.8        |
+    | LINK-6:JUNCTION-5| 469.7        | 312.1        | 963.9        | 806.4        |
+    | LINK-6:JUNCTION-4| 483.7        | 327.8        | 961.5        | 805.6        |
+    | LINK-3:JUNCTION-3| 527.3        | 372.3        | 955.4        | 800.4        |
+    | LINK-3:JUNCTION-4| 483.7        | 327.8        | 961.5        | 805.6        |
+    | LINK-2:JUNCTION-0| 578.9        | 432.9        | 955.0        | 809.0        |
+    | LINK-2:JUNCTION-2| 589.0        | 441.0        | 952.1        | 804.2        |
+    | LINK-1:JUNCTION-17| 567.0        | 415.6        | 952.1        | 800.7        |
+    | LINK-1:JUNCTION-0| 578.9        | 432.9        | 955.0        | 809.0        |
+    | LINK-169:JUNCTION-103| 106.5        | 51.7         | 1138.2       | 1083.4       |
+    | LINK-169:JUNCTION-104| 303.2        | 285.9        | 1163.9       | 1146.6       |
+    | LINK-167:JUNCTION-106| 1165.2       | 1145.0       | 1165.2       | 1145.0       |
+    | LINK-167:JUNCTION-104| 303.2        | 285.9        | 1163.9       | 1146.6       |
+    | LINK-166:JUNCTION-29| 17.5         | 4.5          | 863.7        | 850.8        |
+    | LINK-166:JUNCTION-105| 866.5        | 846.7        | 866.5        | 846.7        |
+    | LINK-165:JUNCTION-102| 61.2         | 44.0         | 1155.3       | 1138.0       |
+    | LINK-165:TANK-131| 17.9         | 17.9         | 1155.0       | 1155.0       |
+    | LINK-164:JUNCTION-103| 106.5        | 51.7         | 1138.2       | 1083.4       |
+    | LINK-164:JUNCTION-102| 61.2         | 44.0         | 1155.3       | 1138.0       |
+    | LINK-162:JUNCTION-46| 349.4        | 326.6        | 1169.6       | 1146.8       |
+    | LINK-162:VALVE-177| 316.1        | 297.6        | 1165.1       | 1146.6       |
+    | LINK-161:JUNCTION-45| 426.1        | 397.1        | 1173.4       | 1144.5       |
+    | LINK-161:JUNCTION-46| 349.4        | 326.6        | 1169.6       | 1146.8       |
+    | LINK-160:JUNCTION-97| 315.3        | 133.9        | 944.3        | 762.9        |
+    | LINK-160:JUNCTION-71| 314.5        | 144.9        | 946.7        | 777.1        |
+    | LINK-159:JUNCTION-98| 304.2        | 93.1         | 947.3        | 736.1        |
+    | LINK-159:JUNCTION-99| 308.3        | 82.8         | 950.1        | 724.7        |
+    | LINK-158:JUNCTION-100| 312.6        | 85.5         | 950.5        | 723.4        |
+    | LINK-158:JUNCTION-101| 303.9        | 84.5         | 948.9        | 729.6        |
+    | LINK-157:JUNCTION-101| 303.9        | 84.5         | 948.9        | 729.6        |
+    | LINK-157:JUNCTION-98| 304.2        | 93.1         | 947.3        | 736.1        |
+    | LINK-156:JUNCTION-100| 312.6        | 85.5         | 950.5        | 723.4        |
+    | LINK-156:JUNCTION-101| 303.9        | 84.5         | 948.9        | 729.6        |
+    | LINK-155:JUNCTION-99| 308.3        | 82.8         | 950.1        | 724.7        |
+    | LINK-155:JUNCTION-100| 312.6        | 85.5         | 950.5        | 723.4        |
+    | LINK-154:JUNCTION-98| 304.2        | 93.1         | 947.3        | 736.1        |
+    | LINK-154:JUNCTION-99| 308.3        | 82.8         | 950.1        | 724.7        |
+    | LINK-153:JUNCTION-97| 315.3        | 133.9        | 944.3        | 762.9        |
+    | LINK-153:JUNCTION-98| 304.2        | 93.1         | 947.3        | 736.1        |
+    | LINK-152:JUNCTION-97| 315.3        | 133.9        | 944.3        | 762.9        |
+    | LINK-152:JUNCTION-96| 316.3        | 136.9        | 945.4        | 766.0        |
+
+    | LINK-151:JUNCTION-91| 305.6        | 122.7        | 943.0        | 760.1        |
+    | LINK-151:JUNCTION-97| 315.3        | 133.9        | 944.3        | 762.9        |
+    | LINK-150:JUNCTION-96| 316.3        | 136.9        | 945.4        | 766.0        |
+    | LINK-150:JUNCTION-95| 313.3        | 131.5        | 944.1        | 762.4        |
+    | LINK-149:JUNCTION-95| 313.3        | 131.5        | 944.1        | 762.4        |
+    | LINK-149:JUNCTION-96| 316.3        | 136.9        | 945.4        | 766.0        |
+    | LINK-148:JUNCTION-92| 312.5        | 132.6        | 940.7        | 760.8        |
+    | LINK-148:JUNCTION-95| 313.3        | 131.5        | 944.1        | 762.4        |
+    | LINK-147:JUNCTION-93| 301.8        | 108.6        | 945.5        | 752.4        |
+    | LINK-147:JUNCTION-94| 310.0        | 120.5        | 943.5        | 754.0        |
+    | LINK-146:JUNCTION-94| 310.0        | 120.5        | 943.5        | 754.0        |
+    | LINK-146:JUNCTION-92| 312.5        | 132.6        | 940.7        | 760.8        |
+    | LINK-145:JUNCTION-93| 301.8        | 108.6        | 945.5        | 752.4        |
+    | LINK-145:JUNCTION-94| 310.0        | 120.5        | 943.5        | 754.0        |
+    | LINK-144:JUNCTION-90| 301.0        | 113.0        | 945.1        | 757.1        |
+    | LINK-144:JUNCTION-93| 301.8        | 108.6        | 945.5        | 752.4        |
+    | LINK-143:JUNCTION-92| 312.5        | 132.6        | 940.7        | 760.8        |
+    | LINK-143:JUNCTION-33| 317.4        | 148.9        | 940.2        | 771.6        |
+    | LINK-142:JUNCTION-91| 305.6        | 122.7        | 943.0        | 760.1        |
+    | LINK-142:JUNCTION-92| 312.5        | 132.6        | 940.7        | 760.8        |
+    | LINK-141:JUNCTION-90| 301.0        | 113.0        | 945.1        | 757.1        |
+    | LINK-141:JUNCTION-91| 305.6        | 122.7        | 943.0        | 760.1        |
+    | LINK-140:JUNCTION-89| 322.9        | 135.7        | 949.7        | 762.5        |
+    | LINK-140:JUNCTION-90| 301.0        | 113.0        | 945.1        | 757.1        |
+    | LINK-139:JUNCTION-89| 322.9        | 135.7        | 949.7        | 762.5        |
+    | LINK-139:JUNCTION-86| 331.0        | 142.1        | 954.5        | 765.6        |
+    | LINK-138:JUNCTION-88| 328.5        | 144.0        | 950.2        | 765.7        |
+    | LINK-138:JUNCTION-89| 322.9        | 135.7        | 949.7        | 762.5        |
+    | LINK-137:JUNCTION-88| 328.5        | 144.0        | 950.2        | 765.7        |
+    | LINK-137:JUNCTION-79| 331.1        | 152.8        | 949.0        | 770.7        |
+    | LINK-136:JUNCTION-87| 330.7        | 143.8        | 952.9        | 766.0        |
+    | LINK-136:JUNCTION-88| 328.5        | 144.0        | 950.2        | 765.7        |
+    | LINK-135:JUNCTION-87| 330.7        | 143.8        | 952.9        | 766.0        |
+    | LINK-135:JUNCTION-85| 333.9        | 148.4        | 954.1        | 768.6        |
+    | LINK-134:JUNCTION-86| 331.0        | 142.1        | 954.5        | 765.6        |
+    | LINK-134:JUNCTION-87| 330.7        | 143.8        | 952.9        | 766.0        |
+    | LINK-133:JUNCTION-85| 333.9        | 148.4        | 954.1        | 768.6        |
+    | LINK-133:JUNCTION-86| 331.0        | 142.1        | 954.5        | 765.6        |
+    | LINK-132:JUNCTION-82| 335.0        | 152.3        | 953.8        | 771.1        |
+    | LINK-132:JUNCTION-85| 333.9        | 148.4        | 954.1        | 768.6        |
+    | LINK-131:JUNCTION-84| 331.8        | 150.3        | 951.7        | 770.3        |
+    | LINK-131:JUNCTION-83| 337.2        | 153.6        | 954.9        | 771.3        |
+    | LINK-130:JUNCTION-84| 331.8        | 150.3        | 951.7        | 770.3        |
+    | LINK-130:JUNCTION-81| 324.2        | 147.5        | 947.8        | 771.0        |
+    | LINK-129:JUNCTION-83| 337.2        | 153.6        | 954.9        | 771.3        |
+    | LINK-129:JUNCTION-84| 331.8        | 150.3        | 951.7        | 770.3        |
+    | LINK-128:JUNCTION-82| 335.0        | 152.3        | 953.8        | 771.1        |
+    | LINK-128:JUNCTION-83| 337.2        | 153.6        | 954.9        | 771.3        |
+    | LINK-127:JUNCTION-80| 333.1        | 155.7        | 950.0        | 772.5        |
+    | LINK-127:JUNCTION-82| 335.0        | 152.3        | 953.8        | 771.1        |
+    | LINK-126:JUNCTION-78| 328.0        | 155.3        | 946.0        | 773.3        |
+    | LINK-126:JUNCTION-71| 314.5        | 144.9        | 946.7        | 777.1        |
+    | LINK-125:JUNCTION-81| 324.2        | 147.5        | 947.8        | 771.0        |
+    | LINK-125:JUNCTION-77| 321.7        | 146.4        | 946.3        | 771.1        |
+    | LINK-124:JUNCTION-80| 333.1        | 155.7        | 950.0        | 772.5        |
+    | LINK-124:JUNCTION-81| 324.2        | 147.5        | 947.8        | 771.0        |
+    | LINK-123:JUNCTION-79| 331.1        | 152.8        | 949.0        | 770.7        |
+    | LINK-123:JUNCTION-80| 333.1        | 155.7        | 950.0        | 772.5        |
+    | LINK-122:JUNCTION-78| 328.0        | 155.3        | 946.0        | 773.3        |
+    | LINK-122:JUNCTION-79| 331.1        | 152.8        | 949.0        | 770.7        |
+
+    | LINK-121:JUNCTION-76| 321.8        | 149.0        | 944.4        | 771.6        |
+    | LINK-121:JUNCTION-78| 328.0        | 155.3        | 946.0        | 773.3        |
+    | LINK-120:JUNCTION-77| 321.7        | 146.4        | 946.3        | 771.1        |
+    | LINK-120:JUNCTION-73| 324.3        | 151.9        | 944.7        | 772.3        |
+    | LINK-119:JUNCTION-76| 321.8        | 149.0        | 944.4        | 771.6        |
+    | LINK-119:JUNCTION-77| 321.7        | 146.4        | 946.3        | 771.1        |
+    | LINK-118:JUNCTION-75| 314.5        | 140.8        | 943.7        | 769.9        |
+    | LINK-118:JUNCTION-76| 321.8        | 149.0        | 944.4        | 771.6        |
+    | LINK-117:JUNCTION-75| 314.5        | 140.8        | 943.7        | 769.9        |
+    | LINK-117:JUNCTION-74| 322.0        | 150.0        | 944.4        | 772.4        |
+    | LINK-116:JUNCTION-72| 322.2        | 150.7        | 944.6        | 773.1        |
+    | LINK-116:JUNCTION-75| 314.5        | 140.8        | 943.7        | 769.9        |
+    | LINK-115:JUNCTION-74| 322.0        | 150.0        | 944.4        | 772.4        |
+    | LINK-115:JUNCTION-73| 324.3        | 151.9        | 944.7        | 772.3        |
+    | LINK-114:JUNCTION-72| 322.2        | 150.7        | 944.6        | 773.1        |
+    | LINK-114:JUNCTION-74| 322.0        | 150.0        | 944.4        | 772.4        |
+    | LINK-113:JUNCTION-73| 324.3        | 151.9        | 944.7        | 772.3        |
+    | LINK-113:JUNCTION-69| 322.6        | 152.6        | 948.6        | 778.6        |
+    | LINK-112:JUNCTION-70| 328.7        | 158.6        | 947.8        | 777.7        |
+    | LINK-112:JUNCTION-72| 322.2        | 150.7        | 944.6        | 773.1        |
+    | LINK-111:JUNCTION-70| 328.7        | 158.6        | 947.8        | 777.7        |
+    | LINK-111:JUNCTION-71| 314.5        | 144.9        | 946.7        | 777.1        |
+    | LINK-110:JUNCTION-69| 322.6        | 152.6        | 948.6        | 778.6        |
+    | LINK-110:JUNCTION-70| 328.7        | 158.6        | 947.8        | 777.7        |
+    | LINK-109:JUNCTION-68| 331.1        | 177.7        | 948.2        | 794.8        |
+    | LINK-109:JUNCTION-69| 322.6        | 152.6        | 948.6        | 778.6        |
+    | LINK-108:JUNCTION-63| 333.6        | 165.6        | 957.5        | 789.6        |
+    | LINK-108:JUNCTION-62| 332.2        | 164.9        | 957.6        | 790.3        |
+    | LINK-107:JUNCTION-65| 334.7        | 174.7        | 954.0        | 794.0        |
+    | LINK-107:JUNCTION-68| 331.1        | 177.7        | 948.2        | 794.8        |
+    | LINK-106:JUNCTION-64| 333.7        | 167.2        | 956.8        | 790.4        |
+    | LINK-106:JUNCTION-65| 334.7        | 174.7        | 954.0        | 794.0        |
+    | LINK-105:JUNCTION-68| 331.1        | 177.7        | 948.2        | 794.8        |
+    | LINK-105:JUNCTION-58| 333.1        | 188.0        | 943.3        | 798.2        |
+    | LINK-104:JUNCTION-66| 335.2        | 174.0        | 954.9        | 793.8        |
+    | LINK-104:JUNCTION-67| 332.0        | 168.2        | 956.5        | 792.7        |
+    | LINK-103:JUNCTION-67| 332.0        | 168.2        | 956.5        | 792.7        |
+    | LINK-103:JUNCTION-61| 331.5        | 167.5        | 956.8        | 792.9        |
+    | LINK-102:JUNCTION-66| 335.2        | 174.0        | 954.9        | 793.8        |
+    | LINK-102:JUNCTION-67| 332.0        | 168.2        | 956.5        | 792.7        |
+    | LINK-101:JUNCTION-65| 334.7        | 174.7        | 954.0        | 794.0        |
+    | LINK-101:JUNCTION-66| 335.2        | 174.0        | 954.9        | 793.8        |
+    | LINK-100:JUNCTION-64| 333.7        | 167.2        | 956.8        | 790.4        |
+    | LINK-100:JUNCTION-65| 334.7        | 174.7        | 954.0        | 794.0        |
+    | LINK-99:JUNCTION-63| 333.6        | 165.6        | 957.5        | 789.6        |
+    | LINK-99:JUNCTION-64| 333.7        | 167.2        | 956.8        | 790.4        |
+    | LINK-42:JUNCTION-19| 359.7        | 245.7        | 918.6        | 804.6        |
+    | LINK-42:VALVE-180| 486.5        | 375.9        | 920.5        | 809.9        |
+    | LINK-0:VALVE-180 | 486.5        | 375.9        | 920.5        | 809.9        |
+    | LINK-0:VALVE-176 | 527.6        | 389.5        | 931.6        | 793.5        |
+    | LINK-41:JUNCTION-20| 296.0        | 188.3        | 913.8        | 806.1        |
+    | LINK-41:VALVE-175| 414.6        | 270.8        | 947.6        | 803.8        |
+    | LINK-14:VALVE-174| 592.2        | 444.3        | 951.2        | 803.3        |
+    | LINK-14:JUNCTION-10| 627.1        | 459.1        | 960.7        | 792.7        |
+    | LINK-25:JUNCTION-15| 531.7        | 375.7        | 955.2        | 799.2        |
+    | LINK-25:VALVE-173| 537.6        | 380.2        | 955.6        | 798.2        |
+    | LINK-168:JUNCTION-103| 106.5        | 51.7         | 1138.2       | 1083.4       |
+    | LINK-168:VALVE-178| 170.0        | 106.7        | 1127.0       | 1063.7       |
+    | LINK-163:VALVE-177| 316.1        | 297.6        | 1165.1       | 1146.6       |
+    | LINK-163:JUNCTION-104| 303.2        | 285.9        | 1163.9       | 1146.6       |
+
+    | LINK-34:VALVE-178| 157.4        | 93.0         | 1114.4       | 1050.0       |
+    | LINK-34:VALVE-179| 239.6        | 147.2        | 997.6        | 905.2        |
+    --------------------------------------------------------------------------------
+ 
+ 
+ 
+ 
+ 
+     ***  Maximum pressure in entire network is 1165.2 ftH at point LINK-167:JUNCTION-106
+ 
+     ***  Minimum pressure in entire network is 4.5 ftH at point LINK-166:JUNCTION-29
+
+
+
+Elapsed time: 167 s.          
