@@ -131,16 +131,12 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
 
     if friction == 'steady':
         Ju = 0
-        if V==0:
-            Js = 0
-        else:
-            Js = f*dt/2./D*V*abs(V) #steady friction
+        Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
         if Re <= 1e-6:
             Js = 0
         else:
-            # print (Re)
             f = quasi_steady_friction_factor(Re, KD)
             Js = f*dt/2./D*V*abs(V)
         if friction == 'quasi-steady':
@@ -215,6 +211,7 @@ def cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
     KD1 = [link1[i].roughness_height  for i in range(len(link1))]
 
     for i in range(len(link1)):
+        # J = f1[i]*dt/2./D1[i]*V1[i]*abs(V1[i])
         J = cal_friction(friction, f1[i], D1[i], V1[i], KD1[i],
             dt, dVdt1[i], dVdx1[i], a1[i], g )
         C1[i,0] = s1[i]*V1[i] + g/a1[i]*H1[i] - s1[i]*J + g/a1[i]* dt *V1[i]*theta1[i]
@@ -230,6 +227,7 @@ def cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
     KD2 = [link2[i].roughness_height  for i in range(len(link2))]
 
     for i in range(len(link2)):
+        # J = f2[i]*dt/2./D2[i]*V2[i]*abs(V2[i])
         J = cal_friction(friction, f2[i], D2[i], V2[i], KD2[i],
             dt, dVdt2[i], dVdx2[i], a2[i], g)
         C2[i,0] = s2[i]*V2[i] + g/a2[i]*H2[i] - s2[i]* J + g/a2[i]* dt *V2[i]*theta2[i]

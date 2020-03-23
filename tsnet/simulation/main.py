@@ -32,7 +32,6 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     tm : tsnet.network.model.TransientModel
             Simulated network
     """
-
     # determine network topology
     links1, links2, utype, dtype = topology(tm)
 
@@ -437,9 +436,12 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     tm.simulation_timestamps = tt[1:]
 
     # save object to file
-    import pickle
-    filehandler = open(results_obj +'.obj','wb')
-    pickle.dump(tm, filehandler)
+    if results_obj != 'no':
+        import pickle
+        filehandler = open(results_obj +'.obj','wb')
+        pickle.dump(tm, filehandler)
+    else:
+        pass
 
     """TO read:
     import pickle
