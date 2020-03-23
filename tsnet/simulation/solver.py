@@ -237,9 +237,8 @@ def cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
 
 
 
-def inner_node(link, H0, V0, dt, g,
-                friction, dVdx, dVdt):
-    """Inner boundary MOC using C+ and C- characteristic curve
+def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
+    """Inner boundary MOC using C+ and C- characteristic curve with unsteady friction
 
     Parameters
     ----------
@@ -253,10 +252,6 @@ def inner_node(link, H0, V0, dt, g,
         Time step
     g : float
         Gravity acceleration
-
-    friction : str
-        friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
-        by default 'steady'
     dVdx : list
         List of convective instantaneous acceleration
     dVdt : list
@@ -286,12 +281,17 @@ def inner_node(link, H0, V0, dt, g,
         C = np.zeros((2,2), dtype=np.float64)
 
         # J1 = f*dt/2./D*V1*abs(V1)
-        J1 = cal_friction(friction, f, D, V1, KD, dt, dVdt1, dVdx1, a, g )
+        Re = Reynold(V1, D)
+        f = quasi_steady_friction_factor(Re, KD)
+        Js = f*dt/2./D*V1*abs(V1)
+        Ju = unsteady_friction(Re, dVdt1, dVdx1, V1, a, g)
+        J1 = Js +Ju
         C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
         C[0,1] = ga
 
-        # J2 = f*dt/2./D*V2*abs(V2)
-        J2 = cal_friction(friction, f, D, V2, KD,dt, dVdt2, dVdx2, a, g)
+        Js = f*dt/2./D*V2*abs(V2)
+        Ju = unsteady_friction(Re, dVdt2, dVdx2, V2, a, g)
+        Js = Js +Ju
         C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
         C[1,1] = ga
 
@@ -300,6 +300,111 @@ def inner_node(link, H0, V0, dt, g,
 
     return HP[1:-1], VP[1:-1]
 
+def inner_node_quasisteady(link, H0, V0, dt, g):
+    """Inner boundary MOC using C+ and C- characteristic curve with unsteady friction
+
+    Parameters
+    ----------
+    link : object
+        current pipe
+    H0 : list
+        head at previous time step
+    V0 : list
+        velocity at previous time step
+    dt : float
+        Time step
+    g : float
+        Gravity acceleration
+    dVdx : list
+        List of convective instantaneous acceleration
+    dVdt : list
+        List of local instantaneous acceleration
+    Returns
+    -------
+    HP : float
+        Head at current pipe inner nodes  at current time
+    VP : float
+        Velocity at current pipe inner nodes at current time
+    """
+    HP = np.zeros(len(H0))
+    VP = np.zeros(len(V0))
+    # property of current pipe
+    f = link.roughness     # unitless
+    D = link.diameter      # m
+    a = link.wavev        # m/s
+    # A = np.pi * D**2. / 4.  # m^2
+    theta = link.theta
+    KD = link.roughness_height
+    ga = g/a
+    for i in range(1,len(H0)-1):
+        V1 = V0[i-1]; H1 = H0[i-1]
+        V2 = V0[i+1]; H2 = H0[i+1]
+        C = np.zeros((2,2), dtype=np.float64)
+
+        Re = Reynold(V1, D)
+        f = quasi_steady_friction_factor(Re, KD)
+        J1 = f*dt/2./D*V1*abs(V1)
+        C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
+        C[0,1] = ga
+
+        J2 = f*dt/2./D*V2*abs(V2)
+        C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
+        C[1,1] = ga
+
+        HP[i] = (C[0,0] + C[1,0]) / (C[0,1] + C[1,1])
+        VP[i] = np.float64(-C[1,0]+ C[1,1]*HP[i])
+
+    return HP[1:-1], VP[1:-1]
+
+def inner_node_steady(link, H0, V0, dt, g):
+    """Inner boundary MOC using C+ and C- characteristic curve with unsteady friction
+
+    Parameters
+    ----------
+    link : object
+        current pipe
+    H0 : list
+        head at previous time step
+    V0 : list
+        velocity at previous time step
+    dt : float
+        Time step
+    g : float
+        Gravity acceleration
+    Returns
+    -------
+    HP : float
+        Head at current pipe inner nodes  at current time
+    VP : float
+        Velocity at current pipe inner nodes at current time
+    """
+    HP = np.zeros(len(H0))
+    VP = np.zeros(len(V0))
+    # property of current pipe
+    f = link.roughness     # unitless
+    D = link.diameter      # m
+    a = link.wavev        # m/s
+    # A = np.pi * D**2. / 4.  # m^2
+    theta = link.theta
+    KD = link.roughness_height
+    ga = g/a
+    for i in range(1,len(H0)-1):
+        V1 = V0[i-1]; H1 = H0[i-1]
+        V2 = V0[i+1]; H2 = H0[i+1]
+        C = np.zeros((2,2), dtype=np.float64)
+
+        J1 = f*dt/2./D*V1*abs(V1)
+        C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
+        C[0,1] = ga
+
+        J2 = f*dt/2./D*V2*abs(V2)
+        C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
+        C[1,1] = ga
+
+        HP[i] = (C[0,0] + C[1,0]) / (C[0,1] + C[1,1])
+        VP[i] = np.float64(-C[1,0]+ C[1,1]*HP[i])
+
+    return HP[1:-1], VP[1:-1]
 
 def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
                 friction, dVdx1, dVdx2, dVdt1, dVdt2):

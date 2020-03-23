@@ -8,7 +8,9 @@ transient simulation on a single pipe, including
 """
 import numpy as np
 from tsnet.simulation.solver import (
-    inner_node,
+    inner_node_steady,
+    inner_node_quasisteady,
+    inner_node_unsteady,
     valve_node,
     pump_node,
     source_pump,
@@ -99,9 +101,13 @@ def inner_pipe (linkp, pn, dt, links1, links2, utype, dtype, p,
     n = linkp.number_of_segments    # spatial discretization
 
     # inner nodes
-    H[1:-1], V[1:-1] = inner_node(linkp, H0, V0, dt, g,
-            friction, dVdx, dVdt)
-
+    if friction == 'steady':
+        H[1:-1], V[1:-1] = inner_node_steady(linkp, H0, V0, dt, g)
+    elif friction == 'quasi-steady':
+        H[1:-1], V[1:-1] = inner_node_quasisteady(linkp, H0, V0, dt, g)
+    else:
+        H[1:-1], V[1:-1] = inner_node_unsteady(linkp, H0, V0, dt, g,
+             dVdx, dVdt)
 
     # Pipe start
     V1 = V10;     H1 = H10       #list
@@ -255,8 +261,13 @@ def left_boundary(linkp, pn, H, V, H0, V0, links2, p, pump, valve, dt,
     KD = linkp.roughness_height
 
     # inner nodes
-    H[1:-1], V[1:-1] = inner_node(linkp, H0, V0, dt, g,
-            friction, dVdx, dVdt)
+    if friction == 'steady':
+        H[1:-1], V[1:-1] = inner_node_steady(linkp, H0, V0, dt, g)
+    elif friction == 'quasi-steady':
+        H[1:-1], V[1:-1] = inner_node_quasisteady(linkp, H0, V0, dt, g)
+    else:
+        H[1:-1], V[1:-1] = inner_node_unsteady(linkp, H0, V0, dt, g,
+             dVdx, dVdt)
 
     # Pipe start (outer boundayr conditions)
     V2 = V0[1]; H2 = H0[1]
@@ -401,8 +412,13 @@ def right_boundary(linkp, pn, H0, V0, H, V, links1, p, pump, valve, dt,
     KD = linkp.roughness_height
 
     # inner nodes
-    H[1:-1], V[1:-1] = inner_node(linkp, H0, V0, dt, g,
-            friction, dVdx, dVdt)
+    if friction == 'steady':
+        H[1:-1], V[1:-1] = inner_node_steady(linkp, H0, V0, dt, g)
+    elif friction == 'quasi-steady':
+        H[1:-1], V[1:-1] = inner_node_quasisteady(linkp, H0, V0, dt, g)
+    else:
+        H[1:-1], V[1:-1] = inner_node_unsteady(linkp, H0, V0, dt, g,
+             dVdx, dVdt)
 
     # Pipe start (inner boundary conditions)
     V1 = V10; H1 = H10            # upstream node
