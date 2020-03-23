@@ -237,89 +237,68 @@ def cal_Cs( link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
 
 
 
-def inner_node(link1, link2, demand, H1, V1, H2, V2, dt, g, nn, s1, s2,
-                friction, dVdx1, dVdx2, dVdt1, dVdt2):
+def inner_node(link, H0, V0, dt, g,
+                friction, dVdx, dVdt):
     """Inner boundary MOC using C+ and C- characteristic curve
 
     Parameters
     ----------
-    link1 : object
-        Pipe object of C+ charateristics curve
-    link2 : object
-        Pipe object of C- charateristics curve
-    demand : float
-        demand at the junction
-    H1 : list
-        List of the head of C+ charateristics curve
-    V1 : list
-        List of the velocity of C+ charateristics curve
-    H2 : list
-        List of the head of C- charateristics curve
-    V2 : list
-        List of the velocity of C- charateristics curve
+    link : object
+        current pipe
+    H0 : list
+        head at previous time step
+    V0 : list
+        velocity at previous time step
     dt : float
         Time step
     g : float
         Gravity acceleration
-    nn : int
-        The index of the calculation node
-    s1 : list
-        List of signs that represent the direction of the flow
-        in C+ charateristics curve
-    s2 : list
-        List of signs that represent the direction of the flow
-        in C- charateristics curve
+
     friction : str
         friction model, e.g., 'steady', 'quasi-steady', 'unsteady',
         by default 'steady'
-    dVdx1 : list
-        List of convective instantaneous acceleration on the
-        C+ characteristic curve
-    dVdx2 : list
-        List of convective instantaneous acceleration on the
-        C- characteristic curve
-    dVdt1 : list
-        List of local instantaneous acceleration on the
-        C+ characteristic curve
-    dVdt2 : list
-        List of local instantaneous acceleration on the
-        C- characteristic curve
+    dVdx : list
+        List of convective instantaneous acceleration
+    dVdt : list
+        List of local instantaneous acceleration
     Returns
     -------
     HP : float
-        Head at current node at current time
+        Head at current pipe inner nodes  at current time
     VP : float
-        Velocity at current node at current time
+        Velocity at current pipe inner nodes at current time
     """
+    HP = np.zeros(len(H0))
+    VP = np.zeros(len(V0))
+    # property of current pipe
+    f = link.roughness     # unitless
+    D = link.diameter      # m
+    a = link.wavev        # m/s
+    # A = np.pi * D**2. / 4.  # m^2
+    theta = link.theta
+    KD = link.roughness_height
+    ga = g/a
+    for i in range(1,len(H0)-1):
+        V1 = V0[i-1]; H1 = H0[i-1]
+        V2 = V0[i+1]; H2 = H0[i+1]
+        dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
+        dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
+        C = np.zeros((2,2), dtype=np.float64)
 
-    try :
-        list(link1)
-    except:
-        link1 = [link1]
-        V1 = [V1] ; H1 = [H1]
-        dVdx1 = [dVdx1]; dVdt1 = [dVdt1]
-    try :
-        list(link2)
-    except:
-        link2 = [link2]
-        V2 = [V2] ; H2 = [H2]
-        dVdx2 = [dVdx2]; dVdt2 = [dVdt2]
+        # J1 = f*dt/2./D*V1*abs(V1)
+        J1 = cal_friction(friction, f, D, V1, KD, dt, dVdt1, dVdx1, a, g )
+        C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
+        C[0,1] = ga
 
-    A1, A2, C1, C2 = cal_Cs(link1, link2, H1, V1, H2, V2, s1, s2, g, dt,
-            friction, dVdx1, dVdx2, dVdt1, dVdt2)
+        # J2 = f*dt/2./D*V2*abs(V2)
+        J2 = cal_friction(friction, f, D, V2, KD,dt, dVdt2, dVdx2, a, g)
+        C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
+        C[1,1] = ga
 
-    if link1 == link2 : # inner node of one pipe
-        HP = ((np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)) /
-         (np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)))
+        HP[i] = (C[0,0] + C[1,0]) / (C[0,1] + C[1,1])
+        VP[i] = np.float64(-C[1,0]+ C[1,1]*HP[i])
 
-    else : # junction
-        HP = (((np.dot(C1[:,0], A1) + np.dot(C2[:,0],A2)) - demand)/
-         (np.dot(C1[:,1], A1) + np.dot(C2[:,1],A2)))
-    if nn == 0:  # pipe start
-        VP = np.float64(-C2[:,0]+ C2[:,1]*HP)
-    else:        # pipe end
-        VP = np.float64(C1[:,0] - C1[:,1]*HP)
-    return HP, VP
+    return HP[1:-1], VP[1:-1]
 
 
 def valve_node(KL_inv, link1, link2, H1, V1, H2, V2, dt, g, nn, s1, s2,
