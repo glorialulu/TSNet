@@ -291,7 +291,7 @@ def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
 
         Js = f*dt/2./D*V2*abs(V2)
         Ju = unsteady_friction(Re, dVdt2, dVdx2, V2, a, g)
-        Js = Js +Ju
+        J2 = Js +Ju
         C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
         C[1,1] = ga
 
