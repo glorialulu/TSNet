@@ -135,7 +135,7 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
         Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        if Re <= 1e-6:
+        if Re <= 0.1:
             Js = 0
         else:
             f = quasi_steady_friction_factor(Re, KD)
@@ -283,7 +283,7 @@ def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
 
         # J1 = f*dt/2./D*V1*abs(V1)
         Re = Reynold(V1, D)
-        f = quasi_steady_friction_factor(Re, KD)
+        # f = quasi_steady_friction_factor(Re, KD)
         Js = f*dt/2./D*V1*abs(V1)
         Ju = unsteady_friction(Re, dVdt1, dVdx1, V1, a, g)
         J1 = Js +Ju
@@ -330,10 +330,8 @@ def inner_node_quasisteady(link, H0, V0, dt, g):
     HP = np.zeros(len(H0))
     VP = np.zeros(len(V0))
     # property of current pipe
-    f = link.roughness     # unitless
     D = link.diameter      # m
     a = link.wavev        # m/s
-    # A = np.pi * D**2. / 4.  # m^2
     theta = link.theta
     KD = link.roughness_height
     ga = g/a
@@ -343,14 +341,21 @@ def inner_node_quasisteady(link, H0, V0, dt, g):
         C = np.zeros((2,2), dtype=np.float64)
 
         Re = Reynold(V1, D)
-        if Re <= 1e-6:
-            J1 = J2 = 0
+        if Re <= 0.1:
+            J1 =  0
         else:
             f = quasi_steady_friction_factor(Re, KD)
             J1 = f*dt/2./D*V1*abs(V1)
-            J2 = f*dt/2./D*V2*abs(V2)
+
         C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
         C[0,1] = ga
+
+        Re = Reynold(V2, D)
+        if Re <= 1:
+            J2 = 0
+        else:
+            f = quasi_steady_friction_factor(Re, KD)
+            J2 = f*dt/2./D*V2*abs(V2)
         C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
         C[1,1] = ga
 
@@ -389,7 +394,6 @@ def inner_node_steady(link, H0, V0, dt, g):
     a = link.wavev        # m/s
     # A = np.pi * D**2. / 4.  # m^2
     theta = link.theta
-    KD = link.roughness_height
     ga = g/a
     for i in range(1,len(H0)-1):
         V1 = V0[i-1]; H1 = H0[i-1]
