@@ -124,13 +124,14 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
     float
         total friction, including steady and unsteady
     """
+    tol = 1
 
     if friction == 'steady':
         Ju = 0
         Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        if Re <= 0.01:
+        if Re < tol:
             Js = 0
         else:
             f = quasi_steady_friction_factor(Re, KD)
@@ -269,15 +270,16 @@ def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
     theta = link.theta
     KD = link.roughness_height
     ga = g/a
+    tol = 1e-1
     for i in range(1,len(H0)-1):
         V1 = V0[i-1]; H1 = H0[i-1]
         V2 = V0[i+1]; H2 = H0[i+1]
         dVdx1 = dVdx[i-1] ; dVdx2 = dVdx[i]
         dVdt1 = dVdt[i-1] ; dVdt2 = dVdt[i+1]
-        C = np.zeros((2,2), dtype=np.float64)
+        C = np.zeros((2,1), dtype=np.float64)
 
         Re = Reynold(V1, D)
-        if Re <= 0.01:
+        if Re <tol:
             Js =  0
         else:
             f = quasi_steady_friction_factor(Re, KD)
@@ -285,10 +287,9 @@ def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
         Ju = unsteady_friction(Re, dVdt1, dVdx1, V1, a, g)
         J1 = Js +Ju
         C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
-        C[0,1] = ga
 
         Re = Reynold(V2, D)
-        if Re <= 0.01:
+        if Re < tol:
             Js =  0
         else:
             f = quasi_steady_friction_factor(Re, KD)
@@ -296,10 +297,9 @@ def inner_node_unsteady(link, H0, V0, dt, g, dVdx, dVdt):
         Ju = unsteady_friction(Re, dVdt2, dVdx2, V2, a, g)
         J2 = Js +Ju
         C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
-        C[1,1] = ga
 
-        HP[i] = (C[0,0] + C[1,0]) / (C[0,1] + C[1,1])
-        VP[i] = np.float64(-C[1,0]+ C[1,1]*HP[i])
+        HP[i] = (C[0,0] + C[1,0]) / 2./ga
+        VP[i] = np.float64(-C[1,0]+ ga*HP[i])
 
     return HP[1:-1], VP[1:-1]
 
@@ -337,32 +337,32 @@ def inner_node_quasisteady(link, H0, V0, dt, g):
     theta = link.theta
     KD = link.roughness_height
     ga = g/a
+    tol = 1e-1
+
     for i in range(1,len(H0)-1):
         V1 = V0[i-1]; H1 = H0[i-1]
         V2 = V0[i+1]; H2 = H0[i+1]
-        C = np.zeros((2,2), dtype=np.float64)
+        C = np.zeros((2,1), dtype=np.float64)
 
         Re = Reynold(V1, D)
-        if Re <= 0.01:
-            J1 =  0
+        if Re < tol:
+            J1 = 0
         else:
             f = quasi_steady_friction_factor(Re, KD)
             J1 = f*dt/2./D*V1*abs(V1)
 
-        C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
-        C[0,1] = ga
-
         Re = Reynold(V2, D)
-        if Re <= 0.01:
+        if Re < tol:
             J2 = 0
         else:
             f = quasi_steady_friction_factor(Re, KD)
             J2 = f*dt/2./D*V2*abs(V2)
-        C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
-        C[1,1] = ga
 
-        HP[i] = (C[0,0] + C[1,0]) / (C[0,1] + C[1,1])
-        VP[i] = np.float64(-C[1,0]+ C[1,1]*HP[i])
+        C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
+        C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
+
+        HP[i] = (C[0,0] + C[1,0]) / 2./ ga
+        VP[i] = np.float64(-C[1,0]+ ga*HP[i])
 
     return HP[1:-1], VP[1:-1]
 
