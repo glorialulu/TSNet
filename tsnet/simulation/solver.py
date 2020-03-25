@@ -53,8 +53,6 @@ def quasi_steady_friction_factor(Re, KD):
 
     a = -1.8*np.log10(6.9/Re + KD)
     f = (1./a)**2.
-
-
     return f
 
 
@@ -86,10 +84,7 @@ def unsteady_friction(Re, dVdt, dVdx, V, a, g):
     if Re< 2000: # laminar flow
         C = 4.76e-3
     else:
-        try:
-            C = 7.41 / Re**(np.log10(14.3/Re**0.05))
-        except:
-            print (Re)
+        C = 7.41 / Re**(np.log10(14.3/Re**0.05))
 
     # calculate Brunone's friction coefficient
     k = np.sqrt(C)/2.
@@ -351,7 +346,7 @@ def inner_node_quasisteady(link, H0, V0, dt, g):
         C[0,1] = ga
 
         Re = Reynold(V2, D)
-        if Re <= 1:
+        if Re <= 0.1:
             J2 = 0
         else:
             f = quasi_steady_friction_factor(Re, KD)
