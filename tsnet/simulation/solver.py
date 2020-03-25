@@ -50,11 +50,10 @@ def quasi_steady_friction_factor(Re, KD):
     f : float
         quasi-steady friction factor
     """
-    if Re > 1e-6:
-        a = -1.8*np.log10(6.9/Re + KD)
-        f = (1./a)**2.
-    else:
-        f =0
+
+    a = -1.8*np.log10(6.9/Re + KD)
+    f = (1./a)**2.
+
 
     return f
 
@@ -136,8 +135,11 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
         Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        f = quasi_steady_friction_factor(Re, KD)
-        Js = f*dt/2./D*V*abs(V)
+        if Re <= 1e-6:
+            Js = 0
+        else:
+            f = quasi_steady_friction_factor(Re, KD)
+            Js = f*dt/2./D*V*abs(V)
         if friction == 'quasi-steady':
             Ju = 0
         elif friction == 'unsteady':
@@ -341,12 +343,14 @@ def inner_node_quasisteady(link, H0, V0, dt, g):
         C = np.zeros((2,2), dtype=np.float64)
 
         Re = Reynold(V1, D)
-        f = quasi_steady_friction_factor(Re, KD)
-        J1 = f*dt/2./D*V1*abs(V1)
+        if Re <= 1e-6:
+            J1 = J2 = 0
+        else:
+            f = quasi_steady_friction_factor(Re, KD)
+            J1 = f*dt/2./D*V1*abs(V1)
+            J2 = f*dt/2./D*V2*abs(V2)
         C[0,0] = V1 + ga*H1 - J1 + ga* dt *V1*theta
         C[0,1] = ga
-
-        J2 = f*dt/2./D*V2*abs(V2)
         C[1,0] = -V2+ ga*H2 + J2 + ga* dt *V2*theta
         C[1,1] = ga
 
