@@ -50,9 +50,11 @@ def quasi_steady_friction_factor(Re, KD):
     f : float
         quasi-steady friction factor
     """
-
-    a = -1.8*np.log10(6.9/Re + KD)
-    f = (1./a)**2.
+    if Re > 1e-6:
+        a = -1.8*np.log10(6.9/Re + KD)
+        f = (1./a)**2.
+    else:
+        f =0
 
     return f
 
@@ -134,11 +136,8 @@ def cal_friction(friction, f, D, V, KD, dt, dVdt, dVdx, a, g ):
         Js = f*dt/2./D*V*abs(V) #steady friction
     else:
         Re = Reynold(V, D)
-        if Re <= 1e-6:
-            Js = 0
-        else:
-            f = quasi_steady_friction_factor(Re, KD)
-            Js = f*dt/2./D*V*abs(V)
+        f = quasi_steady_friction_factor(Re, KD)
+        Js = f*dt/2./D*V*abs(V)
         if friction == 'quasi-steady':
             Ju = 0
         elif friction == 'unsteady':
