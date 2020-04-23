@@ -311,7 +311,7 @@ Example
 We use a small network, shown in :numref:`MOC_time`,
 to illustrate how time step is determined
 as well as the benefits and drawbacks of combining or removing small pipes.
-:numref:`MOC_time`(a) shows a network of three pipes with length of 940m, 60m, and 2000m, respectively.
+:numref:`MOC_time` (a) shows a network of three pipes with length of 940m, 60m, and 2000m, respectively.
 The wave speed for all the pipes is equal to 1000m/s.
 The procedure for determine the time step is as follows:
 

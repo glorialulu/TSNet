@@ -12,6 +12,7 @@ distribution networks. The software includes capability to:
 * Create transient models based on EPANET INP files
 * Operate valves and pumps
 * Add disruptive events including pipe bursts and leaks
+* Model open and closed surge tanks
 * Perform transient simulation using Method of characteristics (MOC) techniques
 * Visualize results
 
