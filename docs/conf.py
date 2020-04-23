@@ -64,6 +64,9 @@ autodoc_member_order = 'bysource'
 autoclass_content = 'both'
 numfig=True
 numfig_format = {'figure':  'Figure %s', 'table': 'Table %s', 'code-block': 'Listing %s'}
+math_numfig = True
+numfig_secnum_depth = 2
+math_eqref_format = "Eq.{number}"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
