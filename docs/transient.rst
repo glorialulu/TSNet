@@ -151,10 +151,9 @@ Darcy-Weisbach coefficients (:math:`f`) based on the head loss
 using the following equation:
 
 .. math::
-    f = \frac{{h_f}_0}{(L/D)(V_0^2/2g)}
+    f = \frac{{h_f}_0}{V_0^2/2gD}
 
 where
-:math:`L` is the pipe length,
 :math:`D` is the pipe diameter,
 and :math:`g` is gravity acceleration.
 
@@ -162,7 +161,7 @@ Subsequently, in transient simulation the headloss (:math:`h_f`) is calculated
 based on the following equation:
 
 .. math::
-    h_f = f\frac{L}{D}\frac{V^2}{2g}
+    h_f = f\frac{V^2}{2gD}
 
 Unsteady friction model
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,15 +286,14 @@ the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
 speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
 
 .. math::
-    N_i = 2\text{int \left(\frac{L_i}{a_i \Delta t\right)} \text{,       }
-    i = 1 \text{, } 2 \text{, ..., } n_p
+    N_i =  \text{round}\left(\frac{L_i}{a_i \Delta t_{max}}\right) \text{,       }
+     i = 1, 2, \dots, n_p
 
 Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
 can be compensated by correcting the wave speed (:math:`a_i`).
 
 .. math::
-    \Delta t = \min{\left(\frac{L_i}{a_i(1 \pm \phi_i)N_i}\right)} \text{,       }
-    i = 1 \text{, } 2 \text{, ..., } n_p
+    \Delta t = \mbox{argmin}_{\phi,\Delta t}{\left \{\sum_{i=1}^{n_p}{{\phi_i}^2} \ \ \big | \ \  \Delta t = \frac{L_i}{a_i(1 \pm \phi_i)N_i} \ \ i = 1, 2, \dots, n_p \right\} }
 
 Least squares approximation is then used to determine :math:`\Delta t`
 such that the sum of squares of the wave speed adjustments
@@ -452,21 +450,21 @@ additional terms describing the instantaneous acceleration-based unsteady fricti
 as below:
 
 .. math::
-    \begin{multline} \label{eq:c1_unsteady}
+
     C+:  \qquad {}(V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
             + \frac{g}{a} \Delta t V_{i-1}^{t-1}\sin\alpha
             + \frac{f\Delta x}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|\\
             + \frac{k_u}{2g} \left[ (V_{i-1}^{t-1} - V_{i-1}^{t-2}) +
             \mbox{sign}(V_{i-1}^{t-1}) \left|V_i^{t-1} - V_{i-1}^{t-1} \right| \right] = 0
-    \end{multline}
 
-    \begin{multline}\label{eq:c2_unsteady}
+
+
     C-:  \qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
             + \frac{g}{a} \Delta t V_{i+1}^{t-1}\sin\alpha
             - \frac{f\Delta x}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|\\
             - \frac{k_u}{2g} \left[ (V_{i+1}^{t-1} - V_{i+1}^{t-2}) +
             \mbox{sign}(V_{i+1}^{t-1}) \left|V_{i+1}^{t-1} - V_{i}^{t-1} \right| \right]  = 0
-    \end{multline}
+
 
 
 Boundary Conditions
@@ -639,4 +637,99 @@ is fully developed:
     tm.add_burst('JUNCTION-20', ts, tc, final_burst_coeff)
 
 
+Surge tanks
+^^^^^^^^^^^^
 
+The modeling of water hammer protection devices, including the open and closed surge tanks,
+are also incorporated in TSNet.
+n open surge tank is modeled as an open chamber connected directly to a pipeline
+and is open to the atmosphere [WYSS93]_.
+Initially, the water head (:math:`z`) in the tank equals to the hydraulic head in the upstream pipeline.
+During transient simulation, the open surge tank moderates pressure transients by
+storing the excess water when a pressure jump occurs in the pipeline connection, or supplying water
+in the event of a pressure drop.
+Then, the boundary conditions at the open surge tank can be formulated as:
+
+.. _open_surge:
+.. math::
+    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity} \label{eq:open_bod12}
+
+    &H_2^t = H_3^t &\mbox{energy conservation} \label{eq:open_bod22}
+
+    &H_2^t = z^t &\mbox{energy conservation} \label{eq:open_bod32}
+
+    &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
+
+
+where :math:`Q_T` is the flow rate into the surge tank,
+:math:`z` is the water level in the surge tank, and
+:math:`A_T` is the cross-sectional area of the surge tank.
+With six equations (two compatity equations and six boundary conditions)
+and six unknowns (:math:`V_2^t, V_3^t, H_2^t, H_3^t, z^t, Q_T^t`),
+the above system of equations can be solved at each time step.
+Other devices can be modeled as well by defining the corresponding boundary conditions to
+replace :numref:`open_surge`.
+
+
+Next we describe how the user can define open surge tanks in TSNet.
+In TSNet, an open surge tank is assumed to exhibit infinite height so that the tank never overflows.
+The user can add an open surge tank to an existing network in the TSNet model by defining the desired
+location and the cross-sectional area of the surge tank, as shown:
+
+.. code:: python
+
+    tank_node = 'JUNCTION-90'
+    tank_area = 10   # tank cross sectional area [m^2]
+    tm.add_surge_tank(tank_node, [tank_area], 'open')
+
+
+Although the infinite height assumption is not realistic, due to the modeling simplicity,
+open surge tanks can serve an good initial approach for investigating the placement of surge protection devices.
+In fact, the major disadvantages of open surge tanks is that it typically cannot accommodate
+large pressure transients unless the tank is excessively tall and large, which limits its usefulness.
+
+Hence, we also included closed surge tank, i.e., air chamber,
+in TSNet as more realistic water hammer protection devices.
+An air chamber is a relatively small sealed vessel with compressed air at its top and
+water in the bottom [WYSS93]_.
+During transient simulation, the closed surge tank also moderates pressure transients
+by slowing down the deceleration or the acceleration of water flow. For example, when pressure
+in the upstream connection increases, water flows into the tank, water level in the tank increases,
+air volume compresses, and air pressure increases,
+thus slowing down the acceleration of the water inflow into the tank and the increase in pressure.
+Similarly, when pressure in the upstream connection drops, water flows from the tank,
+then water level in the chamber decreases, air volume increases, and air pressure decreases,
+thus slowing the deceleration of the water flow and the decrease of pressure head.
+The boundary conditions characterizing close surge tank in the computational units
+shown in :numref:`MOC_grid` are formulated as:
+
+.. math::
+    & V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}
+
+    & H_2^t = H^3_t &\mbox{energy conservation}
+
+    & H_A^t = H2^t + H_b - z_t &\mbox{energy conservation}
+
+    & z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
+
+    & H_A^t \mathcal{V}_A^t = \mbox{constant} &\mbox{perfect gas law}
+
+    & \mathcal{V}_A^t =  \mathcal{V}_A^{t-1} - A_T \left(z^t-z^{t-1}\right) &\mbox{tank air volume}
+
+
+where ::math:`Q_T` is the flow rate into the surge tank,
+::math:`z` is the water level in the surge tank,
+::math:`H_A, \mathcal{V}_A` are the total head, and the volume of the air in the surge tank,
+::math:`H_b` is the barometric pressure, and
+::math:`A_T` is the cross-sectional area of the surge tank.}
+
+The user can add a closed surge tank by specifying the location, cross-sectional area,
+total height of the surge tank, and initial water height in the tank:
+
+.. code::
+
+    tank_node = 'JUNCTION-90'
+    tank_area = 10   # tank cross sectional area [m^2]
+    tank_height = 10  # tank height [m]
+    water_height = 5  # initial water level [m]
+    tm.add_surge_tank(tank_node, [tank_area,tank_height,water_height], 'closed')
