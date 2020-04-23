@@ -88,8 +88,8 @@ A transient simulation can be run using the following code:
 
 .. code:: python
 
-results_obj = 'Tnet1' # name of the object for saving simulation results
-tm = tsnet.simulation.MOCSimulator(tm, results_obj)
+    results_obj = 'Tnet1' # name of the object for saving simulation results
+    tm = tsnet.simulation.MOCSimulator(tm, results_obj)
 
 
 The results will be returned to the transient model (tm) object,
@@ -186,9 +186,10 @@ Vardy's sheer decay coefficient (:math:`C^*`) [VABR95]_:
 .. math::
     k_u = \frac{C^*}{2}
 
+.. math::
     C^* = \left\{ \begin{array}{rl}
         0.00476 & \mbox{laminar flow } (Re \leq 2000)\\
-        frac{7.41}{Re^{\log{(14.3/Re^{0.05})}}} & \mbox{turbulent flow } (Re > 2000)
+        \frac{7.41}{Re^{\log{(14.3/Re^{0.05})}}} & \mbox{turbulent flow } (Re > 2000)
     \end{array} \right.
 
 TSNet allows the user to choose the friction model using TSNet API simply by specifying
@@ -303,6 +304,127 @@ Ultimately, an adjusted
 
 It should be noted that even if the user defined time step satisfied the
 Courant's criterion, it will still be adjusted.
+
+Example
+^^^^^^^
+
+We use a small network, shown in :numref:`MOC_time`,
+to illustrate how time step is determined
+as well as the benefits and drawbacks of combining or removing small pipes.
+:numref:`MOC_time`(a) shows a network of three pipes with length of 940m, 60m, and 2000m, respectively.
+The wave speed for all the pipes is equal to 1000m/s.
+The procedure for determine the time step is as follows:
+
+
+*   Calculate the maximum time step (:math:`\Delta t_{max}`)
+    allowed by Courant's criterion, assuming that there are two computational units
+    on the critical pipe (i.e., the pipe that results in the smallest travel time, which depends on the length and the wave speed for that pipe), i.e., for pipe 2 $N_2 = 2$.}
+
+
+    .. math::
+        \Delta t_{max} = \min{\left(\frac{L_i}{2a_i}\right)} = \left(\frac{L_2}{N_2a_2}\right) = \frac{60}{2\times 1000} = 0.03s
+
+
+*   Compute the required number of computational units for all other
+    pipes, i.e, $N_1$ for pipe 1 and $N_3$ for pipe 3, using $\Delta t_{max}$ as the time step.
+    Since the number of computational units on each pipe has to be integer,
+    the numbers are rounded to the closest integer, thus introducing discrepancies in the time step of different pipes. }
+
+    .. math::
+        N_1 &=  \text{round}\left(\frac{L_1}{a_1 \Delta t_{max}}\right) = \frac{940}{1000\times0.03} = 31
+
+        N_3 &=  \text{round}\left(\frac{L_3}{a_3 \Delta t_{max}}\right) = \frac{2000}{1000\times0.03} = 67
+
+
+    With these number of computational units, the time steps for each pipe become:
+
+    .. math::
+        \Delta t_1 = \frac{L_1}{N_1a_1}=0.03032s
+
+        \Delta t_3 = \frac{L_3}{N_3a_3}=0.02985s
+
+
+    However, all the pipes have to have the same time step for marching forward;
+    hence, we need to adjust the wave speed to match the time step for all pipes.
+
+    .. math::
+        \Delta t =\frac{L_i}{a_i^{adj}N_i}
+
+
+*   Compensate the discrepancies introduced by rounding number of
+    computation units through adjusting wave speed from :math:`a_i` to :math:`a_i^{adj}=a_i(1+\phi_i)`.
+    The sum of squared adjustments (:math:`\sum{{\phi_i}^2}`) is minimized to obtain the minimal overall
+    adjustment. In this example, the wave speeds of the three pipes are adjusted by
+    :math:`\phi_1 = 0.877\, \phi_2 = -0.196\%, \phi_3 =0.693\%`, respectively.
+
+*   Finally, the time step can be calculated based on the number of
+    computational units and the adjusted wave speed of each one of three pipes that now share
+    the same time step:
+
+    .. math::
+        \Delta t = \frac{L_i}{a_i(1 \pm \phi_i)N_i}=0.03006s
+
+
+.. _MOC_time:
+.. figure:: figures/MOC_time_example.png
+   :width: 800
+   :alt: MOC_time
+   
+   Example network for determining the time step: (a) before combing pipes; (b): after combing pipes.
+
+
+Noticeably, the maximum allowed time step for this network is fairly small.
+Meanwhile, the total number of segments (:math:`31+2+67=100`) is relatively large;
+thus, in order to conduct a transient simulation of :math:`10s`,
+the overall number of computation nodes in x-t plane will be :math:`10/0.03006\times100=33267`.
+The computation efforts can be significantly reduced by, for example, combing/removing the shorted pipe, i.e., pipe 2.
+:numref:`MOC_time`(b) illustrates the network after combing pipe 1 and pipe 2.
+Following the same steps shown above, it can be determined that the maximum time step is :math:`0.5s`, and
+the number of computation units for pipes 1 and 2 are :math:`2` and :math:`4`, respectively,
+thus significantly reducing the total number of computation nodes in x-t plane required
+for :math:`10s` simulation to :math:`10/0.5\times(2+4)=26`.
+
+
+In this example, we implicitly assumed that pipe properties were the same (e.g., diameter, material),
+however these properties affect wave propagation, reflection, and damping.
+Hence, despite the benefits in reducing computation costs,
+merging or removing pipes to improve computational efficiency
+is not straightforward and requires careful considerations of how these changes will affect modeling accuracy.
+In other words, any discontinuity or change in pipe properties will create changes in wave propagation, and hence,
+if removed will change the model.
+For example, suppose pipe 1 and 3 in :numref:`MOC_time` have the same diameter,
+while pipe 2 has smaller diameter,
+then a certain portion of wave speed will be reflected at junctions connecting the pipes.
+However, if pipe 2 is to be removed, and pipe 1 is then connected to pipe 3, which exhibit the same diameter,
+there will be no reflection observed in the new junction, thus altering the wave propagation in the network.
+Therefore, precautions are required before removing or combing the short pipes,
+or modifying network topology in general.
+
+Moreover, the simulation time step can be controlled by specifying
+large number of segments in the critical pipe, which will also control the
+wave speed adjustments (:math:`\phi`), as shown in :numref:`wavev`
+calculated for network Tnet1.
+The black curve shows the reduction in the simulation time step as the number of segments
+in the critical pipe increases.
+Subsequently, the decreased time step results in a reduction in wave speed adjustment
+(:math:`a^{adj} = a\times(1+\phi)`), as illustrated by the red curve.
+The red line represents the average wave speed adjustment and the shaded area
+represents the maximum and minimum wave speed adjustments for all pipes in the network.
+For example, when the critical pipe is divided into 40 segments, the time step is reduced
+to less than 0.001s, and
+the adjustment of wave speed is reduced to about 0.005, which is negligibly small.
+However, there is obviously a computational trade-off between numerical accuracy and
+computational efficiency.
+
+.. _wavev:
+.. figure:: figures/wavespeed.png
+   :width: 400
+   :alt: wavev
+   
+   Time step (black, left y-axis) versus the number of computational
+   units on the critical pipe and the wave speed adjustments (red, right y-axis)
+   showing the mean (red line) and the max-min range (shaded area).
+
 
 
 Numerical Scheme
@@ -721,7 +843,7 @@ where ::math:`Q_T` is the flow rate into the surge tank,
 ::math:`z` is the water level in the surge tank,
 ::math:`H_A, \mathcal{V}_A` are the total head, and the volume of the air in the surge tank,
 ::math:`H_b` is the barometric pressure, and
-::math:`A_T` is the cross-sectional area of the surge tank.}
+::math:`A_T` is the cross-sectional area of the surge tank.
 
 The user can add a closed surge tank by specifying the location, cross-sectional area,
 total height of the surge tank, and initial water height in the tank:
@@ -733,3 +855,172 @@ total height of the surge tank, and initial water height in the tank:
     tank_height = 10  # tank height [m]
     water_height = 5  # initial water level [m]
     tm.add_surge_tank(tank_node, [tank_area,tank_height,water_height], 'closed')
+
+
+Comparison with Hammer
+"""""""""""""""""""""""
+
+During the development process, we have consistently compared TSNet results with
+Bentley Hammer [HAMMER]_0 using different networks and many different transient events.
+In this section, we present the comparison between TSNet and Hammer results.
+
+
+Tnet 0
+^^^^^^^^^
+
+We first show the comparison for a simple network,
+consisting of one reservoir, two pipes, and one valve, as illustrated in :numref:`tnet0_network`.
+The wave speed for both pipes is ::math:`1200m/s`, and lengths and diameters are given in the figure.
+The transient event is generated by closing the end-valve at the beginning of the simulation
+during 2s; thus, the flow rate at the end valve decreases linearly from :math:`0.05m^3/s` at :math:`t=0s` to
+:math:`0m^3/s` at :math:`t=2s` and remains zero thereafter.
+:numref:`tnet0_network`(a) shows the flow rate through the valve, and
+:numref:`tnet0_network`(b) presents the pressure transients generated at node N-1 during 60s simulation period.
+The solid line represents TSNet results and the dashed-dotted line shows Hammer results.
+These results indicate a perfect match between TSNet and Hammer simulation results for this simple network.
+
+
+.. _tnet0_network:
+.. figure:: figures/tnet0_network.png
+   :width: 500
+   :alt: tnet0_network
+
+   Topology of a simple network.
+
+.. _tnet0_hammer:
+.. figure:: figures/tnet0_calibration.png
+   :width: 500
+   :alt: tnet0_hammer
+
+   Comparison of TSNet and Hammer results: (a) flow at the valve; (b) pressure head at N-1.
+
+
+Tnet 3
+^^^^^^^
+
+We then show the comparison between TSNet and Hammer results for
+a more complicated network, Tnet3 in the network folder,
+for three different transient events:
+
+1. shut down of PUMP-1,
+
+2. burst at JUNCTION-73, and
+
+3. closure of VALVE-1.
+
+The results for the three transient-generating events are shown in
+:numref:`pump_hammer`, :numref:`burst_hammer`, and:numref:`valve_hammer`, respectively.
+The Hammer model that was used to generate the events is also included
+in the GitHub example directory for the user's reference.
+
+*   We would like to note beforehand that we do not expect to
+    obtain the exact same results from TSNet
+    as Hammer since different numerical schemes were implemented,
+    such as wave speed adjustment, pressure dependent demand, and boundary conditions.
+    In fact, due to the fact that Hammer is a closed-source software,
+    we do not know precisely what numerical schemes are implemented in Hammer,
+    which directly motivated us to develop TSNet in the first place.
+
+
+Pump shut-down
+~~~~~~~~~~~~~~~~~
+
+Both TSNet and Hammer are utilized to simulate
+the shut down of PUMP-1.
+The time step is specified as 0.002s in both software.
+:numref:`pump_hammer` reports the pressure change with respect to the nominal pressure
+at multiple junctions, where the solid lines represent TSNet results
+and the dashed lines show Hammer results.
+TSNet and Hammer results are very similar to each other
+in terms of attenuation and phase shift throughout the 20s simulation period,
+despite slight discrepancies, which can be explained by
+the different wave speed adjustment schemes and boundary condition configurations adopted
+by the two software.
+
+.. _pump_hammer:
+.. figure:: figures/tnet3_pump_hammer_002.png
+   :width: 500
+   :alt: pump_hammer
+
+    Comparison of pressure transients
+    at multiple junctions generated by shutting down PUMP-1 in TNet3:
+    TSNet (solid lines) Hammer (dashed lines) results.
+
+*   Moreover, we tested the consistency of the solution when altering
+    the time step of the simulation in TSNet and Hammer.
+    We simulated the pump shut-down event with different time steps, i.e., :math:`dt = \{0.002s, 0.0055, 0.0115s\}`
+    and plot the results in :numref:`convergence1`.
+    The green and purple lines represent the pressure at JUNCTION-30, and JUNCTION-90, respectively,
+    and the different line types (solid, dashed, dotted) represent different time steps (see legend).
+    :numref:`convergence`(a) represents the results from TSNet, and
+    :numref:`fig:convergence`(b) shows the results from Hammer.
+    We observe that the pressure transients simulated by TSNet with different time steps, resemble closely
+    with each other, and all of pressure traces disclose anticipated level of details about the reflection,
+    transmission, propagation, and attenuation of the pressure waves.
+    However, the Hammer predicts significantly different and uncharacteristic results with time steps larger than
+    0.002s (i.e., :math:`dt =\{0.0055s, 0.0115s\}`), with small transient amplitude, delayed pressure peaks,
+    and high attenuation.
+    The pressure transients exhibit consistency only when the time step is smaller than 0.002s,
+    which is the reason why we chose time step as 0.002s to compare the results from Hammer and TSNet.
+
+
+.. _convergence:
+.. figure:: figures/tnet3_pump_timestep_hammer&tesnet.png
+   :width: 500
+   :alt: convergence
+
+    Pressure transients at JUNCTION-30 (green) and JUNCTION-90 (purple) predicted
+    by Hammer using different time steps: (a) TSNet results; (b) Hammer results.
+
+
+Burst event
+~~~~~~~~~~~
+
+Aburst event was simulated at Junction-73 using both TSNet and Hammer.
+:numref:`burst_hammer1` reports the pressure change with respect to the nominal pressure
+at multiple junctions, where the solid lines represent TSNet results,
+and the dashed lines show Hammer results.
+It can be observed that during the first transient cycle, i.e., around 0-8s,
+TSNet and Hammer results exhibit very good agreement with each other.
+Although the discrepancies increase a bit in terms of attenuation and phase shift during the latter period,
+the overall match is satisfactory considering that different time step and wave speed adjustment schemes
+are adopted in the two software.
+
+
+.. _burst_hammer:
+.. figure:: figures/tnet3_burst_hammer.png
+   :width: 500
+   :alt: burst_hammer
+
+   Comparison of pressure transients at multiple junctions generated by the burst at JUNCTION-73 in Tnet3:
+   TSNet (solid lines) Hammer (dashed lines) results.
+
+Valve closure
+~~~~~~~~~~~~~
+
+Both TSNet and Hammer are utilized to simulate
+the closure of VALVE-1.
+The comparison of the results is presented in :numref:`valve_hammer1`.
+Again, adequate resemblance can be observed between the TSNet (a) and
+Hammer results (b). Considering that pressure transients are of smaller amplitude and
+more chaotic, the results are presented in two separate plots with same scale for clarity.
+
+.. _valve_hammer:
+.. figure:: figures/tnet3_valve_hammer.png
+   :width: 500
+   :alt: valve_hammer
+
+   Comparison of pressure transients at multiple junctions generated by closing VALVE-1 in Tnet3:
+   (a): TSNet results, (b): Hammer results.
+
+
+In summary, we are able to show adequate consistency between TSNet and Hammer
+results in two networks undergoing different transient events.
+In the Reservoir-Pipe-Valve network, shown in :numref:`tnet0_network`, TSNet and Hammer predict exact same
+pressure and flow results when a transient event is generated by gradually closing the end-valve.
+In the larger network, TSNet and Hammer results are remarkably similar with each other despite minor discrepancies
+due to the differences in modeling and numerical schemes.
+Moreover, as presented in :numref:`convergence1`,
+TSNet performs better with relatively large time step than Hammer.
+
+

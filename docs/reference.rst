@@ -31,3 +31,5 @@ Reference
 .. [VIBS06] Vítkovský, J. P., Bergant, A., Simpson, A. R., & Lambert, M. F. (2006). Systematic evaluation of one-dimensional unsteady friction models in simple pipelines. Journal of Hydraulic Engineering, 132(7), 696-708.
 
 .. [VABR95] Vardy, A. E., & Brown, J. M. (1995). Transient, turbulent, smooth pipe friction. Journal of hydraulic research, 33(4), 435-456.
+
+.. [HAMMER] Bentley, W. H. Transient Analysis Software.
