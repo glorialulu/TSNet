@@ -194,14 +194,13 @@ Vardy's sheer decay coefficient (:math:`C^*`) [VABR95]_:
     \end{array} \right.
 
 TSNet allows the user to choose the friction model using TSNet API simply by specifying
-the friction model to be used in \texttt{tsnet.simulation.MOCSimulator}, as illustrated
-in Listing~\ref{lst:friction1}.
-The friction argument can take three values: 'steady', 'quasi-steady', and 'unsteady'.}
+the friction model to be used in :class:`~tsnet.simulation.MOCSimulator`.
+The friction argument can take three values: 'steady', 'quasi-steady', and 'unsteady':
 
 .. code:: python
 
     results_obj = 'Tnet3' # name of the object for saving simulation results
-    friction = 'unsteady' # or "steady" or "quasi-steady"
+    friction = 'unsteady' # or "steady" or "quasi-steady", by default "steady"
     tm = tsnet.simulation.MOCSimulator(tm, results_obj, friction)
 
 
@@ -381,7 +380,7 @@ The procedure for determine the time step is as follows:
 
 .. _MOC_time:
 .. figure:: figures/MOC_time_example.png
-   :width: 800
+   :width: 600
    :alt: MOC_time
    
    Example network for determining the time step: (a) before combing pipes; (b): after combing pipes.
@@ -568,12 +567,11 @@ Mathematically, the acceleration terms along positive and negative characteristi
 be represented as:
 
 .. math::
-    \begin{align}
     C^+: & \frac{\partial{V}}{\partial{t}}^+ = \frac{V_1^{t-1}-V_1^{t-2}}{\Delta t}
         & \frac{\partial{V}}{\partial{x}}^+ = \frac{V_2^{t-1}-V_1^{t-1}}{\Delta x} \\
     C^-: & \frac{\partial{V}}{\partial{t}}^- = \frac{V_4^{t-1}-V_4^{t-2}}{\Delta t}
         & \frac{\partial{V}}{\partial{x}}^- = \frac{V_4^{t-1}-V_3^{t-1}}{\Delta x}
-    \end{align}
+
 
 
 .. _MOC_grid_unsteady:
@@ -631,9 +629,12 @@ Then, the boundary conditions at the open surge tank can be formulated as:
 .. math::
     :label: open_surge
 
-    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}\\
-    &H_2^t = H_3^t &\mbox{energy conservation}\\
-    &H_2^t = z^t &\mbox{energy conservation}\\
+    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}
+
+    &H_2^t = H_3^t                 &\mbox{energy conservation}
+
+    &H_2^t = z^t                    &\mbox{energy conservation}
+
     &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
 
 

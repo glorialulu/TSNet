@@ -9,4 +9,4 @@ from tsnet import utils
 
 __author__ = """Lu Xing"""
 __email__ = 'xinglu@utexas.edu'
-__version__ = '0.1.2'
+__version__ = '0.2.0'
