@@ -2,6 +2,8 @@
 Transient Modeling Framework
 ==================================
 The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
+The main steps of transient modelling and simulation in TSNet
+are described in subsequent sections.
 
 .. _flowchart:
 .. figure:: figures/flowchart.png
@@ -9,10 +11,6 @@ The framework of performing transient simulation using TSNet is shown in :numref
    :alt: flowchart
 
    Flowchart of transient simulation in TSNet
-
-The main steps of transient modelling and simulation in TSNet
-are described in subsequent sections.
-
 
 Transient Model
 ---------------
