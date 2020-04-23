@@ -331,7 +331,8 @@ The procedure for determine the time step is as follows:
 
 *   Calculate the maximum time step (:math:`\Delta t_{max}`)
     allowed by Courant's criterion, assuming that there are two computational units
-    on the critical pipe (i.e., the pipe that results in the smallest travel time, which depends on the length and the wave speed for that pipe), i.e., for pipe 2 $N_2 = 2$.}
+    on the critical pipe (i.e., the pipe that results in the smallest travel time,
+    which depends on the length and the wave speed for that pipe), i.e., for pipe 2 :math:`N_2 = 2`.}
 
 
     .. math::
@@ -339,9 +340,9 @@ The procedure for determine the time step is as follows:
 
 
 *   Compute the required number of computational units for all other
-    pipes, i.e, $N_1$ for pipe 1 and $N_3$ for pipe 3, using $\Delta t_{max}$ as the time step.
+    pipes, i.e, :math:`N_1` for pipe 1 and :math:`N_3` for pipe 3, using :math:`\Delta t_{max}` as the time step.
     Since the number of computational units on each pipe has to be integer,
-    the numbers are rounded to the closest integer, thus introducing discrepancies in the time step of different pipes. }
+    the numbers are rounded to the closest integer, thus introducing discrepancies in the time step of different pipes.
 
     .. math::
         N_1 &=  \text{round}\left(\frac{L_1}{a_1 \Delta t_{max}}\right) = \frac{940}{1000\times0.03} = 31
@@ -494,14 +495,14 @@ The two characteristic equations describing the hydraulic transients with steady
 
 .. math::
     :label: com_steady
+
     C+:  &\qquad {} (V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
                     + \frac{f\Delta t}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|
-                    + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0
-
+                    + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0\\
     C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
                     - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
                     - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0
-
+    
 
 Once the MOC characteristic grid and numerical scheme are established,
 the explicit time marching MOC scheme can be conducted in the computational units shown
@@ -590,14 +591,12 @@ as below:
 
 .. math::
     :label: com_unsteady
+
     C+:  \qquad {}(V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
             + \frac{g}{a} \Delta t V_{i-1}^{t-1}\sin\alpha
             + \frac{f\Delta x}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|\\
             + \frac{k_u}{2g} \left[ (V_{i-1}^{t-1} - V_{i-1}^{t-2}) +
-            \mbox{sign}(V_{i-1}^{t-1}) \left|V_i^{t-1} - V_{i-1}^{t-1} \right| \right] = 0
-
-
-
+            \mbox{sign}(V_{i-1}^{t-1}) \left|V_i^{t-1} - V_{i-1}^{t-1} \right| \right] = 0\\
     C-:  \qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
             + \frac{g}{a} \Delta t V_{i+1}^{t-1}\sin\alpha
             - \frac{f\Delta x}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|\\
@@ -630,14 +629,13 @@ in the event of a pressure drop.
 Then, the boundary conditions at the open surge tank can be formulated as:
 
 .. math::
-:label: open_surge
-    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}
+    :label: open_surge
 
-    &H_2^t = H_3^t &\mbox{energy conservation}
-
-    &H_2^t = z^t &\mbox{energy conservation}
-
+    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}\\
+    &H_2^t = H_3^t &\mbox{energy conservation}\\
+    &H_2^t = z^t &\mbox{energy conservation}\\
     &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
+
 
 where :math:`Q_T` is the flow rate into the surge tank,
 :math:`z` is the water level in the surge tank, and
