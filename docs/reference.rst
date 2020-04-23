@@ -27,3 +27,7 @@ Reference
 .. [STWY67] Streeter, V. L., & Wylie, E. B. (1967). Hydraulic transients (No. BOOK). mcgraw-hill.
 
 .. [OSBH08] Ostfeld, A., Uber, J. G., Salomons, E., Berry, J. W., Hart, W. E., Phillips, C. A., ... & di Pierro, F. (2008). The battle of the water sensor networks (BWSN): A design challenge for engineers and algorithms. Journal of Water Resources Planning and Management, 134(6), 556-568.
+
+.. [VIBS06] Vítkovský, J. P., Bergant, A., Simpson, A. R., & Lambert, M. F. (2006). Systematic evaluation of one-dimensional unsteady friction models in simple pipelines. Journal of Hydraulic Engineering, 132(7), 696-708.
+
+.. [VABR95] Vardy, A. E., & Brown, J. M. (1995). Transient, turbulent, smooth pipe friction. Journal of hydraulic research, 33(4), 435-456.

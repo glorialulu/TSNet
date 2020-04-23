@@ -4,7 +4,7 @@ Transient Modeling Framework
 The framework of performing transient simulation using TSNet is shown in :numref:`flowchart`
 
 .. _flowchart:
-.. figure:: figures/flowchart.PNG
+.. figure:: figures/flowchart.png
    :width: 400
    :alt: flowchart
 
@@ -65,8 +65,11 @@ pressure-dependent demand (PDD) hydraulics simulations, with the
 capacity of simulating leaks. The default simulation engine is DD.
 An initial condition simulation can be run using the following code:
 
-.. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 22-24
+.. code:: python
+
+    t0 = 0. # initialize the simulation at 0 [s]
+    engine = 'DD' # demand driven simulator
+    tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 :math:`t_0` stands for the time when the initial condition will be
 calculated. More information on the initializer can be found in
@@ -83,8 +86,11 @@ the Method of Characteristics (MOC)
 for solving governing transient flow equations.
 A transient simulation can be run using the following code:
 
-.. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 27-28
+.. code:: python
+
+results_obj = 'Tnet1' # name of the object for saving simulation results
+tm = tsnet.simulation.MOCSimulator(tm, results_obj)
+
 
 The results will be returned to the transient model (tm) object,
 and then stored in the 'Tnet1.obj' file for the easiness of retrieval.
@@ -93,7 +99,7 @@ In the following sections, an overview of the solution approaches
 and boundary conditions is presented,
 based on the following literature [LAJW99]_ , [MISI08]_, [WYSS93]_.
 
-Governing Equations and Numerical Schemes
+Governing Equations
 """"""""""""""""""""""""""""""""""""""""""
 
 Mass and Momentum Conservation
@@ -105,7 +111,7 @@ equation [WYSS93]_:
 .. math::
     \frac{\partial H}{\partial t} + \frac{a^2}{g} \frac{\partial V}{\partial x} - gV\sin \alpha = 0
 
-    \frac{\partial V}{\partial t} + g\frac{\partial H}{\partial x} + h_f = 0
+    \frac{1}{g}\frac{\partial V}{\partial t} + \frac{\partial H}{\partial x} + h_f = 0
 
 where
 :math:`H` is the head,
@@ -113,9 +119,8 @@ where
 :math:`t` is time,
 :math:`a` is the wave speed,
 :math:`g` is the gravity acceleration,
-:math:`\alpha` is the angle from horizontal,
-and :math:`h_f` represents the head loss
-(only quasi-steady friction head loss per unit length is modelled in current package).
+:math:`\alpha` is the pipe slope,
+and :math:`h_f` represents the head loss per unit length due to friction.
 
 Method of Characteristics (MOC)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -127,18 +132,18 @@ equations that apply along specific lines, i.e., characteristics lines
 (C+ and C-), as shown below [LAJW99]_:
 
 .. math::
-    C+: \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    \text{  only when  } \frac{dx}{dt} = a
+    C+: \ \ \ \frac{dV}{dt} + \frac{g}{a} \frac{dH}{dt} + g h_f - \frac{g}{a}V\sin\alpha = 0
+   \ \  \  \text{  along  } \frac{dx}{dt} = a
 
-    C-: \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + h_f - gV\sin(\alpha) = 0
-    \text{  only when  } \frac{dx}{dt} = -a
+    C-: \ \  \  \frac{dV}{dt} - \frac{g}{a} \frac{dH}{dt} + g h_f - \frac{g}{a}V\sin\alpha = 0
+   \ \  \ \text{  along  } \frac{dx}{dt} = -a
 
-The explicit MOC technique is then adopted to solve the above systems of
-equations along the characteristics lines [LAJW99]_.
 
 Headloss in Pipes
 ^^^^^^^^^^^^^^^^^
 
+Steady/ quasi-steady friction model
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TSNet adopts Darcy-Weisbach equation to compute head loss, regardless of the
 friction method defined in the EPANET .inp file. This package computes
 Darcy-Weisbach coefficients (:math:`f`) based on the head loss
@@ -158,6 +163,45 @@ based on the following equation:
 
 .. math::
     h_f = f\frac{L}{D}\frac{V^2}{2g}
+
+Unsteady friction model
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the steady friction model, we incorporated the quasi-steady and
+the unsteady friction models in the updated version of TSNet
+The head loss term (:math:`h_f`) can be expressed as a sum of steady/quasi-steady part (:math:`{h_f}_s`) and
+unsteady part (:math:`{h_f}_u`), i.e., :math:`h_f={h_f}_s+ {h_f}_u`.
+TSNet incorporated the instantaneous acceleration-based model [VIBS06]_.
+
+.. math::
+    {h_f}_u = \frac{k_u}{2g} \left( \frac{\partial V}{\partial t} + a \cdot \mbox{sign}(V) \left| \frac{\partial V}{\partial x}\right| \right)
+
+
+where
+:math:`{h_f}_u` is the head loss per unit length due to unsteady friction,
+:math:`\frac{\partial V}{\partial t}` is the local instantaneous acceleration,
+:math:`\frac{\partial V}{\partial x}` is the convective instantaneous acceleration, and
+:math:`k_u` is Brunone's friction coefficient, which can be analytically determined using
+Vardy's sheer decay coefficient (:math:`C^*`) [VABR95]_:
+
+.. math::
+    k_u = \frac{C^*}{2}
+
+    C^* = \left\{ \begin{array}{rl}
+        0.00476 & \mbox{laminar flow } (Re \leq 2000)\\
+        frac{7.41}{Re^{\log{(14.3/Re^{0.05})}}} & \mbox{turbulent flow } (Re > 2000)
+    \end{array} \right.
+
+TSNet allows the user to choose the friction model using TSNet API simply by specifying
+the friction model to be used in \texttt{tsnet.simulation.MOCSimulator}, as illustrated
+in Listing~\ref{lst:friction1}.
+The friction argument can take three values: 'steady', 'quasi-steady', and 'unsteady'.}
+
+.. code:: python
+
+    results_obj = 'Tnet3' # name of the object for saving simulation results
+    friction = 'unsteady' # or "steady" or "quasi-steady"
+    tm = tsnet.simulation.MOCSimulator(tm, results_obj, friction)
 
 
 Pressure-driven Demand
@@ -225,8 +269,11 @@ fatal error will be raised and the program will be killed; if not, the
 user defined value will be used as the initial guess for the upcoming
 adjustment.
 
-.. literalinclude:: ../examples/Tnet1_valve_closure.py
-    :lines: 9-11
+.. code:: python
+
+    dt = 0.1  # time step [s], if not given, use the maximum allowed dt
+    tf = 60   # simulation period [s]
+    tm.set_time(tf,dt)
 
 The determination of time step is not
 straightforward, especially in large networks.
@@ -258,6 +305,168 @@ Ultimately, an adjusted
 
 It should be noted that even if the user defined time step satisfied the
 Courant's criterion, it will still be adjusted.
+
+
+Numerical Scheme
+"""""""""""""""""""
+The explicit MOC technique adopted to solve the compatibility equations
+is explained in a simple network.
+:numref:`MOC_grid_net` illustrates a simple piped network
+and the corresponding MOC characteristic grid on the x-t plane.
+Boundary nodes (represented by the void circles),
+are defined by the physical elements in the network (or any discontinuity),
+such as tanks, junctions, valves,  pumps, leaks and bursts.
+Inner nodes (represented by solid circles) are numerically specified to divide a single
+pipe into several segments, i.e., *computational units*, so that the propagation of pressure waves
+can be properly modeled.
+The heads, :math:`H`, and flow velocities, :math:`V`, are computed for each computational node,
+either boundary or inner node, and at each time based on the information at a previous time.
+Depending on the type of the computational node (i.e. inner or boundary)
+and the specific boundary condition,
+the flows and heads may be allocated and computed differently.
+:numref:`MOC_grid` shows a general example of two computational units for computing flow velocities and heads.
+Note that for inner nodes, where there is no change in pipe or flow conditions,
+:math:`H_2^t = H_3^t` and :math:`V_2^t = V_3^t`.
+Otherwise, additional head/flow boundary conditions will be introduced between points 2 and 3
+in addition to the two compatibility equations.
+Detailed descriptions about different boundary conditions are discussed in the next section.
+
+
+.. _MOC_grid_net:
+.. figure:: figures/MOC_grid_net.png
+   :width: 600
+   :alt: MOC_grid_net
+
+   Topology of a simple network
+
+
+.. _MOC_grid:
+.. figure:: figures/MOC_grid.png
+   :width: 400
+   :alt: MOC_grid
+
+   MOC characteristic grids in x-t plane for two adjacent computational units
+
+
+Steady/quasi-steady Friction Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The solution of the compatibility equations is achieved by integrating
+the above equations along specific characteristic lines of the numerical grid,
+which are solved to compute the head and flow velocity, :math:`H_i^t,V_i^t`,
+at new point in time and space given that the conditions at the previous time step are known.
+The two characteristic equations describing the hydraulic transients with steady friction model
+(:math:`h_f = {h_f}_s = f\frac{V^2}{2gD}`) are discretized and formulated as:
+
+.. math::
+ C+:  &\qquad {} (V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
+                + \frac{f\Delta t}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|
+                + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0 \label{eq:c1}
+
+ C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
+                - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
+                - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0 \label{eq:c2}
+
+Once the MOC characteristic grid and numerical scheme are established,
+the explicit time marching MOC scheme can be conducted in the computational units shown
+in :numref:`MOC_grid` as follows:
+
+*   First, given initial conditions, the heads and flow velocities
+    at all computational nodes are known, and are updated for the next time step,
+    i.e. :math:`H_2^{t}, V_2^{t}, H_3^{t}`,
+    and :math:`V_3^{t}` will be updated based on
+    :math:`H_1^{t-1}, V_1^{t-1}, H_4^{t-1},` and :math:`V_4^{t-1}`.
+
+*   Then, the relation between :math:`H_2^t` and :math:`V_2^t` with known
+    :math:`H_1^{t-1}, V_1^{t-1}`, and properties of the computation unit 1,
+    such as wave speed (:math:`a_1`) and friction factor(:math:`f_1`) are established
+    along the positive characteristic line (:math:`C^+`):
+
+    .. math::
+        V_2^t + \frac{g}{a_1} H_2^t = V_1^{t-1} + \frac{g}{a_1} H_1^{t-1}
+        -\frac{f_1\Delta t}{2D_1}V_1^{t-1} |V_1^{t-1}| +  \frac{g\Delta t}{a_1} V_1^{t-1}\sin\alpha_1
+
+
+*   Similarly, :math:`H_3^t` and :math:`V_3^t` is updated using the compatibility equations
+    along the negative characteristic line (:math:`C^-`) and
+    conditions at previous time step, :math:`H_4^{t-1}, V_4^{t-1}` :
+
+    .. math::
+        V_3^t - \frac{g}{a_2} H_3^t = -V_4^{t-1} + \frac{g}{a_2} H_4^{t-1}
+        + \frac{f_2\Delta t}{2D_2}V_4^{t-1} |V_4^{t-1}| - \frac{g \Delta t}{a_2} V4^{t-1}\sin\alpha_2
+
+*   Subsequently, the system of equations is supplemented using
+    the boundary conditions at the node connecting the two computation units,
+    such as energy equations that specify the relation between :math:`H_2^t` and :math:`H_3^t`
+    and continuity equations for :math:`V_2^t` and :math:`V_3^t`.
+    Different boundary conditions can be defined to characterize different connections,
+    including valves, pumps, surge tanks, and pipe-to-pipe junctions with/or without
+    leak, burst, and demand.
+    For example, if the connection is a pipe-to-pipe junction with a leak, the boundary conditions
+    can be defined as:
+
+    .. math::
+        H_2^t = H_3^t;   V_2^t A_1  = V_3^t A_2 + k_l \sqrt{H_2^t}
+
+    where, :math:`k_l` is the leakage coefficient and
+    :math:`A_1, A_2` are the cross-sectional area of computation units 1 and 2, respectively.
+    More boundary conditions are discussed in the next section.
+
+*   Ultimately, the system of equations containing compatibility equations,
+    and the two boundary conditions
+    can be solved for the four unknowns, i.e.,:math:`H_2^t, V_2^t, H_3^t`, and :math:`V_3^t`,
+    thus completing the time marching from :math:`t-1` to :math:`t`.
+
+Unsteady Friction Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The local (:math:`\frac{\partial{V}}{\partial{x}}`)
+and convective instantaneous (:math:`\frac{\partial{V}}{\partial{t}}`)acceleration terms
+are approximated using finite-difference schemes
+on the characteristic grid, as shown in :numref:`MOC_grid_unsteady`.
+The explicit fist-order finite difference scheme is implemented such that the computation
+of the acceleration terms does not interact with adjacent computational sections,
+thus preserving the original structure of the MOC scheme. %as shown in :numref:`MOC_grid_unsteady`.
+Mathematically, the acceleration terms along positive and negative characteristic lines can
+be represented as:
+
+.. math::
+    \begin{align}
+    C^+: & \frac{\partial{V}}{\partial{t}}^+ = \frac{V_1^{t-1}-V_1^{t-2}}{\Delta t}
+        & \frac{\partial{V}}{\partial{x}}^+ = \frac{V_2^{t-1}-V_1^{t-1}}{\Delta x} \\
+    C^-: & \frac{\partial{V}}{\partial{t}}^- = \frac{V_4^{t-1}-V_4^{t-2}}{\Delta t}
+        & \frac{\partial{V}}{\partial{x}}^- = \frac{V_4^{t-1}-V_3^{t-1}}{\Delta x}
+    \end{align}
+
+
+.. _MOC_grid_unsteady:
+.. figure:: figures/MOC_grid_unsteady.png
+   :width: 400
+   :alt: MOC_grid_unsteady
+
+   MOC characteristic grid with finite difference unsteady friction
+
+Subsequently, the formulation of unsteady friction can be incorporated into
+the compatibility equations with
+additional terms describing the instantaneous acceleration-based unsteady friction model,
+as below:
+
+.. math::
+    \begin{multline} \label{eq:c1_unsteady}
+    C+:  \qquad {}(V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
+            + \frac{g}{a} \Delta t V_{i-1}^{t-1}\sin\alpha
+            + \frac{f\Delta x}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|\\
+            + \frac{k_u}{2g} \left[ (V_{i-1}^{t-1} - V_{i-1}^{t-2}) +
+            \mbox{sign}(V_{i-1}^{t-1}) \left|V_i^{t-1} - V_{i-1}^{t-1} \right| \right] = 0
+    \end{multline}
+
+    \begin{multline}\label{eq:c2_unsteady}
+    C-:  \qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
+            + \frac{g}{a} \Delta t V_{i+1}^{t-1}\sin\alpha
+            - \frac{f\Delta x}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|\\
+            - \frac{k_u}{2g} \left[ (V_{i+1}^{t-1} - V_{i+1}^{t-2}) +
+            \mbox{sign}(V_{i+1}^{t-1}) \left|V_{i+1}^{t-1} - V_{i}^{t-1} \right| \right]  = 0
+    \end{multline}
 
 
 Boundary Conditions
@@ -350,8 +559,14 @@ has not been included yet.
 The following example shows how to add pump shut-off event to the network,
 where the parameters are defined in the same manner as in valve closure:
 
-.. literalinclude:: ../examples/Tnet2_pump_shutdown.py
-    :lines: 13-18
+.. code:: python
+
+    tc = 1 # pump closure period
+    ts = 0 # pump closure start time
+    se = 0 # end open percentage
+    m = 1 # closure constant
+    pump_op = [tc,ts,se,m]
+    tm.pump_shut_off('PUMP2', pump_op)
 
 Correspondingly, the controlled pump opening can be simulated using:
 
@@ -375,8 +590,11 @@ In TSNet, leaks and bursts are assigned to the network nodes.
 A leak is defined by specifying the leaking node name and the
 emitter coefficient (:math:`k_l`):
 
-.. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 15-16
+.. code:: python
+
+    emitter_coeff = 0.01 # [ m^3/s/(m H20)^(1/2)]
+    tm.add_leak('JUNCTION-22', emitter_coeff)
+
 
 Existing leaks should be included in the initial condition solver
 (WNTR simulator);
@@ -413,8 +631,12 @@ Thus, a burst event can be modeled by defining the start and end time of the
 burst, and the final emitter coefficient when the burst
 is fully developed:
 
-.. literalinclude:: ../examples/Tnet3_burst_leak.py
-    :lines: 19-22
+.. code:: python
+
+    ts = 1 # burst start time
+    tc = 1 # time for burst to fully develop
+    final_burst_coeff = 0.01 # final burst coeff [ m^3/s/(m H20)^(1/2)]
+    tm.add_burst('JUNCTION-20', ts, tc, final_burst_coeff)
 
 
 

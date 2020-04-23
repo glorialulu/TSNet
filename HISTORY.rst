@@ -14,3 +14,10 @@ History
 ------------------
 1. Fixed bugs about dead end and single pipe.
 2. Added plot and change detection methods.
+
+0.2.0 (2020-3-31)
+-------------------
+1. Added quasi-steady and unsteady friction model.
+2. Added surge tank.
+3. Added demand-pulse simulation.
+4. Updated docs.
