@@ -12,6 +12,7 @@ Welcome to TSNet's documentation!
    transient
    results
    examples
+   validation
    contributing
    authors
    history
