@@ -259,7 +259,9 @@ This package adopted the wave speed adjustment scheme  [WYSS93]_ to make
 sure the two criterion stated above are satisfied.
 
 To begin with, the maximum allowed time step (:math:`{\Delta t}_{max}`) is
-calculated, assuming there are two computational segments on the shortest pipe:
+calculated, assuming that there are two computational units
+on the critical pipe (i.e., the pipe that results in the smallest travel time,
+which depends on the length and the wave speed for that pipe):
 
 .. math::
     \Delta t_{max} = \min{\left(\frac{L_i}{2a_i}\right)} \text{,       }
@@ -276,11 +278,21 @@ adjustment.
     tf = 60   # simulation period [s]
     tm.set_time(tf,dt)
 
+
 The determination of time step is not
 straightforward, especially in large networks.
 Thus, we allow the user
 to ignore the time step setting, in which case
 :math:`{\Delta t}_{max}` will be used as the initial guess for the upcoming adjustment.
+
+Alternatively, the user can also specify the number of segments on the critical pipe:
+
+.. code:: python
+
+    N = 3  # number of computational units on the critical pipe, default 2.
+    tf = 60   # simulation period [s]
+    tm.set_time_N(tf,N)
+
 
 After setting the initial time step, the following adjustments will be performed.
 Firstly,
@@ -479,15 +491,17 @@ at new point in time and space given that the conditions at the previous time st
 The two characteristic equations describing the hydraulic transients with steady friction model
 (:math:`h_f = {h_f}_s = f\frac{V^2}{2gD}`) are discretized and formulated as:
 
-.. _com_steady:
-.. math::
- C+:  &\qquad {} (V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
-                + \frac{f\Delta t}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|
-                + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0 \label{eq:c1}
 
- C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
-                - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
-                - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0 \label{eq:c2}
+.. math::
+    C+:  &\qquad {} (V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
+                    + \frac{f\Delta t}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|
+                    + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0 \label{eq:c1}
+
+    C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
+                    - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
+                    - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0 \label{eq:c2}
+    :label:com_steady
+
 
 Once the MOC characteristic grid and numerical scheme are established,
 the explicit time marching MOC scheme can be conducted in the computational units shown
@@ -573,7 +587,7 @@ the compatibility equations with
 additional terms describing the instantaneous acceleration-based unsteady friction model,
 as below:
 
-.. _com_unsteady:
+
 .. math::
 
     C+:  \qquad {}(V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
@@ -589,7 +603,7 @@ as below:
             - \frac{f\Delta x}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|\\
             - \frac{k_u}{2g} \left[ (V_{i+1}^{t-1} - V_{i+1}^{t-2}) +
             \mbox{sign}(V_{i+1}^{t-1}) \left|V_{i+1}^{t-1} - V_{i}^{t-1} \right| \right]  = 0
-
+    :label: com_unsteady
 
 
 Boundary Conditions
@@ -616,7 +630,6 @@ storing the excess water when a pressure jump occurs in the pipeline connection,
 in the event of a pressure drop.
 Then, the boundary conditions at the open surge tank can be formulated as:
 
-.. _open_surge:
 .. math::
     &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity} \label{eq:open_bod12}
 
@@ -625,7 +638,7 @@ Then, the boundary conditions at the open surge tank can be formulated as:
     &H_2^t = z^t &\mbox{energy conservation} \label{eq:open_bod32}
 
     &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
-
+    :label: open_surge
 
 where :math:`Q_T` is the flow rate into the surge tank,
 :math:`z` is the water level in the surge tank, and
@@ -883,7 +896,7 @@ Subsequently, the time-varying demand coefficient is defined as
 
 .. _demandpulse:
 .. figure:: figures/DemandMultiplier.png
-   :width: 500
+   :width: 300
    :alt: demandpulse
 
    Demand pulse curve

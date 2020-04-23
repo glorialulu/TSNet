@@ -312,3 +312,6 @@ JUNCTION-20, where the burst occurred.
    :alt: tnet3_multi
 
    Tnet3 - Head at multiple junctions.
+
+
+More examples are includeded in https://github.com/glorialulu/TSNet/tree/master/examples.

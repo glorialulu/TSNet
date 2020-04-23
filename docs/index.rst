@@ -13,6 +13,7 @@ distribution networks. The software includes capability to:
 * Operate valves and pumps
 * Add disruptive events including pipe bursts and leaks
 * Model open and closed surge tanks
+* Choose between steady,quasi-steady, and unsteady friction models
 * Perform transient simulation using Method of characteristics (MOC) techniques
 * Visualize results
 

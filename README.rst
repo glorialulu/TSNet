@@ -48,6 +48,8 @@ distribution networks. The software includes capabilities to:
 * Create water network models based on .inp files
 * Generate transient events by operating valves and pumps
 * Add disruptive events including pipe bursts and leakages
+* Add surge protection devices
+* Choose between steady,quasi-steady, and unsteady friction models
 * Perform transient simulation using MOC method
 * Visualize results
 
