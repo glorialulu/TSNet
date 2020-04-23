@@ -599,7 +599,7 @@ Boundary conditions are required to characterize the devices or discontinuities,
 such as such as tanks, junctions, valves,  pumps, leaks and bursts, between two computational units.
 Supplemented by the boundary conditions specifying the relations between :math:`H_2 ^t, H_3^t, V_2^t, V_3^t` as
 in :numref:`MOC_grid` or :numref:`MOC_grid_unsteady`,
-the compatibility equations (:numbered:`com_steady` or :numbered:`com_unsteady`)
+the compatibility equations (:eq:`com_steady` or :eq:`com_unsteady`)
 can then be solved to obtain :math:`H_2 ^t, H_3^t, V_2^t`, and :math:`V_3^t`.
 The following sections discuss the boundary conditions for devices and discontinuities in detail.
 
@@ -634,7 +634,7 @@ With six equations (two compatity equations and four boundary conditions)
 and six unknowns (:math:`V_2^t, V_3^t, H_2^t, H_3^t, z^t, Q_T^t`),
 the above system of equations can be solved at each time step.
 Other devices can be modeled as well by defining the corresponding boundary conditions to
-replace :numbered:`open_surge`.
+replace :eq:`open_surge`.
 
 In TSNet, an open surge tank is assumed to exhibit infinite height so that the tank never overflows.
 The user can add an open surge tank to an existing network in the TSNet model by defining the desired
