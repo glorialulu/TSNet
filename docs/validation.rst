@@ -5,6 +5,9 @@ Comparison with Hammer
 During the development process, we have consistently compared TSNet results with
 Bentley Hammer [HAMMER]_ using different networks and many different transient events.
 In this section, we present the comparison between TSNet and Hammer results.
+The Hammer models used to generate the events is also included
+in the GitHub example directory (https://github.com/glorialulu/TSNet/tree/master/examples/networks)
+for the user's reference.
 
 
 Tnet 0

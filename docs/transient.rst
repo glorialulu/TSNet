@@ -493,14 +493,14 @@ The two characteristic equations describing the hydraulic transients with steady
 
 
 .. math::
+    :label: com_steady
     C+:  &\qquad {} (V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
                     + \frac{f\Delta t}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|
-                    + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0 \label{eq:c1}
+                    + \frac{g\Delta t}{a} V_{i-1}^{t-1}\sin\alpha= 0
 
     C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
                     - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
-                    - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0 \label{eq:c2}
-    :label:com_steady
+                    - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0
 
 
 Once the MOC characteristic grid and numerical scheme are established,
@@ -589,7 +589,7 @@ as below:
 
 
 .. math::
-
+    :label: com_unsteady
     C+:  \qquad {}(V_i^t - V_{i-1}^{t-1}) + \frac{g}{a} (H_i^{t} - H_{i-1}^{t-1} )
             + \frac{g}{a} \Delta t V_{i-1}^{t-1}\sin\alpha
             + \frac{f\Delta x}{2D}V_{i-1}^{t-1} |V_{i-1}^{t-1}|\\
@@ -603,7 +603,6 @@ as below:
             - \frac{f\Delta x}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|\\
             - \frac{k_u}{2g} \left[ (V_{i+1}^{t-1} - V_{i+1}^{t-2}) +
             \mbox{sign}(V_{i+1}^{t-1}) \left|V_{i+1}^{t-1} - V_{i}^{t-1} \right| \right]  = 0
-    :label: com_unsteady
 
 
 Boundary Conditions
@@ -631,14 +630,14 @@ in the event of a pressure drop.
 Then, the boundary conditions at the open surge tank can be formulated as:
 
 .. math::
-    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity} \label{eq:open_bod12}
+:label: open_surge
+    &V_2^t A_1 - V_3^t A_2 = Q_T^t &\mbox{continuity}
 
-    &H_2^t = H_3^t &\mbox{energy conservation} \label{eq:open_bod22}
+    &H_2^t = H_3^t &\mbox{energy conservation}
 
-    &H_2^t = z^t &\mbox{energy conservation} \label{eq:open_bod32}
+    &H_2^t = z^t &\mbox{energy conservation}
 
     &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
-    :label: open_surge
 
 where :math:`Q_T` is the flow rate into the surge tank,
 :math:`z` is the water level in the surge tank, and
