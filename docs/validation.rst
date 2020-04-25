@@ -55,6 +55,7 @@ for three different transient events:
 
 The results for the three transient-generating events are shown in
 :numref:`pump_hammer`, :numref:`burst_hammer`, and :numref:`valve_hammer`, respectively.
+
 .. The Hammer model that was used to generate the events is also included
 in the GitHub example directory for the user's reference.
 
@@ -62,9 +63,10 @@ in the GitHub example directory for the user's reference.
     obtain the exact same results from TSNet
     as Hammer since different numerical schemes were implemented,
     such as wave speed adjustment, pressure dependent demand, and boundary conditions.
+
 .. In fact, due to the fact that Hammer is a closed-source software,
-    we do not know precisely what numerical schemes are implemented in Hammer,
-    which directly motivated us to develop TSNet in the first place.
+we do not know precisely what numerical schemes are implemented in Hammer,
+which directly motivated us to develop TSNet in the first place.
 
 
 Pump shut-down
@@ -108,13 +110,6 @@ by the two software.
     which is the reason why we chose time step as 0.002s to compare the results from Hammer and TSNet.
 
 
-.. .. _convergence:
-.. figure:: figures/tnet3_pump_timestep_hammer&tesnet.png
-   :width: 500
-   :alt: convergence
-
-   Pressure transients at JUNCTION-30 (green) and JUNCTION-90 (purple) predicted by Hammer using different time steps:
-   (a) TSNet results; (b) Hammer results.
 
 
 Burst event
