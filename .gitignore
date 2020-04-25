@@ -106,8 +106,8 @@ temp.*
 
 
 # vscode
-.vscode
+.vscode/
 
 # github
-.github
+.github/
 

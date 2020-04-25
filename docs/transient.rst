@@ -167,11 +167,11 @@ based on the following equation:
 Unsteady friction model
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the steady friction model, we incorporated the quasi-steady and
-the unsteady friction models in the updated version of TSNet
+In addition to the steady friction model, TSNet includes the quasi-steady and
+the unsteady friction models.
 The head loss term (:math:`h_f`) can be expressed as a sum of steady/quasi-steady part
 (:math:`{h_f}_s`) and unsteady part (:math:`{h_f}_u`), i.e., :math:`h_f={h_f}_s+ {h_f}_u`.
-TSNet incorporated the instantaneous acceleration-based model [VIBS06]_ to calcualte the
+TSNet incorporates the instantaneous acceleration-based model [VIBS06]_ to calcualte the
 unsteady friction:
 
 .. math::
@@ -266,6 +266,30 @@ which depends on the length and the wave speed for that pipe):
     \Delta t_{max} = \min{\left(\frac{L_i}{2a_i}\right)} \text{,       }
     i = 1 \text{, } 2 \text{, ..., } n_p
 
+After setting the initial time step, the following adjustments will be performed.
+Firstly,
+the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
+speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
+
+.. math::
+    N_i =  \text{round}\left(\frac{L_i}{a_i \Delta t_{max}}\right) \text{,       }
+     i = 1, 2, \dots, n_p
+
+Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
+can be compensated by correcting the wave speed (:math:`a_i`).
+
+.. math::
+    \Delta t = \mbox{argmin}_{\phi,\Delta t}{\left \{\sum_{i=1}^{n_p}{{\phi_i}^2} \ \ \big | \ \  \Delta t = \frac{L_i}{a_i(1 \pm \phi_i)N_i} \ \ i = 1, 2, \dots, n_p \right\} }
+
+Least squares approximation is then used to determine :math:`\Delta t`
+such that the sum of squares of the wave speed adjustments
+(:math:`\sum{{\phi_i}^2}`) is minimized [MISI08]_.
+Ultimately, an adjusted
+:math:`\Delta t` can be determined and then used in the transient simulation.
+
+It should be noted that even if the user defined time step satisfied the
+Courant's criterion, it will still be adjusted.
+
 If the user defined time step is greater than :math:`{\Delta t}_{max}`, a
 fatal error will be raised and the program will be killed; if not, the
 user defined value will be used as the initial guess for the upcoming
@@ -292,30 +316,6 @@ Alternatively, the user can also specify the number of segments on the critical 
     tf = 60   # simulation period [s]
     tm.set_time_N(tf,N)
 
-
-After setting the initial time step, the following adjustments will be performed.
-Firstly,
-the :math:`i^{th}` pipes (:math:`p_i`) with length (:math:`L_i`) and wave
-speed (:math:`a_i`) will be discretized into (:math:`N_i`) segments:
-
-.. math::
-    N_i =  \text{round}\left(\frac{L_i}{a_i \Delta t_{max}}\right) \text{,       }
-     i = 1, 2, \dots, n_p
-
-Furthermore, the discrepancies introduced by the rounding of :math:`N_i`
-can be compensated by correcting the wave speed (:math:`a_i`).
-
-.. math::
-    \Delta t = \mbox{argmin}_{\phi,\Delta t}{\left \{\sum_{i=1}^{n_p}{{\phi_i}^2} \ \ \big | \ \  \Delta t = \frac{L_i}{a_i(1 \pm \phi_i)N_i} \ \ i = 1, 2, \dots, n_p \right\} }
-
-Least squares approximation is then used to determine :math:`\Delta t`
-such that the sum of squares of the wave speed adjustments
-(:math:`\sum{{\phi_i}^2}`) is minimized [MISI08]_.
-Ultimately, an adjusted
-:math:`\Delta t` can be determined and then used in the transient simulation.
-
-It should be noted that even if the user defined time step satisfied the
-Courant's criterion, it will still be adjusted.
 
 Example
 ^^^^^^^
@@ -433,7 +433,7 @@ computational efficiency.
 .. figure:: figures/wavespeed.png
    :width: 400
    :alt: wavev
-   
+
    Time step (black, left y-axis) versus the number of computational
    units on the critical pipe and the wave speed adjustments (red, right y-axis)
    showing the mean (red line) and the max-min range (shaded area).
@@ -501,7 +501,7 @@ The two characteristic equations describing the hydraulic transients with steady
     C-:  &\qquad {} (V_i^t - V_{i+1}^{t-1}) - \frac{g}{a} (H_i^{t} - H_{i+1}^{t-1} )
                     - \frac{f\Delta t}{2D}V_{i+1}^{t-1} |V_{i+1}^{t-1}|
                     - \frac{g\Delta t}{a}  V_{i+1}^{t-1}\sin\alpha= 0
-    
+
 
 Once the MOC characteristic grid and numerical scheme are established,
 the explicit time marching MOC scheme can be conducted in the computational units shown
@@ -618,7 +618,7 @@ Surge tanks
 
 The modeling of water hammer protection devices, including the open and closed surge tanks,
 are also incorporated in TSNet.
-n open surge tank is modeled as an open chamber connected directly to a pipeline
+An open surge tank is modeled as an open chamber connected directly to a pipeline
 and is open to the atmosphere [WYSS93]_.
 Initially, the water head (:math:`z`) in the tank equals to the hydraulic head in the upstream pipeline.
 During transient simulation, the open surge tank moderates pressure transients by
@@ -636,7 +636,6 @@ Then, the boundary conditions at the open surge tank can be formulated as:
     &H_2^t = z^t                    &\mbox{energy conservation}
 
     &z^t = z^{t-1} + \frac{\Delta t }{a A_T}\left(Q_T^t + Q_T^{t-1}\right) &\mbox{tank water level}
-
 
 where :math:`Q_T` is the flow rate into the surge tank,
 :math:`z` is the water level in the surge tank, and
@@ -692,10 +691,10 @@ shown in :numref:`MOC_grid` are formulated as:
 
 
 where ::math:`Q_T` is the flow rate into the surge tank,
-::math:`z` is the water level in the surge tank,
-::math:`H_A, \mathcal{V}_A` are the total head, and the volume of the air in the surge tank,
-::math:`H_b` is the barometric pressure, and
-::math:`A_T` is the cross-sectional area of the surge tank.
+:math:`z` is the water level in the surge tank,
+:math:`H_A, \mathcal{V}_A` are the total head, and the volume of the air in the surge tank,
+:math:`H_b` is the barometric pressure, and
+:math:`A_T` is the cross-sectional area of the surge tank.
 
 The user can add a closed surge tank by specifying the location, cross-sectional area,
 total height of the surge tank, and initial water height in the tank:
