@@ -562,7 +562,7 @@ are approximated using finite-difference schemes
 on the characteristic grid, as shown in :numref:`MOC_grid_unsteady`.
 The explicit fist-order finite difference scheme is implemented such that the computation
 of the acceleration terms does not interact with adjacent computational sections,
-thus preserving the original structure of the MOC scheme. %as shown in :numref:`MOC_grid_unsteady`.
+thus preserving the original structure of the MOC scheme.
 Mathematically, the acceleration terms along positive and negative characteristic lines can
 be represented as:
 
@@ -690,7 +690,7 @@ shown in :numref:`MOC_grid` are formulated as:
     & \mathcal{V}_A^t =  \mathcal{V}_A^{t-1} - A_T \left(z^t-z^{t-1}\right) &\mbox{tank air volume}
 
 
-where ::math:`Q_T` is the flow rate into the surge tank,
+where :math:`Q_T` is the flow rate into the surge tank,
 :math:`z` is the water level in the surge tank,
 :math:`H_A, \mathcal{V}_A` are the total head, and the volume of the air in the surge tank,
 :math:`H_b` is the barometric pressure, and
