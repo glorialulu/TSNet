@@ -111,3 +111,6 @@ temp.*
 # github
 .github/
 
+
+# obj results
+*.obj

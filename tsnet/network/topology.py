@@ -4,6 +4,7 @@ upstream and downstream adjacent links for each pipe, and
 store the information in lists.
 
 """
+import wntr
 
 def topology(wn):
     """Figure out the topology of the network
@@ -40,10 +41,13 @@ def topology(wn):
         If there is no downstream link, the type of the end node
         will be recorded.
     """
-    G = wn.get_graph()
     npipe = wn.num_pipes
     length = wn.query_link_attribute('length')
-    G.weight_graph(link_attribute = length)
+    if wntr.__version__=='0.2.2':
+        G = wn.get_graph(link_weight = length)
+    else:
+        G = wn.get_graph()
+        G.weight_graph(link_attribute = length)
 
     # add 'id' attribute to networkx links
     i =1
