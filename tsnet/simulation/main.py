@@ -14,7 +14,7 @@ import warnings
 from datetime import datetime
 import pickle
 
-@memo
+
 def MOCSimulator(tm, results_obj='results', friction='steady'):
     """ MOC Main Function
 
@@ -361,10 +361,9 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                 elif utype[pn][0] == 'Valve':
                     if tm.links[utype[pn][1]].operating == True:
                         valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100,
-                        tm.links[utype[pn][1]].valve_coef)
+                        tm.links[utype[pn][1]].valve_coeff)
                     else :
-                         valve[0] = tm.links[utype[pn][1]].valve_curve(100,
-                         tm.links[utype[pn][1]].valve_coef)
+                         valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
 
                 HN[pn], VN[pn] = right_boundary(pipe, pn,
                      H[pn], V[pn], HN[pn], VN[pn],

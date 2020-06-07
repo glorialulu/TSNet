@@ -1,7 +1,7 @@
 import tsnet
 #%%
 # Open an example network and create a transient model
-inp_file = 'networks/Tnet1.inp'
+inp_file = 'examples/networks/Tnet1.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
@@ -51,9 +51,16 @@ tm = tsnet.simulation.Initializer(tm, t0, engine)
 tc = 1 # total demand period [s]
 ts = 1 # demand pulse start time [s]
 tp = 0.2 # demand pulse increase time [s]
-dp = 2 # demand pulse increase multiples [s]
+dp = 1 # demand pulse increase multiples [s]
 demand_pulse = [tc,ts,tp,dp]
 tm.add_demand_pulse('N2',demand_pulse)
+
+tc = 1 # total demand period [s]
+ts = 2 # demand pulse start time [s]
+tp = 0.2 # demand pulse increase time [s]
+dp = 1 # demand pulse increase multiples [s]
+demand_pulse = [tc,ts,tp,dp]
+tm.add_demand_pulse('N4',demand_pulse)
 
 # Transient simulation
 results_obj = 'Tnet1' # name of the object for saving simulation results

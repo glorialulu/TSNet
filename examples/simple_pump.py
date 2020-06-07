@@ -40,7 +40,7 @@ plt.ylabel("Pressure Head [m]")
 plt.legend(loc='best')
 plt.grid(True)
 plt.show()
-fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
+# fig1.savefig('./docs/figures/tnet1_node.png', format='png',dpi=100)
 
 pipe = 'p2'
 pipe = tm.get_link(pipe)

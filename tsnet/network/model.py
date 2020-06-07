@@ -52,7 +52,6 @@ class TransientModel (WaterNetworkModel):
             i+=1
         for _,valve in self.valves():
             valve.valve_coeff = None
-
         # assign ID to each links, start from 1.
         i =1
         for _, node in self.nodes():
