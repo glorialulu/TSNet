@@ -13,7 +13,7 @@ tm.set_time(tf)
 ts = 5 # valve closure start time [s]
 tc = 1 # valve closure period [s]
 se = 0 # end open percentage [s]
-m = 1 # closure constant [dimensionless]
+m = 2 # closure constant [dimensionless]
 tm.valve_closure('VALVE',[tc,ts,se,m])
 
 # Initialize steady state simulation
