@@ -161,7 +161,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100,
                         tm.links[utype[pn][1]].valve_coeff)
                     else :
-                         valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
+                        if tm.links[utype[pn][1]].initial_status.name == 'Open':
+                            valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            valve[0] = valve_curve(0,tm.links[utype[pn][1]].valve_coeff)
                 # downstream
                 if dtype[pn][0] == 'Pump':
                     pump[1] = [tm.links[dtype[pn][1]].curve_coef,"d"]
@@ -178,7 +181,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule[ts]*100,
                         tm.links[dtype[pn][1]].valve_coeff)
                     else :
-                         valve[1] = valve_curve(100,tm.links[dtype[pn][1]].valve_coeff)
+                        if tm.links[dtype[pn][1]].initial_status.name == 'Open':
+                            valve[1] = valve_curve(100,tm.links[dtype[pn][1]].valve_coeff)
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            valve[1] = valve_curve(0,tm.links[dtype[pn][1]].valve_coeff)
 
                 HN[pn], VN[pn] = inner_pipe(pipe, pn, dt,
                      links1[pn], links2[pn], utype[pn], dtype[pn], p,
@@ -237,7 +243,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         VN[pn][0] = pipe.initial_velocity[0] * \
                             tm.links[utype[pn][1]].operation_rule[ts]
                     else :
-                        VN[pn][0] = pipe.initial_velocity[0]
+                        if tm.links[utype[pn][1]].initial_status.name == 'Open':
+                            VN[pn][0]  = pipe.initial_velocity[0]
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            valve[0] = 0
                 elif utype[pn][0] == 'Pump':
                     # source pump
                     # pump[0][0]: elevation of the reservoir/tank
@@ -268,7 +277,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         valve[1] = valve_curve(tm.links[dtype[pn][1]].operation_rule*100,
                         tm.links[dtype[pn][1]].valve_coeff)
                     else :
-                         valve[1] = valve_curve(100, tm.links[dtype[pn][1]].valve_coeff)
+                        if tm.links[dtype[pn][1]].initial_status.name == 'Open':
+                            valve[1] = valve_curve(100, tm.links[dtype[pn][1]].valve_coeff)
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            valve[1] = valve_curve(0, tm.links[dtype[pn][1]].valve_coeff)
                     # if also the right valve end
                     if links2[pn] == ['End']:
                         links2[pn] = []
@@ -333,7 +345,10 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         VN[pn][-1] = pipe.initial_velocity[-1]* \
                         tm.links[dtype[pn][1]].operation_rule[ts]
                     else :
-                        VN[pn][-1] = pipe.initial_velocity[-1]
+                        if tm.links[dtype[pn][1]].initial_status.name == 'Open':
+                            VN[pn][-1] = pipe.initial_velocity[-1]
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            VN[pn][-1] = 0
                 # source pump
                 elif dtype[pn][0] == 'Pump':
                     # pump[1][0]: elevation of the reservoir/tank
@@ -363,7 +378,11 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                         valve[0] = valve_curve(tm.links[utype[pn][1]].operation_rule[ts]*100,
                         tm.links[utype[pn][1]].valve_coeff)
                     else :
-                         valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
+                        if tm.links[utype[pn][1]].initial_status.name == 'Open':
+                            valve[0] = valve_curve(100,tm.links[utype[pn][1]].valve_coeff)
+                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                            valve[0] = valve_curve(0,tm.links[utype[pn][1]].valve_coeff)
+
 
                 HN[pn], VN[pn] = right_boundary(pipe, pn,
                      H[pn], V[pn], HN[pn], VN[pn],
