@@ -183,7 +183,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     else :
                         if tm.links[dtype[pn][1]].initial_status.name == 'Open':
                             valve[1] = valve_curve(100,tm.links[dtype[pn][1]].valve_coeff)
-                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                        elif tm.links[dtype[pn][1]].initial_status.name == 'Closed':
                             valve[1] = valve_curve(0,tm.links[dtype[pn][1]].valve_coeff)
 
                 HN[pn], VN[pn] = inner_pipe(pipe, pn, dt,
@@ -279,7 +279,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     else :
                         if tm.links[dtype[pn][1]].initial_status.name == 'Open':
                             valve[1] = valve_curve(100, tm.links[dtype[pn][1]].valve_coeff)
-                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                        elif tm.links[dtype[pn][1]].initial_status.name == 'Closed':
                             valve[1] = valve_curve(0, tm.links[dtype[pn][1]].valve_coeff)
                     # if also the right valve end
                     if links2[pn] == ['End']:
@@ -347,7 +347,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     else :
                         if tm.links[dtype[pn][1]].initial_status.name == 'Open':
                             VN[pn][-1] = pipe.initial_velocity[-1]
-                        elif tm.links[utype[pn][1]].initial_status.name == 'Closed':
+                        elif tm.links[dtype[pn][1]].initial_status.name == 'Closed':
                             VN[pn][-1] = 0
                 # source pump
                 elif dtype[pn][0] == 'Pump':
