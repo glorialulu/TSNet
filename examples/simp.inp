@@ -1,0 +1,129 @@
+[TITLE]
+
+[JUNCTIONS]
+;ID                      Elevation       Demand Pattern                 
+ in                                 0               0                            ;
+ pumpjunc                           0               0                            ;
+ ref                                0               0                            ;
+ before_valve1                      0               0                            ;
+ after_valve1                       0               0                            ;
+
+[RESERVOIRS]
+;ID                                   Head                  Pattern
+ res                                0                            ;
+ atmos1                             0                            ;
+
+[TANKS]
+;ID                              Elevation           Init Level            Min Level            Max Level             Diameter           Min Volume Volume Curve        
+
+[PIPES]
+;ID                   Node1                Node2                              Length             Diameter            Roughness           Minor Loss               Status
+ source               res                  in                       131.2335958            1.25             100               0                 Open   ;
+ to_ref               pumpjunc             ref                      32.80839895            1.25             100               0                 Open   ;
+ to_valve1            ref                  before_valve1           82.020997375            1.25             100               0                 Open   ;
+ out1                 after_valve1         atmos1                  49.212598425   0.41666666667             100               0                 Open   ;
+
+[PUMPS]
+;ID                   Node1                Node2                Properties          
+ supply               in                   pumpjunc             HEAD     pumpcurve              ;
+
+[VALVES]
+;ID                   Node1                Node2                            Diameter Type              Setting           Minor Loss
+ valve1               before_valve1        after_valve1                      12 FCV     2.5600005074               0   ;
+
+[TAGS]
+;type      name       tag       
+
+[DEMANDS]
+;ID        Demand     Pattern   
+
+[STATUS]
+;ID        Setting   
+valve1     Closed    
+[PATTERNS]
+;ID        Multipliers
+
+[CURVES]
+;ID         X-Value      Y-Value     
+;PUMP: pumpcurve
+ pumpcurve      0.000000   138.434964   ;
+ pumpcurve      5.000001   103.826223   ;
+ pumpcurve     10.000002    57.681235   ;
+
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+GLOBAL EFFICIENCY      75.0000
+GLOBAL PRICE           0.0000
+
+[EMITTERS]
+;ID        Flow coefficient
+
+[QUALITY]
+
+[SOURCES]
+;Node      Type       Quality    Pattern   
+
+[REACTIONS]
+;Type           Pipe/Tank               Coefficient
+
+ ORDER BULK 1
+ ORDER TANK 1
+ ORDER WALL 1
+ GLOBAL BULK 0.0000    
+ GLOBAL WALL 0.0000    
+
+[MIXING]
+;Tank ID             Model Fraction
+
+[TIMES]
+DURATION             00:00:00
+HYDRAULIC TIMESTEP   01:00:00
+QUALITY TIMESTEP     00:06:00
+PATTERN TIMESTEP     01:00:00
+PATTERN START        00:00:00
+REPORT TIMESTEP      01:00:00
+REPORT START         00:00:00
+START CLOCKTIME      00:00:00 AM
+STATISTIC            NONE      
+
+[REPORT]
+
+[OPTIONS]
+UNITS                GPM                 
+HEADLOSS             H-W                 
+SPECIFIC GRAVITY     1
+VISCOSITY            1
+TRIALS               40
+ACCURACY             0.001
+CHECKFREQ            2
+MAXCHECK             10
+UNBALANCED           STOP                
+PATTERN              1                   
+DEMAND MULTIPLIER    1
+EMITTER EXPONENT     0.5
+QUALITY              NONE                
+DIFFUSIVITY          1
+TOLERANCE            0.01
+
+[COORDINATES]
+;Node      X-Coord    Y-Coord   
+res                 0.000000000          0.000000000
+in                  0.000000000          0.000000000
+pumpjunc            0.000000000          0.000000000
+ref                 0.000000000          0.000000000
+before_valve1          0.000000000          0.000000000
+after_valve1          0.000000000          0.000000000
+atmos1              0.000000000          0.000000000
+
+[VERTICES]
+;Link      X-Coord    Y-Coord   
+
+[LABELS]
+
+[BACKDROP]
+
+[END]
