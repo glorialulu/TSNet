@@ -178,7 +178,7 @@ latex_documents = [
      u"Lu Xing, Lina Sela", 'manual'),
 ]
 
-latex_logo = 'logo.png'
+# latex_logo = 'logo.png'
 
 # -- Options for manual page output ------------------------------------
 
