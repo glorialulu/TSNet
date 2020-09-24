@@ -76,7 +76,7 @@ Version
 -------
 
 TSNet is a ongoing research project in the University of Texas at Austin.
-The current version is 0.2.1, which is still a pre-release.
+The current version is 0.2.2, which is still a pre-release.
 
 Contact
 -------

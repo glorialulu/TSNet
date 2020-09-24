@@ -82,7 +82,7 @@ The following Python packages are required::
     install on a python-enabled command line with `pip install wntr`
     https://networkx.github.io/
 
-4.  WNTR 0.2.1 [WNTRSi]_: Water Network Tool for Resilience
+4.  WNTR [WNTRSi]_: Water Network Tool for Resilience
     install on a python-enabled command line with `pip install wntr`
     http://wntr.readthedocs.io
 

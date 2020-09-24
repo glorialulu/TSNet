@@ -27,3 +27,7 @@ History
 1. Fixed minor bugs about valve default settings.
 2. Updated documentation.
 3. Updated WNTR compatibility.
+
+0.2.2 (2020-09-24)
+-------------------
+1. Updated WNTR compatibility.
