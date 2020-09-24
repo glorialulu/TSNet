@@ -1,33 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 13 09:34:17 2020
+valve_open_period=0.5
 
-@author: luxing
-"""
 
-# Define test-case options
-initial_status_active = False
-provide_curve = True
-kl_fact = 0.1
-#kl_fact = 0.001
-minor_loss = 0
-setting = 1
-#minor_loss = 1e10
-#setting = 1
-
-# Initialize
-import matplotlib
 from matplotlib import pyplot as plt
 import numpy
-import pandas
 import wntr
 import tsnet
-from tsnet.utils.valve_curve import valve_curve
 
-
-def gpm_to_m3s(gpm):
-    return gpm/(60*264.172)
 
 def m3s_to_gpm(m3s):
     return m3s*(60*264.172)
@@ -35,117 +13,99 @@ def m3s_to_gpm(m3s):
 def m_to_psi(m):
     return m*1.4219702063247
 
-def psi_to_m(psi):
-    return psi/1.4219702063247
 
-# New network
-wn = wntr.network.WaterNetworkModel()
+# Restore model for each pump
+wn1 = wntr.network.WaterNetworkModel('pumpcurve_1.txt')
+wn2 = wntr.network.WaterNetworkModel('pumpcurve_2.txt')
 
-# Add water source --> reservoir at atmos, with a pump to get significant pressure
-wn.add_reservoir('res', base_head=0)
-wn.add_junction('in')
-wn.add_pipe('source', start_node_name='res', end_node_name='in', length=40, diameter=0.03175)
-wn.add_junction('pumpjunc')
-pumpcurve = []
-pumpcurve.append((gpm_to_m3s(0),psi_to_m(60)))
-pumpcurve.append((gpm_to_m3s(5),psi_to_m(45)))
-pumpcurve.append((gpm_to_m3s(10),psi_to_m(25)))
-wn.add_curve('pumpcurve', 'HEAD', pumpcurve)
-wn.add_pump(name='supply', start_node_name='in', end_node_name='pumpjunc', pump_type='HEAD', pump_parameter='pumpcurve')
+#%%
+                                   
+# Access pump curve 1
+pts_1 = wn1.get_link('supply').get_pump_curve().points
+coeffs_1 = wn1.get_link('supply').get_head_curve_coefficients()
+q_1 = numpy.linspace(pts_1[0][0],pts_1[-1][0])
+H_1 = coeffs_1[0] - coeffs_1[1]*(q_1**coeffs_1[2])
 
-# Add reference point junction 'ref'
-wn.add_junction('ref')
-wn.add_pipe('to_ref', start_node_name='pumpjunc', end_node_name='ref', length=10, diameter=0.03175)
+# Access pump curve 2 
+pts_2 = wn2.get_link('supply').get_pump_curve().points
+coeffs_2 = wn2.get_link('supply').get_head_curve_coefficients()
+q_2 = numpy.linspace(pts_2[0][0],pts_2[-1][0])
+H_2 = coeffs_2[0] - coeffs_2[1]*(q_2**coeffs_2[2])
 
-# Add valve
-wn.add_junction('before_valve1')
-wn.add_pipe('to_valve1', start_node_name='ref', end_node_name='before_valve1', length=25, diameter=0.03175)
-wn.add_junction('after_valve1')
-wn.add_valve('valve1', start_node_name='before_valve1', end_node_name='after_valve1', valve_type='FCV', minor_loss=minor_loss, setting=setting)
-if initial_status_active:
-    wn.get_link('valve1').initial_status = wntr.network.elements.LinkStatus.Active
-else:
-    wn.get_link('valve1').initial_status = wntr.network.elements.LinkStatus.Closed
-wn.add_reservoir('atmos1', base_head=psi_to_m(0))
-wn.add_pipe('out1', start_node_name='after_valve1', end_node_name='atmos1', length=15, diameter=0.03175/3)
-
-# Prep plotting
-fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
-
-# Build EPANET file
-wn.write_inpfile('simp.inp')
-
-# Construct transient model 
-tm = tsnet.network.TransientModel('simp.inp')
-tm.set_wavespeed(1200.) # m/s
-tm.set_time(3) # simulation period [s]
-
-# Extract default valve curve
-po = numpy.linspace(100,0,11)
-kl = valve_curve(po)
-
-# Scale loss by requested factor and assemble the curve in the required format
-kl = kl*kl_fact
-curve = list(zip(po, kl))
-
-# Confirm 'curve' contains the default curve
-if kl_fact == 1:
-    curve_test1 = valve_curve(po, coeff=(po, kl))
-    curve_test2 = valve_curve(po, coeff=list(zip(*curve)))
-    assert((curve_test1 == kl).all())
-    assert((curve_test2 == kl).all())
-    print('default valve_curve passed consistency check')
-
-# Plot the valve curve
-plt.clf()
-plt.plot(po, kl, 'o')
-plt.xlabel('% open')
-plt.ylabel('loss')
+# Plot pump curves
+plt.plot(m3s_to_gpm(q_1), m_to_psi(H_1), label='pumpcurve_1')
+plt.plot(m3s_to_gpm(q_2), m_to_psi(H_2), label='pumpcurve_2')
+plt.xlabel('gpm')
+plt.ylabel('PSI')
 plt.draw()
-plt.savefig('valve_curve.png')
-
-# Set valve opening 
-tc = 0.2 # valve opening period [s]
-ts = 1 # valve opening start time [s]
-se = 1 # end open percentage [s]
-m = 1 # open constant [dimensionless]
-if provide_curve:
-    tm.valve_opening('valve1',[tc,ts,se,m], curve=curve)
-else:
-    tm.valve_opening('valve1',[tc,ts,se,m])
-
-# Initialize and run simulation
-tm = tsnet.simulation.Initializer(tm, 0, 'DD')
-tm = tsnet.simulation.MOCSimulator(tm, 'simpres', 'unsteady')
-
-# Gather results
-t = tm.simulation_timestamps
-ref_flow_rate = tm.get_link('to_ref').end_node_flowrate
-
-# Prep plotting
-fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
-
-# Plot flow-rates
-plt.clf()
-plt.plot(t, m3s_to_gpm(ref_flow_rate), label='ref', linewidth=1.5)
-plt.plot(t, m3s_to_gpm(tm.get_link('out1').end_node_flowrate), label='output1', linewidth=1.5)
-plt.ylabel("flow-rate [gpm]")
-plt.xlim([t[0],t[-1]])
-plt.xlabel("Time [s]")
 plt.legend(loc='best')
-plt.draw()
-plt.savefig('flowrate.png')
+
+# Define valve curve
+valve_curve = [(100.0, 0.0008099981681764881), (90.0, 0.00040499908408824403),
+               (80.0, 0.00020249954204412202), (70.0, 0.00010124977102206101),
+               (60.0, 5.394587800055411e-05), (50.0, 2.7539937718000598e-05),
+               (40.0, 1.6199963363529762e-05), (30.0, 9.007179630122548e-06),
+               (20.0, 5.0705885327848155e-06), (10.0, 2.7053938817094702e-06),
+               (0.0, 0.0)]
+
+# Simulate using each pump curve
+time_index = []
+pressure = []
+flowrate = []
+for input_name in ['pumpcurve_1', 'pumpcurve_2']:
+    # Construct transient model
+    tm = tsnet.network.TransientModel(input_name+'.txt')
+
+    # Set wavespeed
+    tm.set_wavespeed(1200) # m/s
+
+    # Set time options
+    tf = 4   # simulation period [s]
+    dt = tsnet.network.discretize.max_time_step(tm)
+    tm.set_time(tf, dt)
+
+    # Set valve opening
+    tc = valve_open_period # valve opening period [s]
+    ts = 1 # valve opening start time [s]
+    se = 1 # end open fraction (ranges from 0 to 1)
+    m = 1 # open constant [dimensionless]
+    tm.valve_opening('valve_3',[tc,ts,se,m], curve=valve_curve)
+
+    # Initialize steady state simulation
+    tm = tsnet.simulation.Initializer(tm, 0, 'DD')
+
+    # Transient simulation
+    tm = tsnet.simulation.MOCSimulator(tm, 'temp.res', 'steady')
+
+    # Save results
+    time_index.append(numpy.asarray(tm.simulation_timestamps, dtype=float))
+    pressure.append(m_to_psi(numpy.asarray(tm.get_node('ref').head, dtype=float)))
+    flowrate.append(m3s_to_gpm(numpy.asarray(tm.get_link('to_ref').start_node_flowrate, dtype=float)))
+
+# Prep plotting
+fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
 
 # Plot pressure
 plt.clf()
-plt.plot(t, m_to_psi(tm.get_node('ref').head), 'k', label='ref', linewidth=1.5)
-plt.plot(t, m_to_psi(tm.get_node('after_valve1').head), label='output1', linewidth=1.5)
+plt.plot(time_index[0], pressure[0], label='pump_curve_1', linewidth=1.5)
+plt.plot(time_index[1], pressure[1], label='pump_curve_2', linewidth=1.5)
 plt.ylabel("Pressure [PSI]")
-plt.xlim([t[0],t[-1]])
+plt.xlim([0,4])
+plt.ylim([0,100])
 plt.xlabel("Time [s]")
 plt.legend(loc='best')
 plt.draw()
 plt.savefig('pressure.png')
 
-print('Initial ref flow rate={}'.format(m3s_to_gpm(ref_flow_rate[0])))
-print('Final ref flow rate={}'.format(m3s_to_gpm(ref_flow_rate[-1])))
+
+# Plot flow-rates
+plt.clf()
+plt.plot(time_index[0], flowrate[0], label='pump_curve_1', linewidth=1.5)
+plt.plot(time_index[1], flowrate[1], label='pump_curve_2', linewidth=1.5)
+plt.ylabel("flow-rate [gpm]")
+plt.xlim([0,4])
+plt.ylim([0,3])
+plt.xlabel("Time [s]")
+plt.legend(loc='best')
+plt.draw()
+plt.savefig('flowrate.png')

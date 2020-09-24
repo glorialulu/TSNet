@@ -1,0 +1,149 @@
+[TITLE]
+
+[JUNCTIONS]
+;ID                      Elevation       Demand Pattern                 
+ source_jct                         0               0                            ;
+ pump_jct                3.8701287904               0                            ;
+ ref                     6.1091353434               0                            ;
+ main_jct                4.1213484313               0                            ;
+ before_section_0        1.7985581438               0                            ;
+ before_section_1        1.7985581438               0                            ;
+ jct_0                   1.7985581438               0                            ;
+ before_section_2        3.1807490056               0                            ;
+ before_valve_3          3.1807490056               0                            ;
+ after_valve_3           3.1807490056               0                            ;
+ jct_1                   3.1807490056               0                            ;
+ before_section_4        32.204836565               0                            ;
+
+[RESERVOIRS]
+;ID                                   Head                  Pattern
+ source_res                         0                            ;
+ atmos_3                            0                            ;
+
+[TANKS]
+;ID                              Elevation           Init Level            Min Level            Max Level             Diameter           Min Volume Volume Curve        
+
+[PIPES]
+;ID                   Node1                Node2                              Length             Diameter            Roughness           Minor Loss               Status
+ source_pipe          source_res           source_jct              88.582677165               1             100               0                 Open   ;
+ to_ref               pump_jct             ref                     55.774278215               1             100               0                 Open   ;
+ to_main              ref                  main_jct                 59.05511811               1             100               0                 Open   ;
+ to_section_0         main_jct             before_section_0        88.582677165            0.75             100               0                 Open   ;
+ to_section_1         main_jct             before_section_1        88.582677165            0.75             100               0                 Open   ;
+ to_jct_0             main_jct             jct_0                   88.582677165            0.75             100               0                 Open   ;
+ to_section_2         jct_0                before_section_2        62.335958005             0.5             100               0                 Open   ;
+ to_valve_3           jct_0                before_valve_3           72.17847769             0.5             100               0                 Open   ;
+ to_atmos_3           after_valve_3        atmos_3                 68.897637795             0.5             100               0                 Open   ;
+ to_jct_1             jct_0                jct_1                    52.49343832             0.5             100               0                 Open   ;
+ to_section_4         jct_1                before_section_4         39.37007874           0.375             100               0                 Open   ;
+
+[PUMPS]
+;ID                   Node1                Node2                Properties          
+ supply               source_jct           pump_jct             HEAD     pumpcurve              ;
+
+[VALVES]
+;ID                   Node1                Node2                            Diameter Type              Setting           Minor Loss
+ valve_3              before_valve_3       after_valve_3                     12 FCV                0               0   ;
+
+[TAGS]
+;type      name       tag       
+
+[DEMANDS]
+;ID        Demand     Pattern   
+
+[STATUS]
+;ID        Setting   
+valve_3    Closed    
+[PATTERNS]
+;ID        Multipliers
+
+[CURVES]
+;ID         X-Value      Y-Value     
+;PUMP: pumpcurve
+ pumpcurve       0.000000   144.147083   ;
+ pumpcurve       4.620509   106.241820   ;
+ pumpcurve       6.568104    77.344206   ;
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+GLOBAL EFFICIENCY      75.0000
+GLOBAL PRICE           0.0000
+
+[EMITTERS]
+;ID        Flow coefficient
+
+[QUALITY]
+
+[SOURCES]
+;Node      Type       Quality    Pattern   
+
+[REACTIONS]
+;Type           Pipe/Tank               Coefficient
+
+ ORDER BULK 1
+ ORDER TANK 1
+ ORDER WALL 1
+ GLOBAL BULK 0.0000    
+ GLOBAL WALL 0.0000    
+
+[MIXING]
+;Tank ID             Model Fraction
+
+[TIMES]
+DURATION             00:00:00
+HYDRAULIC TIMESTEP   01:00:00
+QUALITY TIMESTEP     00:06:00
+PATTERN TIMESTEP     01:00:00
+PATTERN START        00:00:00
+REPORT TIMESTEP      01:00:00
+REPORT START         00:00:00
+START CLOCKTIME      00:00:00 AM
+STATISTIC            NONE      
+
+[REPORT]
+
+[OPTIONS]
+UNITS                GPM                 
+HEADLOSS             H-W                 
+SPECIFIC GRAVITY     1
+VISCOSITY            1
+TRIALS               40
+ACCURACY             0.001
+CHECKFREQ            2
+MAXCHECK             10
+UNBALANCED           STOP                
+PATTERN              1                   
+DEMAND MULTIPLIER    1
+EMITTER EXPONENT     0.5
+QUALITY              NONE                
+DIFFUSIVITY          1
+TOLERANCE            0.01
+
+[COORDINATES]
+;Node      X-Coord    Y-Coord   
+source_res          0.000000000          0.000000000
+source_jct          0.000000000          0.000000000
+pump_jct            0.000000000          0.000000000
+ref                 0.000000000          0.000000000
+main_jct            0.000000000          0.000000000
+before_section_0          0.000000000          0.000000000
+before_section_1          0.000000000          0.000000000
+jct_0               0.000000000          0.000000000
+before_section_2          0.000000000          0.000000000
+before_valve_3          0.000000000          0.000000000
+after_valve_3          0.000000000          0.000000000
+atmos_3             0.000000000          0.000000000
+jct_1               0.000000000          0.000000000
+before_section_4          0.000000000          0.000000000
+
+[VERTICES]
+;Link      X-Coord    Y-Coord   
+
+[LABELS]
+
+[BACKDROP]
+
+[END]

@@ -43,7 +43,7 @@ def topology(wn):
     """
     npipe = wn.num_pipes
     length = wn.query_link_attribute('length')
-    if wntr.__version__=='0.2.2':
+    if wntr.__version__>= '0.2.2':
         G = wn.get_graph(link_weight = length)
     else:
         G = wn.get_graph()
