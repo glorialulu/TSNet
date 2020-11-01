@@ -214,8 +214,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     else: # assume reverse flow preventer installed
                         pipe.start_node.emitter_discharge[ts] = 0.
                         pipe.start_node.demand_discharge[ts] = 0.
-                        warnings.warn("Negative pressure on node %s.\
-                        Backflow stopped by reverse flow preventer." %pipe.start_node.name)
+                        warnings.warn("Negative pressure on node %s. Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
                 if pipe.end_node.transient_node_type == 'Junction':
                     if HN[pn][-1]  -pipe.end_node.elevation >0:
@@ -225,8 +224,7 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                     else: # assume reverse flow preventer installed
                         pipe.end_node.emitter_discharge[ts] = 0.
                         pipe.end_node.demand_discharge[ts] = 0.
-                        warnings.warn("Negative pressure on node %s.\
-                            Backflow stopped by reverse flow preventer." %pipe.start_node.name)
+                        warnings.warn("Negative pressure on node %s Backflow stopped by reverse flow preventer." %pipe.start_node.name)
 
             # left boundary pipe
             elif not links1[pn] or links1[pn] == ['End']:

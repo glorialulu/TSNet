@@ -110,11 +110,13 @@ def Initializer(tm, t0, engine='DD'):
         He = H[-1]
         demand = [0,0] # demand at start and end node
         try :
-            demand[0] = tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
+            demand[0] = results.node['demand'].loc[t0, pipe.start_node_name]
+            # demand[0] = tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
         except:
             demand[0] = 0.
         try :
-            demand[1] = tm.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
+            demand[1] = results.node['demand'].loc[t0, pipe.end_node_name]
+            # demand[1] = tm.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
         except :
             demand[1] = 0.
         try :
@@ -228,6 +230,14 @@ def pump_operation_points(tm):
     for _, pump in tm.pumps():
         opt_point = (pump.initial_flow, abs(pump.end_node.initial_head-pump.start_node.initial_head))
         def_points = pump.get_pump_curve().points
+        # single-point pump curve
+        if len(def_points) == 1:
+            (flow, head) = def_points[0]
+            def_points.append((0., 1.33*head))
+            def_points.append((2*flow, 0.))
+        elif len(def_points) != 3:
+            raise Exception("TSNet only support one-point or three-point pump curve.")
+
         dist = []
         for (i,j) in def_points:
             dist.append(np.sqrt((i - opt_point[0])**2 + (j - opt_point[1])**2))
