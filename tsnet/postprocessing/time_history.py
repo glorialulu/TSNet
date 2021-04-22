@@ -6,7 +6,8 @@ end point of a pipe
 from __future__ import print_function
 import matplotlib.pyplot as plt
 
-def plot_head_history(pipe,H,wn,tt):
+
+def plot_head_history(pipe, H, wn, tt):
     """Plot Head history on the start and end node of a pipe
 
     Parameters
@@ -22,18 +23,19 @@ def plot_head_history(pipe,H,wn,tt):
     """
 
     pipeid = wn.links[pipe].id-1
-    plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-    plt.plot(tt,H[pipeid][0,:], 'b-',label='Start Node')
-    plt.plot(tt,H[pipeid][-1,:], 'r-',label='End Node')
-    plt.xlim([tt[0],tt[-1]])
-    plt.title('Pressure Head of Pipe %s '%pipe)
+    plt.figure(figsize=(10, 4), dpi=80, facecolor='w', edgecolor='k')
+    plt.plot(tt, H[pipeid][0, :], 'b-', label='Start Node')
+    plt.plot(tt, H[pipeid][-1, :], 'r-', label='End Node')
+    plt.xlim([tt[0], tt[-1]])
+    plt.title('Pressure Head of Pipe %s ' % pipe)
     plt.xlabel("Time")
     plt.ylabel("Pressure Head (m)")
     plt.legend(loc='best')
     plt.grid(True)
     plt.show()
 
-def plot_velocity_history(pipe,V,wn,tt):
+
+def plot_velocity_history(pipe, V, wn, tt):
     """Plot Velocity history on the start and end node of a pipe
 
     Parameters
@@ -49,11 +51,11 @@ def plot_velocity_history(pipe,V,wn,tt):
     """
 
     pipeid = wn.links[pipe].id-1
-    plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-    plt.plot(tt,V[pipeid][0,:], 'b-',label='Start Node')
-    plt.plot(tt,V[pipeid][-1,:], 'r-',label='End Node')
-    plt.xlim([tt[0],tt[-1]])
-    plt.title('Velocity Head of Pipe %s ' %pipe)
+    plt.figure(figsize=(10, 4), dpi=80, facecolor='w', edgecolor='k')
+    plt.plot(tt, V[pipeid][0, :], 'b-', label='Start Node')
+    plt.plot(tt, V[pipeid][-1, :], 'r-', label='End Node')
+    plt.xlim([tt[0], tt[-1]])
+    plt.title('Velocity Head of Pipe %s ' % pipe)
     plt.xlabel("Time")
     plt.ylabel("Velocity (m/s)")
     plt.legend(loc='best')

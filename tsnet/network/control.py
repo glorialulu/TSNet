@@ -6,6 +6,7 @@ parameters in the network during transient simulation.
 """
 import numpy as np
 
+
 def valveclosing(dt, tf, valve_op):
     """Define valve operation curve (percentage open v.s. time)
 
@@ -29,21 +30,21 @@ def valveclosing(dt, tf, valve_op):
         valve operation curve
     """
 
-    [tc,ts,se,m] = valve_op
+    [tc, ts, se, m] = valve_op
     tn = int(tf/dt)
     # abrupt closure
-    if tc ==0:
-        s =  np.array([(1- (i*dt- ts))**1    for i in range(tn)])
-        s[s>1] = 1
-        s[s<1] = se
+    if tc == 0:
+        s = np.array([(1 - (i * dt - ts)) ** 1 for i in range(tn)])
+        s[s > 1] = 1
+        s[s < 1] = se
     # gradual closure
     else:
-        t = np.array([(i*dt- ts)/tc for i in range(tn)])
-        t[t>1] = 1
-        t[t<0] = 0
-        s =  np.array([1 - (1-se)*t[i]**m for i in range(tn)])
-        s[s>1] = 1
-        s[s<se] = se
+        t = np.array([(i * dt - ts)/tc for i in range(tn)])
+        t[t > 1] = 1
+        t[t < 0] = 0
+        s = np.array([1 - (1-se)*t[i]**m for i in range(tn)])
+        s[s > 1] = 1
+        s[s < se] = se
 
     return s
 
@@ -71,22 +72,23 @@ def valveopening(dt, tf, valve_op):
         valve operation curve
     """
 
-    [tc,ts,se,m] = valve_op
+    [tc, ts, se, m] = valve_op
     tn = int(tf/dt)
     # abrupt opening
-    if tc ==0:
-        s =  np.array([((i*dt- ts))**1    for i in range(tn)])
-        s[s>0] = se
-        s[s<0] = 0
+    if tc == 0:
+        s = np.array([((i * dt - ts)) ** 1 for i in range(tn)])
+        s[s > 0] = se
+        s[s < 0] = 0
     # gradual opening
     else:
-        t = np.array([(i*dt- ts)/tc for i in range(tn)])
-        t[t>1] = 1
-        t[t<0] = 0
-        s =  np.array([se* (t[i])**m for i in range(tn)])
-        s[s<0] = 0
-        s[s>se] = se
+        t = np.array([(i * dt - ts)/tc for i in range(tn)])
+        t[t > 1] = 1
+        t[t < 0] = 0
+        s = np.array([se * (t[i])**m for i in range(tn)])
+        s[s < 0] = 0
+        s[s > se] = se
     return s
+
 
 def pumpclosing(dt, tf, pump_op):
     """Define pump operation curve (percentage open v.s. time)
@@ -110,27 +112,28 @@ def pumpclosing(dt, tf, pump_op):
     s : list
         valve operation curve
     """
-    [tc,ts,se,m] = pump_op
+    [tc, ts, se, m] = pump_op
     # do not allow the pump to be fully closed due to numerical issues
     if se == 0.:
         se = 0.0001
 
-    tn = int(tf/dt)
+    tn = int(tf / dt)
     # gradual closure
     if tc != 0:
-        s =  np.array([(1- (i*dt- ts)/tc)**m    for i in range(tn)])
-        s[s>1] = 1
-        s[s<se] = se
+        s = np.array([(1 - (i * dt - ts) / tc) ** m for i in range(tn)])
+        s[s > 1] = 1
+        s[s < se] = se
 
     # abrupt closure
-    if tc ==0:
-        t = np.array([(i*dt- ts)/tc for i in range(tn)])
-        t[t>1] = 1
-        t[t<0] = 0
-        s =  np.array([1 - (1-se)*t[i]**m for i in range(tn)])
-        s[s>1] = 1
-        s[s<se] = se
+    if tc == 0:
+        t = np.array([(i * dt - ts) / tc for i in range(tn)])
+        t[t > 1] = 1
+        t[t < 0] = 0
+        s = np.array([1 - (1-se)*t[i]**m for i in range(tn)])
+        s[s > 1] = 1
+        s[s < se] = se
     return s
+
 
 def pumpopening(dt, tf, pump_op):
     """Define pump operation curve (percentage open v.s. time)
@@ -155,24 +158,25 @@ def pumpopening(dt, tf, pump_op):
         valve operation curve
     """
 
-    [tc,ts,se,m] = pump_op
-    tn = int(tf/dt)
+    [tc, ts, se, m] = pump_op
+    tn = int(tf / dt)
     # abrupt opening
-    if tc ==0:
-        s =  np.array([((i*dt- ts))**1    for i in range(tn)])
-        s[s>0] = se
-        s[s<0] = 0
+    if tc == 0:
+        s = np.array([((i * dt - ts)) ** 1 for i in range(tn)])
+        s[s > 0] = se
+        s[s < 0] = 0
     # gradual opening
     else:
-        t = np.array([(i*dt- ts)/tc for i in range(tn)])
-        t[t>1] = 1
-        t[t<0] = 0
-        s =  np.array([se* (t[i])**m for i in range(tn)])
-        s[s<0] = 0
-        s[s>se] = se
+        t = np.array([(i * dt - ts)/tc for i in range(tn)])
+        t[t > 1] = 1
+        t[t < 0] = 0
+        s = np.array([se * (t[i])**m for i in range(tn)])
+        s[s < 0] = 0
+        s[s > se] = se
     return s
 
-def burstsetting(dt,tf,ts,tc,final_burst_coeff):
+
+def burstsetting(dt, tf, ts, tc, final_burst_coeff):
     """ Calculate the burst area as a function of simulation time
 
     Parameters
@@ -190,15 +194,15 @@ def burstsetting(dt,tf,ts,tc,final_burst_coeff):
     """
 
     tn = int(tf/dt)
-    if tc !=0 :
-        s = np.array([(i*dt- ts)/tc    for i in range(tn)])
-        s[s>1] = 1
-        s[s<0] = 0
+    if tc != 0:
+        s = np.array([(i * dt - ts) / tc for i in range(tn)])
+        s[s > 1] = 1
+        s[s < 0] = 0
         burst_A = final_burst_coeff * s
     else:
-        s = np.array([(i*dt- ts)    for i in range(tn)])
-        s[s>0] = 1
-        s[s<0] = 0
+        s = np.array([(i * dt - ts) for i in range(tn)])
+        s[s > 0] = 1
+        s[s < 0] = 0
         burst_A = final_burst_coeff * s
 
     return burst_A
@@ -222,23 +226,40 @@ def demandpulse(dt, tf, tc, ts, tp, dp):
         Pulse multiplier
     """
     tn = int(tf/dt)
-    x = np.linspace(0,tf,tn)
+    x = np.linspace(0, tf, tn)
     t_change = tp
-    stay = tc - 2*tp
-    if t_change !=0 :
-        s = np.piecewise(x, [x<=ts, (x>ts)& (x<= ts+t_change),
-                        (x>ts+t_change) & (x<=ts+t_change+stay),
-                        (x>ts+t_change+stay) & (x<=ts+tc),
-                        x>ts+tc],
-                        [0, lambda x: (x-ts)/t_change,
-                        1, lambda x: 1- (x-ts-t_change-stay)/t_change,
-                        0])
+    stay = tc - 2 * tp
+    if t_change != 0:
+        s = np.piecewise(
+            x,
+            [
+                x <= ts,
+                (x > ts) & (x <= ts + t_change),
+                (x > ts + t_change) & (x <= ts + t_change + stay),
+                (x > ts + t_change + stay) & (x <= ts + tc),
+                x > ts + tc
+            ],
+            [
+                0,
+                lambda x: (x - ts) / t_change,
+                1,
+                lambda x: 1 - (x - ts - t_change - stay) / t_change,
+                0
+            ]
+        )
 
         pulse_mul = dp * s
 
     else:
-        s = np.piecewise(x, [x<=ts,(x>ts) & (x<=ts+stay), x>ts+tc],
-                        [0, 1, 0])
+        s = np.piecewise(
+            x,
+            [
+                x <= ts,
+                (x > ts) & (x <= ts + stay),
+                x > ts + tc
+            ],
+            [0, 1, 0]
+        )
         pulse_mul = dp * s
 
     # import matplotlib.pyplot as plt
@@ -256,5 +277,6 @@ def demandpulse(dt, tf, tc, ts, tp, dp):
     # plt.vlines(ts+tc, -0.1, 0, 'k', linestyles='dotted')
     # plt.hlines(dp, ts-0.2, ts+tp, 'k', linestyles='dotted')
     # plt.show()
-    # fig1.savefig("DemandMultiplier.pdf", format='pdf',dpi=500, bbox_inches = 'tight')
+    # fig1.savefig("DemandMultiplier.pdf", format='pdf',dpi=500, \
+    # bbox_inches = 'tight')
     return pulse_mul
