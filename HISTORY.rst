@@ -31,3 +31,7 @@ History
 0.2.2 (2020-09-24)
 -------------------
 1. Updated WNTR compatibility.
+
+0.2.3 (2021-11-12)
+-------------------
+1. Only support WNTR version up untill 0.3.0
