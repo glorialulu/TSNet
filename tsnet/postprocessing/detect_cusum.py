@@ -5,11 +5,11 @@ Cumulative sum algorithm (CUSUM) to detect abrupt changes in data.
 """
 
 import numpy as np
-import matplotlib.dates as mdates
+# import matplotlib.dates as mdates
+
 
 def detect_cusum(time, x, threshold, drift, show,
                  ending=True,  ax=None):
-
     """
     Parameters
     ----------
@@ -67,7 +67,8 @@ def detect_cusum(time, x, threshold, drift, show,
     References
     ----------
     .. [1] Gustafsson (2000) Adaptive Filtering and Change Detection.
-    .. [2] hhttp://nbviewer.ipython.org/github/demotu/BMC/blob/master/notebooks/DetectCUSUM.ipynb
+    .. [2] hhttp://nbviewer.ipython.org/github/demotu/BMC/blob/master\
+        /notebooks/DetectCUSUM.ipynb
 
     """
 
@@ -107,16 +108,20 @@ def detect_cusum(time, x, threshold, drift, show,
             gp[i], gp_real[i], tap = 0, 0, i
         if gn[i] < 0:
             gn[i], gn_real[i], tan = 0, 0, i
-        if gp_real[i] > threshold or gn_real[i] > threshold:  # change detected!
+        # change detected!
+        if gp_real[i] > threshold or gn_real[i] > threshold:
             ta = np.append(ta, i)    # alarm index
-            tai = np.append(tai, tap if gp_real[i] > threshold else tan)  # start
+            # start
+            tai = np.append(tai, tap if gp_real[i] > threshold else tan)
             gp[i], gn[i] = 0, 0      # reset alarm
             gp_real[i], gn_real[i] = 0, 0
     # THE CLASSICAL CUSUM ALGORITHM ENDS HERE
 
     # Estimation of when the change ends (offline form)
     if tai.size and ending:
-        tai2, _, _ = detect_cusum(time[::-1],x[::-1], threshold, drift, ending=False, show=False)
+        tai2, _, _ = detect_cusum(
+            time[::-1], x[::-1], threshold, drift, ending=False, show=False
+        )
         taf = x.size - tai2[::-1] - 1
         # Eliminate repeated changes, changes that have the same beginning
         tai, ind = np.unique(tai, return_index=True)
@@ -154,16 +159,21 @@ def _plot(time, x, threshold, drift, ending, ax, ta, tai, taf, gp, gn):
         print('matplotlib is not available.')
     else:
         if ax is None:
-            fig, ax = plt.subplots(1, 1, figsize=(8,4), dpi=100, facecolor='w', edgecolor='k')
+            fig, ax = plt.subplots(
+                1, 1, figsize=(8, 4), dpi=100, facecolor='w', edgecolor='k'
+            )
 
-        ax.plot(time , x, 'k-', lw=2)
+        ax.plot(time, x, 'k-', lw=2)
         if len(ta):
-            ax.plot(time[tai], x[tai], '>', mfc='r', mec='r', ms=10,
-                     label='Start')
+            ax.plot(
+                time[tai], x[tai], '>', mfc='r', mec='r', ms=10, label='Start'
+            )
 
             if ending:
-                ax.plot(time[taf], x[taf], '<', mfc='r', mec='r', ms=10,
-                         label='End')
+                ax.plot(
+                    time[taf], x[taf], '<', mfc='r', mec='r', ms=10,
+                    label='End'
+                )
             ax.legend(loc='best', framealpha=.5, numpoints=1)
         ax.set_xlim([time[0], time[-1]])
         ax.set_xlabel('Time [s]', fontsize=14)
@@ -185,6 +195,3 @@ def _plot(time, x, threshold, drift, ending, ax, ta, tai, taf, gp, gn):
 #         ax2.legend(loc='best', framealpha=.5, numpoints=1)
 #         plt.tight_layout()
         plt.show()
-
-
-

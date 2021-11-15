@@ -12,6 +12,7 @@ import numpy as np
 import warnings
 from tsnet.utils import calc_parabola_vertex
 
+
 def Initializer(tm, t0, engine='DD'):
     """Initial Condition Calculation.
 
@@ -40,8 +41,8 @@ def Initializer(tm, t0, engine='DD'):
     """
     # adjust the time step and discretize each pipe
 
-    tn = int(tm.simulation_period/tm.time_step) # Total time steps
-    print ('Total Time Step in this simulation %s'  %tn)
+    tn = int(tm.simulation_period/tm.time_step)  # Total time steps
+    print('Total Time Step in this simulation %s' % tn)
 
     # create new attributes for each pipe to store head and velocity results
     # at its start and end node.
@@ -54,48 +55,53 @@ def Initializer(tm, t0, engine='DD'):
         pipe.end_node_flowrate = np.zeros(tn)
 
     # create new attributes for each node to store head and discharge results
-    for _,node in tm.nodes():
+    for _, node in tm.nodes():
         node.demand_discharge = np.zeros(tn)
         node.emitter_discharge = np.zeros(tn)
 
     # calculate initial conditions using EPAnet engine
-    for _,node in tm.nodes():
-        if node.leak_status == True:
-            node.add_leak(tm, area=node.emitter_coeff/np.sqrt(2*9.81),
-                    discharge_coeff = 1, start_time = t0)
+    for _, node in tm.nodes():
+        if node.leak_status is True:
+            node.add_leak(
+                tm, area=node.emitter_coeff/np.sqrt(2*9.81),
+                discharge_coeff=1, start_time=t0
+            )
     if engine.lower() == 'dd':
         sim = wntr.sim.EpanetSimulator(tm)
         results = sim.run_sim()
     elif engine.lower() == 'pdd':
-        sim = wntr.sim.WNTRSimulator(tm,mode='PDD')
+        sim = wntr.sim.WNTRSimulator(tm, mode='PDD')
         results = sim.run_sim()
     else:
         raise Exception("Unknown initial calculation engine. \
             The engine can only be 'DD' or 'PDD'.")
 
-    for _,node in tm.nodes():
+    for _, node in tm.nodes():
         node.initial_head = results.node['head'].loc[t0, node.name]
 
-    for _,link in tm.links():
+    for _, link in tm.links():
         link.initial_flow = results.link['flowrate'].loc[t0, link.name]
     nu = 1.004e-6
     for _, pipe in tm.pipes():
         # assign the initial conditions to the latest result arrays
 
-        V = np.sign(results.link['flowrate'].loc[t0, pipe.name])*\
-                    results.link['velocity'].loc[t0, pipe.name]*\
-                    np.ones(pipe.number_of_segments+1)
+        V = np.sign(results.link['flowrate'].loc[t0, pipe.name]) * \
+            results.link['velocity'].loc[t0, pipe.name] * \
+            np.ones(pipe.number_of_segments+1)
 
-        H = [results.node['head'].loc[t0, pipe.start_node_name] +\
-                      i* ((results.node['head'].loc[t0, pipe.end_node_name]-
-                       results.node['head'].loc[t0, pipe.start_node_name])/
-                       (pipe.number_of_segments))
-                    for i in range(pipe.number_of_segments+1)]
+        H = [
+            results.node['head'].loc[t0, pipe.start_node_name] +
+            i * ((
+                results.node['head'].loc[t0, pipe.end_node_name] -
+                results.node['head'].loc[t0, pipe.start_node_name]
+            ) / (pipe.number_of_segments))
+            for i in range(pipe.number_of_segments + 1)
+        ]
 
         H = np.array(H)
         pipe.initial_head = H
         pipe.initial_velocity = V
-        pipe.initial_Re =  np.abs(V[0]*pipe.diameter/nu)
+        pipe.initial_Re = np.abs(V[0]*pipe.diameter/nu)
 
         # assign the initial conditions to the results attributes
         pipe.start_node_velocity[0] = V[0]
@@ -108,39 +114,45 @@ def Initializer(tm, t0, engine='DD'):
         # calculate demand coefficient
         Hs = H[0]
         He = H[-1]
-        demand = [0,0] # demand at start and end node
-        try :
+        demand = [0, 0]  # demand at start and end node
+        try:
             demand[0] = results.node['demand'].loc[t0, pipe.start_node_name]
-            # demand[0] = tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
-        except:
+            # demand[0] =
+            # tm.nodes[pipe.start_node_name].demand_timeseries_list.at(t0)
+        except:  # noqa: E722
             demand[0] = 0.
-        try :
+        try:
             demand[1] = results.node['demand'].loc[t0, pipe.end_node_name]
-            # demand[1] = tm.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
-        except :
+            # demand[1] =
+            # tm.nodes[pipe.end_node_name].demand_timeseries_list.at(t0)
+        except:  # noqa: E722
             demand[1] = 0.
-        try :
-            Hsa = H[0] -pipe.start_node.elevation
-        except:
+        try:
+            Hsa = H[0] - pipe.start_node.elevation
+        except:  # noqa: E722
             Hsa = 1.
-        try :
-            Hea = H[-1]- pipe.end_node.elevation
-        except :
-            Hea=1.
+        try:
+            Hea = H[-1] - pipe.end_node.elevation
+        except:  # noqa: E722
+            Hea = 1.
         pipe = cal_demand_coef(demand, pipe, Hsa, Hea, t0)
 
         # calculate demnad discharge and emitter discharge
         if pipe.start_node.node_type == 'Junction':
-            pipe.start_node.emitter_discharge[0] = pipe.start_node.emitter_coeff * np.sqrt(Hsa)
-            pipe.start_node.demand_discharge[0] = pipe.start_node.demand_coeff * np.sqrt(Hsa)
+            pipe.start_node.emitter_discharge[0] = \
+                pipe.start_node.emitter_coeff * np.sqrt(Hsa)
+            pipe.start_node.demand_discharge[0] = \
+                pipe.start_node.demand_coeff * np.sqrt(Hsa)
         if pipe.end_node.node_type == 'Junction':
-            pipe.end_node.emitter_discharge[0] = pipe.end_node.emitter_coeff * np.sqrt(Hea)
-            pipe.end_node.demand_discharge[0] =  pipe.end_node.demand_coeff * np.sqrt(Hea)
+            pipe.end_node.emitter_discharge[0] = \
+                pipe.end_node.emitter_coeff * np.sqrt(Hea)
+            pipe.end_node.demand_discharge[0] =  \
+                pipe.end_node.demand_coeff * np.sqrt(Hea)
 
         # calculate roughness coefficient
         Vp = V[0]
         hl = abs(Hs - He)
-        pipe = cal_roughness_coef(pipe, Vp, hl )
+        pipe = cal_roughness_coef(pipe, Vp, hl)
 
     # set initial conditions as a new attribute to TransientModel
     tm.initial_head = H
@@ -150,6 +162,7 @@ def Initializer(tm, t0, engine='DD'):
     tm = pump_operation_points(tm)
 
     return tm
+
 
 def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
 
@@ -175,17 +188,18 @@ def cal_demand_coef(demand, pipe, Hs, He, t0=0.):
     """
 
     try:
-        start_demand_coeff = demand[0]/ np.sqrt(Hs)
-    except :
+        start_demand_coeff = demand[0] / np.sqrt(Hs)
+    except:  # noqa: E722
         start_demand_coeff = 0.
 
     try:
         end_demand_coeff = demand[1] / np.sqrt(He)
-    except :
+    except:  # noqa: E722
         end_demand_coeff = 0.
-    pipe.start_node.demand_coeff = start_demand_coeff # [m^3/s/(m H20)^(1/2)]
-    pipe.end_node.demand_coeff = end_demand_coeff   # [m^3/s/(m H20)^(1/2)]
+    pipe.start_node.demand_coeff = start_demand_coeff  # [m^3/s/(m H20)^(1/2)]
+    pipe.end_node.demand_coeff = end_demand_coeff  # [m^3/s/(m H20)^(1/2)]
     return pipe
+
 
 def cal_roughness_coef(pipe, V, hl):
     """Calculate the D-W roughness coefficient based on initial conditions.
@@ -214,32 +228,43 @@ def cal_roughness_coef(pipe, V, hl):
     else:
         pipe.roughness = 0
 
-    if pipe.roughness >0.08:
-        warnings.warn("%s :the friction coefficient %.4f is too large. \
-                        The D-W coeff has been set to 0.03 "
-                        %(pipe.name, pipe.roughness))
+    if pipe.roughness > 0.08:
+        warnings.warn(
+            "%s :the friction coefficient %.4f is too large. \
+            The D-W coeff has been set to 0.03 "
+            % (pipe.name, pipe.roughness)
+        )
         pipe.roughness = 0.03
-    if pipe.roughness!= 0:
-        pipe.roughness_height = max(10**(-1/1.8/np.sqrt(pipe.roughness)) - 6.9/pipe.initial_Re, 0)
+    if pipe.roughness != 0:
+        pipe.roughness_height = max(
+            10 ** (-1 / 1.8 / np.sqrt(pipe.roughness)) - 6.9 / pipe.initial_Re,
+            0
+        )
     else:
         pipe.roughness_height = 0
     return pipe
 
+
 def pump_operation_points(tm):
-    #add operation points to the pump
+    # add operation points to the pump
     for _, pump in tm.pumps():
-        opt_point = (pump.initial_flow, abs(pump.end_node.initial_head-pump.start_node.initial_head))
+        opt_point = (
+            pump.initial_flow,
+            abs(pump.end_node.initial_head-pump.start_node.initial_head)
+        )
         def_points = pump.get_pump_curve().points
         # single-point pump curve
         if len(def_points) == 1:
             (flow, head) = def_points[0]
-            def_points.append((0., 1.33*head))
+            def_points.append((0., 1.33 * head))
             def_points.append((2*flow, 0.))
         elif len(def_points) != 3:
-            raise Exception("TSNet only support one-point or three-point pump curve.")
+            raise Exception(
+                "TSNet only support one-point or three-point pump curve."
+            )
 
         dist = []
-        for (i,j) in def_points:
+        for (i, j) in def_points:
             dist.append(np.sqrt((i - opt_point[0])**2 + (j - opt_point[1])**2))
 
         pump.get_pump_curve().points.remove(def_points[dist.index(min(dist))])
