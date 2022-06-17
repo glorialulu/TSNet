@@ -35,3 +35,8 @@ History
 0.2.3 (2021-11-12)
 -------------------
 1. Only support WNTR version up untill 0.3.0
+
+0.2.4 (2022-06-17)
+-------------------
+1. fix minor issues regarding reporting messages
+2. Only support WNTR version up untill 0.2.3.

@@ -100,9 +100,9 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
             for _,pipe in tm.pipes():
                 diff1 = pipe.start_node_head[1] - pipe.start_node_head[0]
                 diff2 = pipe.end_node_head[1] - pipe.end_node_head[0]
-                if abs(diff1)> 1e-1:
+                if abs(diff1)> 5e-1:
                     print('Initial condition discrepancy of pressure (%.4f m) on the %s node' %(diff1,pipe.start_node.name))
-                if abs(diff2)> 1e-1:
+                if abs(diff2)> 5e-1:
                     print('Initial condition discrepancy of pressure (%.4f m) on the %s node'%(diff2,pipe.end_node.name))
         if ts == 3:
             timeperstep = (datetime.now() - starttime) /2.

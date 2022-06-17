@@ -1,6 +1,6 @@
 import tsnet
 # open an example network and create a transient model
-inp_file = 'networks/Tnet3.inp'
+inp_file = 'examples/networks/Tnet3.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
@@ -23,7 +23,7 @@ tm.add_burst('JUNCTION-20', ts, tc, final_burst_coeff)
 
 # Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0s
-engine = 'DD' # or Epanet
+engine = 'PDD' # or Epanet
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
