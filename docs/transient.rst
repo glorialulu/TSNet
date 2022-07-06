@@ -250,7 +250,7 @@ constraints that have to be satisfied simultaneously:
     realistic in a real network, because different pipe lengths
     and wave speeds usually cause different wave travel times. Moreover,
     the number of sections in the :math:`i^{th}` pipe (:math:`N_i`) has to
-    be an even integer due to the grid configuration in MOC; however, the
+    be an integer due to the grid configuration in MOC; however, the
     combination of time step and pipe length is likely to produce
     non-integer value of :math:`N_i`, which then requires further adjustment.
 
@@ -738,7 +738,7 @@ orange curve in :numref:`valve_closure`.
 
   tc = 1 # valve closure period [s]
   ts = 0 # valve closure start time [s]
-  se = 0 # end open percentage [s]
+  se = 0.5 # end open ratio
   m = 1 # closure constant [dimensionless]
   valve_op = [tc,ts,se,m]
   tm.valve_closure('VALVE',valve_op)
@@ -758,7 +758,7 @@ with :math:`m=1` and :math:`m=2` are illustrated in :numref:`valve_opening`.
 
   tc = 1 # valve opening period [s]
   ts = 0 # valve opening start time [s]
-  se = 1 # end open percentage [s]
+  se = 0.5 # end open ratio
   m = 1 # opening constant [dimensionless]
   valve_op = [tc,ts,se,m]
   tm.valve_opening('VALVE',valve_op)
