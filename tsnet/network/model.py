@@ -265,9 +265,9 @@ class TransientModel (WaterNetworkModel):
             se : final open percentage [s]
             m  : closure constant [unitless]
         curve: list
-            [(open_percentage[i], kl[i]) for i ]
+            [(open_percentage[i], 1/kl[i]) for i ]
             List of open percentage and the corresponding
-            valve coefficient
+            inverse of valve coefficient
         """
 
         valve = self.get_link(name)
