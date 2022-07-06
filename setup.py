@@ -3,7 +3,7 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from distutils.core import Extension
 
 with open('README.rst') as readme_file:
@@ -47,7 +47,7 @@ setup(
     include_package_data=True,
     keywords='tsnet',
     name='tsnet',
-    packages=find_packages(),
+    packages='tsnet',
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
