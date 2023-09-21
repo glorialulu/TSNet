@@ -14,7 +14,6 @@ import warnings
 from datetime import datetime
 import pickle
 
-
 def MOCSimulator(tm, results_obj='results', friction='steady'):
     """ MOC Main Function
 
@@ -443,13 +442,14 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
                 node.water_level_timeseries[ts] = max(node.water_level,0)
                 node.tank_flow_timeseries[ts] = node.tank_flow
 
-    for _,pipe in tm.pipes():
-        if not isinstance(pipe.start_node.head, np.ndarray):
-            pipe.start_node.head = np.copy(pipe.start_node_head)
-        if not isinstance(pipe.end_node.head, np.ndarray):
-            pipe.end_node.head = np.copy(pipe.end_node_head)
+    for _, pipe in tm.pipes():
+        if not isinstance(pipe.start_node._head, np.ndarray):
+            pipe.start_node._head = np.copy(pipe.start_node_head)
+        if not isinstance(pipe.end_node._head, np.ndarray):
+            pipe.end_node._head = np.copy(pipe.end_node_head)
 
     tm.simulation_timestamps = tt[1:]
+
 
     # save object to file
     if results_obj != 'no':
@@ -459,9 +459,4 @@ def MOCSimulator(tm, results_obj='results', friction='steady'):
     else:
         pass
 
-    """TO read:
-    import pickle
-    file = open('results.obj', 'rb')
-    tm = pickle.load(file)
-    """
     return tm

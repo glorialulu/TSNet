@@ -1,6 +1,6 @@
 import tsnet
 # open an example network and create a transient model
-inp_file = 'examples/networks/Tnet2.inp'
+inp_file = '/Users/luxing/Code/TSNet/examples/networks/Tnet2.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 node = 'JUNCTION-105'
 node = tm.get_node(node)
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='w')
-plt.plot(tm.simulation_timestamps,node.head, 'k', lw=3)
+plt.plot(tm.simulation_timestamps, node._head, 'k', lw=3)
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 # plt.title('Pressure Head at Node %s '%node)
 plt.xlabel("Time [s]", fontsize=14)

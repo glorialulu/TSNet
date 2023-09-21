@@ -1,7 +1,7 @@
 import tsnet
-import numpy as np 
+import numpy as np
 # Open an example network and create a transient model
-inp_file = 'networks/Tnet1.inp'
+inp_file = '/Users/luxing/Code/TSNet/examples/networks/Tnet1.inp'
 # Set valve closure
 tc = 0.6 # valve closure period [s]
 ts = 0 # valve closure start time [s]

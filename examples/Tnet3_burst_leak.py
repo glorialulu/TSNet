@@ -1,6 +1,6 @@
 import tsnet
 # open an example network and create a transient model
-inp_file = 'examples/networks/Tnet3.inp'
+inp_file = '/Users/luxing/Code/TSNet/examples/networks/Tnet3.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
@@ -12,8 +12,8 @@ tf = 20 # simulation period [s]
 tm.set_time(tf)
 
 # Add leak
-emitter_coeff = 0.01 # [ m^3/s/(m H20)^(1/2)]
-tm.add_leak('JUNCTION-22', emitter_coeff)
+# emitter_coeff = 0.01 # [ m^3/s/(m H20)^(1/2)]
+# tm.add_leak('JUNCTION-22', emitter_coeff)
 
 # Add burst
 ts = 1 # burst start time
@@ -77,10 +77,10 @@ node2 = tm.get_node('JUNCTION-16')
 node3 = tm.get_node('JUNCTION-45')
 node4 = tm.get_node('JUNCTION-90')
 fig = plt.figure(figsize=(10,4), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(tm.simulation_timestamps,node1.head,label='JUNCTION-8')
-plt.plot(tm.simulation_timestamps,node2.head,label='JUNCTION-16')
-plt.plot(tm.simulation_timestamps,node3.head,label='JUNCTION-45')
-plt.plot(tm.simulation_timestamps,node4.head,label='JUNCTION-90')
+plt.plot(tm.simulation_timestamps, node1._head, label='JUNCTION-8')
+plt.plot(tm.simulation_timestamps, node2._head, label='JUNCTION-16')
+plt.plot(tm.simulation_timestamps, node3._head, label='JUNCTION-45')
+plt.plot(tm.simulation_timestamps, node4._head, label='JUNCTION-90')
 plt.xlim([tm.simulation_timestamps[0],tm.simulation_timestamps[-1]])
 plt.title('Head on Junctions')
 plt.xlabel("Time [s]")

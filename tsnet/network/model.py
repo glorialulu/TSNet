@@ -56,14 +56,14 @@ class TransientModel (WaterNetworkModel):
         i =1
         for _, node in self.nodes():
             node.id = i
-            node.leak_status = False
+            node._leak_status = False
             node.burst_status = False
             node.blockage_status = False
             node.pulse_status = False
             node.emitter_coeff = 0.
             node.block_per = 0.
             node.transient_node_type = node.node_type
-            i+=1     ## Graph the network
+            i+=1
 
         # calculate the slope and area for each pipe
         for _, pipe in self.pipes():
@@ -214,7 +214,7 @@ class TransientModel (WaterNetworkModel):
 
         leak_node = self.get_node(name)
         leak_node.emitter_coeff += coeff
-        leak_node.leak_status = True
+        leak_node._leak_status = True
 
     def add_burst(self, name, ts, tc, final_burst_coeff):
         """Add leak to the transient model
@@ -461,7 +461,7 @@ The initial setting has been changed to open to perform the closure." %name)
         ax : a matplotlib.axes.Axes instance, optional (default = None).
         """
         time = self.simulation_timestamps
-        x = self.get_node(name).head
+        x = self.get_node(name)._head
         ta, tf, amp = detect_cusum(time, x, threshold, drift,
                  show, ax=None)
         ta = [time[i] for i in ta]
@@ -492,7 +492,7 @@ The initial setting has been changed to open to perform the closure." %name)
         time = self.simulation_timestamps
 
         for i,node in enumerate(nodes):
-            ax.plot(time,node.head,lw=2,label=name[i])
+            ax.plot(time, node._head, lw=2, label=name[i])
         plt.xlim([self.simulation_timestamps[0],self.simulation_timestamps[-1]])
         # plt.title('Pressure Head at Node(s) ')
         plt.xlabel("Time [s]", fontsize=14)

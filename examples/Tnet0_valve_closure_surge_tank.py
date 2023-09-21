@@ -1,6 +1,6 @@
 import tsnet
 # Open an example network and create a transient model
-inp_file = 'networks/Tnet0.inp'
+inp_file = '/Users/luxing/Code/TSNet/examples/networks/Tnet0.inp'
 tm = tsnet.network.TransientModel(inp_file)
 
 # Set wavespeed
@@ -117,14 +117,4 @@ plt.xlabel("Time [s]")
 plt.ylabel("Flow into tank [m^3s]")
 plt.legend(loc='best')
 plt.grid(True)
-plt.show()
-
-
-fig = plt.figure(figsize=(8,5), dpi=80, facecolor='w', edgecolor='k')
-plt.plot(t1, node1.water_level_timeseries, 'r',label='w surge tank $A_s=10m^2$', linewidth=2.5)
-plt.plot(t2, node2.water_level_timeseries, 'g',label='w surge tank $A_s=100m^2$', linewidth=2.5)
-plt.xlim([t1[0],t1[-1]])
-plt.xlabel("Time [s]")
-plt.ylabel("Water level in tank [m]")
-plt.legend(loc='best')
 plt.show()

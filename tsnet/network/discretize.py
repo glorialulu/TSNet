@@ -125,7 +125,7 @@ def cal_N(tm,  dt):
 
     for _, pipe in tm.pipes() :
         # N[int(pipe.id)-1] =  int(2*np.int(pipe.length/ (2. * pipe.wavev *dt)))
-        N[int(pipe.id)-1] =  round(np.int(pipe.length/ (pipe.wavev *dt)))
+        N[int(pipe.id)-1] =  round(int(pipe.length/ (pipe.wavev *dt)))
     return N
 
 
