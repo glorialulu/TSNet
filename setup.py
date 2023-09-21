@@ -17,7 +17,7 @@ requirements = [
                 'scipy',
                 'matplotlib',
                 'plotly',
-                'wntr==0.2.3',
+                'wntr',
                 'networkx',
                 ]
 
@@ -34,8 +34,8 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     description="tsnet conducts transient simulation using MOC method for water distribution systems.",
     entry_points={},
@@ -50,6 +50,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/glorialulu/TSNet',
-    version='0.2.4',
+    version='0.3.1',
     zip_safe=False,
 )

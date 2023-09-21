@@ -40,3 +40,9 @@ History
 -------------------
 1. fix minor issues regarding reporting messages
 2. Only support WNTR version up until 0.2.3.
+
+0.3.0 (2023-02-22)
+-------------------
+1. Support WNTR version 1.0.0
+2. Test on python 3.10 and 3.11.
+3. Drop supports for Python 3.6 and 3.7

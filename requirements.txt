@@ -4,4 +4,4 @@ numpy
 scipy
 matplotlib
 plotly
-wntr==0.2.3
+wntr

@@ -15,12 +15,12 @@ tc = 0 # valve closure period [s]
 ts = 0 # valve closure start time [s]
 se = 0 # end open percentage [s]
 m = 1 # closure constant [dimensionless]
-valve_op = [tc,ts,se,m]
+valve_op = [tc, ts, se, m]
 tm.valve_closure('3',valve_op)
 
 # Initialize steady state simulation
 t0 = 0. # initialize the simulation at 0 [s]
-engine = 'DD' # demand driven simulator
+engine = 'PDD' # demand driven simulator
 tm = tsnet.simulation.Initializer(tm, t0, engine)
 
 # Transient simulation
